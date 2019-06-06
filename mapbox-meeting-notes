@@ -1,0 +1,22 @@
+Scope of project
+
+Visualize civil engagements that are occuring on the campus vis Mapbox.
+
+Original project used Node + WordPress for data entry
+This project was handed off to Les
+Some functionality was added here, but not too much
+
+What features do we want to make use of? (AR, points, etc.)
+
+For AR stuff, we may have to use other tools such as Unity, AR Kit, etc.
+
+MapBox studio may help us manage data.
+
+The base map of the project can be completely customized.
+
+TODO:
+Replicate current site to mapbox
+How do we handle workflow to add or edit things
+Who adds things?
+Where/how will the db maintained?
+
