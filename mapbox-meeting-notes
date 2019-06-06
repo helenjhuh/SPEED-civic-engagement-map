@@ -17,7 +17,17 @@ The base map of the project can be completely customized.
 TODO:
 Replicate current site to mapbox
 How do we handle workflow to add or edit things
-Who adds things?
-Where/how will the db maintained?
+Who adds things? 
+Need to get clear answer on expected workflow from Denise
+  1. should there be accounts, or 
+  2. does this flow through a particular set of individuals, and 
+  3. who vets information and
+  4. at what stage does stuff get vetted (or is that who gets vetted)
+    5. Swat login credentials?
+    6. Authorization?
+Where/how will the db maintained? What db will be used?  
+  1. Initial data input form, 
+  2. Convert entered data to geojson?
+  3. image data? other sorts of data for any particular entry?
 
 current site -> http://www.mapmyorg.net/
