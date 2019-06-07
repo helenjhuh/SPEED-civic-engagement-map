@@ -31,3 +31,16 @@ Where/how will the db maintained? What db will be used?
   3. image data? other sorts of data for any particular entry?
 
 current site -> http://www.mapmyorg.net/
+
+**June 7 notes**
+-- Only Swarthmore employees allowed to input data currently
+-- Approval process after something is submitted
+-- Tie emails to approval process
+-- Image uploads tied to the post
+-- Manage categories
+-- Analysis from search terms
+-- Possible displaying of certain hashtags
+-- This should be able to be customized for other colleges
+-- Possible expiration date for each row of data 
+-- We want to somehow visualize the data over time
+-- How can we measure social impact?
