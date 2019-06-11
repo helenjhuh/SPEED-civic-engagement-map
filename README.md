@@ -3,4 +3,4 @@ The Civic Engagement Map is a platform that allows the entire campus community t
 
 ## Resources
 
-(CAS Authentication)[https://apereo.github.io/cas/4.2.x/protocol/CAS-Protocol.html]
+[CAS Authentication](https://apereo.github.io/cas/4.2.x/protocol/CAS-Protocol.html)
