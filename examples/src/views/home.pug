@@ -1,0 +1,16 @@
+html
+  head
+    title Mapbox
+    script(src='https://api.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.js')
+    link(href='https://api.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet')
+  body
+    h1 Mapbox
+    input#placeName(placeholder="Search for a place bro")
+    button(onclick="onClick()") Search
+
+    script.
+      const baseURL = "http://localhost:9000"
+      function onClick() {
+        const inputStr = document.querySelector("#placeName").value;
+        window.location = `${baseURL}/geocode?place=${inputStr}`
+      }
