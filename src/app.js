@@ -8,24 +8,41 @@ const express = require("express"),
   M_OV = require("method-override"),
   GeoJSON = require("geojson"),
   User = require("./models/user.js");
-geoUser = require("./models/geoUser.js");
+  geoUser = require("./models/geoUser.js"),
+  passport = require("passport"),
+  session = require("express-session");
 
 /* Share a base client with multiple services with mapbox*/
 const mbxClient = require("@mapbox/mapbox-sdk"),
   mbxStyles = require("@mapbox/mapbox-sdk/services/styles"),
   mbxTilesets = require("@mapbox/mapbox-sdk/services/tilesets"),
   mbxDatasets = require("@mapbox/mapbox-sdk/services/datasets");
-mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
+  mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 
 /* Initialize our base client with our token */
 const baseClient = mbxClient({ accessToken: process.env.CEM_ID }),
   stylesService = mbxStyles(baseClient),
   tilesetsService = mbxTilesets(baseClient);
-datasetsService = mbxDatasets(baseClient);
-geocodingService = mbxGeocoding(baseClient);
+  datasetsService = mbxDatasets(baseClient);
+  geocodingService = mbxGeocoding(baseClient);
 
 /* Begin initialization for our app and set up stuff */
 const app = express();
+
+// configure express session -- This is required for a persistant logon
+// with passport. If we switch to something like token-based authentication
+// we can remove this
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: false 
+}));
+
+// require passport as a middleware of express
+require("./middleware/passport")(passport);
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.set("view engine", "ejs");
 
 /* Point to stylesheets in ./public */
