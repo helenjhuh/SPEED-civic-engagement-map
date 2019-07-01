@@ -19,8 +19,8 @@ mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 
 /* Initialize our base client with our token */
 const baseClient = mbxClient({ accessToken: process.env.CEM_ID }),
-stylesService = mbxStyles(baseClient),
-tilesetsService = mbxTilesets(baseClient);
+  stylesService = mbxStyles(baseClient),
+  tilesetsService = mbxTilesets(baseClient);
 datasetsService = mbxDatasets(baseClient);
 geocodingService = mbxGeocoding(baseClient);
 
@@ -39,9 +39,10 @@ app.use(sanitizer());
 app.use(M_OV("_method"));
 
 /* Start mongoose and make sure database is connected */
-const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${
-  process.env.DB_HOST
-}/cem-data`;
+//const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/cem-data`;
+
+const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0-hytar.gcp.mongodb.net/test?retryWrites=true&w=majority`;
+
 mongoose
   .connect(uri, { useNewUrlParser: true })
   .then(() => console.log("Connection successful"))
@@ -84,7 +85,9 @@ app.get("/cem_map", (req, res) => {
 
   geoUser.find({}, (err, geoUsers) => {
     //render our pages/index but pass in all of our geoUsers as users
-    (err) ? res.redirect("pages/error") : res.render("pages/index", { users: JSON.stringify(geoUsers) });
+    err
+      ? res.redirect("pages/error")
+      : res.render("pages/index", { users: JSON.stringify(geoUsers) });
   });
 });
 
