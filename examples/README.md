@@ -1,1 +1,0 @@
-This example utilizes both the mapbox client and server code. The application allows the user to search for a place through a web frontend. The server processes the request and renders the map page to the user.
