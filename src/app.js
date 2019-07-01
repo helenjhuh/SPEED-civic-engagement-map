@@ -11,7 +11,8 @@ const express = require("express"),
   geoUser = require("./models/geoUser.js"),
   passport = require("passport"),
   session = require("express-session"),
-  path = require("path");
+  path = require("path"),
+  logger = require("morgan");
 
 /* Share a base client with multiple services with mapbox*/
 const mbxClient = require("@mapbox/mapbox-sdk"),
@@ -47,6 +48,9 @@ app.use(passport.session());
 // configure ejs as the view engine and set the views directory
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
+
+// Use logger
+app.use(logger(process.env.NODE_ENV === "development" ? "dev" : "tiny"));
 
 /* Point to stylesheets in ./public */
 app.use(express.static("public"));

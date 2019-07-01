@@ -27,7 +27,7 @@ const userSchema = new mongoose.Schema({
 });
 
 // This hashes a new user's password
-userSchema.pre("save", next => {
+userSchema.pre("save", function(next) {
   let user = this;
 
   // The password only needs to be hashed if it is new
