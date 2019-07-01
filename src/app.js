@@ -10,7 +10,8 @@ const express = require("express"),
   User = require("./models/user.js");
   geoUser = require("./models/geoUser.js"),
   passport = require("passport"),
-  session = require("express-session");
+  session = require("express-session"),
+  path = require("path");
 
 /* Share a base client with multiple services with mapbox*/
 const mbxClient = require("@mapbox/mapbox-sdk"),
@@ -43,7 +44,9 @@ require("./middleware/passport")(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
+// configure ejs as the view engine and set the views directory
 app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
 
 /* Point to stylesheets in ./public */
 app.use(express.static("public"));
@@ -90,7 +93,10 @@ mongoose.set("useCreateIndex", true);
  *
  */
 
-app.get("/", (req, res) => {
+// Include auth routes
+app.use("/auth", require("./routes/auth"));
+
+ app.get("/", (req, res) => {
   res.render("pages/landing");
 });
 

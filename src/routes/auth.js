@@ -2,7 +2,15 @@ const express = require("express");
 const router = express.Router();
 const passport = require("passport");
 
-router.post("/signup", passport.use("local-signup"), (req, res) => {});
-router.post("/login", passport.use("local-login"), (req, res) => {});
+router.get("/login", (req, res) => {
+  res.render("pages/auth/login");
+});
+
+router.get("/signup", (req, res) => {
+  res.render("pages/auth/signup");
+});
+
+router.post("/signup", passport.authenticate("local-signup"), (req, res) => {});
+router.post("/login", passport.authenticate("local-login"), (req, res) => {});
 
 module.exports = router;

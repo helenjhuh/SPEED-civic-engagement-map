@@ -29,4 +29,6 @@ const LocalSignupStrategy = new LocalStrategy(
 
     })
   }
-)
+);
+
+module.exports = LocalSignupStrategy;

@@ -17,4 +17,6 @@ const LocalLoginStrategy = new LocalStrategy({
     // everything is good
     return done(null, user);
   })
-})
+});
+
+module.exports = LocalLoginStrategy;
