@@ -10,7 +10,19 @@ router.get("/signup", (req, res) => {
   res.render("pages/auth/signup");
 });
 
-router.post("/signup", passport.authenticate("local-signup"), (req, res) => {});
-router.post("/login", passport.authenticate("local-login"), (req, res) => {});
+router.get("/logout", (req, res) => {
+  req.logout();
+  res.redirect("/");
+});
+
+router.post("/signup", passport.authenticate("local-signup", {
+  successRedirect: "/",
+  failureRedirect: "/signup"
+}));
+
+router.post("/login", passport.authenticate("local-login", {
+  successRedirect: "/",
+  failureRedirect: "/login"
+}));
 
 module.exports = router;
