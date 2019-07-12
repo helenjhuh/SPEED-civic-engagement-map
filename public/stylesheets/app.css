@@ -21,8 +21,9 @@ body{
 }
 
 #header {
-    font-family: 'Asap', sans-serif;
-    height: 5rem;
+
+    font-family: 'Raleway', sans-serif;
+    height: 4rem;
     margin-bottom: 0;
 }
 #footer {
@@ -55,4 +56,8 @@ body:before {
   height: 25px;
   border-radius: 50%;
   cursor: pointer;
+}
+
+#pin_content {
+    background: red;
 }

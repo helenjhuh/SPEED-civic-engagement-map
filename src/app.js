@@ -63,10 +63,9 @@ app.use(sanitizer());
 app.use(M_OV("_method"));
 
 /* Start mongoose and make sure database is connected */
-//const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/cem-data`;
-
-const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0-hytar.gcp.mongodb.net/test?retryWrites=true&w=majority`;
-
+const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${
+  process.env.DB_HOST}
+/cem-data`;
 mongoose
   .connect(uri, { useNewUrlParser: true })
   .then(() => console.log("Connection successful"))
@@ -112,9 +111,10 @@ app.get("/cem_map", (req, res) => {
 
   geoUser.find({}, (err, geoUsers) => {
     //render our pages/index but pass in all of our geoUsers as users
-    err
-      ? res.redirect("pages/error")
-      : res.render("pages/index", { users: JSON.stringify(geoUsers) });
+    
+    console.log(err);
+    err ? res.redirect("pages/error") : res.render("pages/index", { users: JSON.stringify(geoUsers) });
+
   });
 });
 
@@ -122,9 +122,6 @@ app.get("/cem_map", (req, res) => {
 app.post("/cem_map", (req, res) => {
   //create a new post and then redirect to our index page
   //first we need to create a geoJson object that we can put to our dataset?
-
-  //TODO: 1) Figure out whether we want to grab location in the form and then just pass that
-  //         in to geocoder along with our form data?
 
   /* BUILD OUR ADDRESS */
   let this_address = req.body.address.concat(
@@ -161,11 +158,7 @@ app.post("/cem_map", (req, res) => {
 
       temp = GeoJSON.parse(temp, { Point: ["lat", "lng"] });
       geoUser.create(temp, (err, success) => {
-        if (err) {
-          res.render("pages/error");
-        } else {
-          res.redirect("/cem_map");
-        }
+          (err) ? res.render("pages/error") : res.redirect("/cem_map");
       });
     })
     .catch(err => console.log(err));
