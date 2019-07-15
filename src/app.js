@@ -111,7 +111,6 @@ app.get("/cem_map", (req, res) => {
    */
 
   geoUser.find({}, (err, pinGeo) => {
-    //render our pages/index but pass in all of our geoUsers as users
     
     err ? res.redirect("pages/error") : res.render("pages/index", { users: JSON.stringify(pinGeo) });
 
@@ -171,6 +170,7 @@ app.post("/cem_map", isLoggedIn, (req, res) => {
           /* Here we're linking that geoJson post with the account it was made from */
           success.properties.owner.id = req.user._id;
           success.properties.owner.username = req.user.email;
+          success.properties.self._id = success._id;
 
           /* Make sure this pin is added to the owners collection of pins */
           User.
@@ -184,6 +184,7 @@ app.post("/cem_map", isLoggedIn, (req, res) => {
                       ele.save();
                   }
               });
+
           success.save();
 
           (err) ? res.render("pages/error") : res.redirect("/cem_map");
@@ -203,12 +204,22 @@ app.get("/cem_map/new", isLoggedIn, (req, res) => {
  *
  *             READ MORE ABOUT A SPECIFIC POST ROUTES
  *
+ *TODO: Add routing for updating and destroying pins
   TODO: Add routing for a read more about a specific pin...
   TODO: Should have edit and delete options...
  *
  * ==========================================================
  *
  */
+
+//Display a pins information route
+app.get("/cem_map/:id", (req, res) => {
+
+    res.send("DISPLAY A PIN ROUTE");
+});
+
+
+//UPDATE PIN ROUTE
 
 app.get("*", (req, res) => {
   res.render("pages/error");

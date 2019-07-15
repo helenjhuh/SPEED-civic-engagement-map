@@ -33,7 +33,14 @@ let geoJsonSchema = new mongoose.Schema({
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "User"
             },
-            username: {type: String}
+            username: {
+                type: String
+            }
+        },
+        self: {
+            _id: {
+                type: String
+            }
         }
     }
 });

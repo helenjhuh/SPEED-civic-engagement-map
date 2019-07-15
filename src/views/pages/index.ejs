@@ -89,6 +89,13 @@
                         /* use map.queryRenderedFeatures to grab that object on click */
                         let ele = map.queryRenderedFeatures(e.point, { layers: ['points'] });
 
+                        /* These elements need to be parsed an extra time because they still had back slashes */
+                        ele[0].properties.owner = JSON.parse(ele[0].properties.owner);
+                        console.log(ele[0].properties.owner.id);
+                        console.log(ele[0].properties.owner.username);
+                        ele[0].properties.self = JSON.parse(ele[0].properties.self);
+                        console.log(ele[0].properties.self._id);
+
                         map.easeTo({
                             center: (ele[0].geometry.coordinates),
                             zoom: zoom
@@ -104,7 +111,6 @@
 
                         /* Create an element with the popup content and add it to our popups DOMContent */
                         let content = ele[0].properties;
-                        console.log(content);
 
                         /* everything is a child of our root div */
                         let root_div = window.document.createElement('div');
@@ -150,6 +156,12 @@
                         let div4_description = window.document.createElement('div');
                         div4_description.innerHTML = content.community_partners;
 
+                        /* We want to create a button that'll allow us to view more info about this pin! */
+                        let view_more_div = window.document.createElement('div');
+                        let view_more_button = window.document.createElement('button');
+                        view_more_button.className = 'btn btn-secondary';
+                        view_more_button.innerHTML = 'view more';
+
                         div1.appendChild(div1_header);
                         div1.appendChild(div1_meta);
                         div1_description.appendChild(div1_description_text);
@@ -160,6 +172,8 @@
                         div1.appendChild(div3_description);
                         div1.appendChild(div4_meta);
                         div1.appendChild(div4_description);
+                        div1.appendChild(view_more_div);
+                        div1.appendChild(view_more_button);
 
                         /* ATTACH EVERYTHING TO OUR ROOT DIV */
                         root_div.appendChild(div1);
