@@ -10,7 +10,7 @@
             <div class="section" style="margin-bottom: 0;">
                 <div class="row">
                     <!-- Div to contain a rendering of available elements to the right-->
-                    <div class="col-3" id="pin_content"></div>
+                    <div class="col-3" id="pin_listing">Listings</div>
                     <div class="col-9" id="map" style="padding-left: 0;"></div>
                 </div>
             </div>
@@ -40,7 +40,8 @@
                     let map = new mapboxgl.Map({
                         container: "map",
                         style: "mapbox://styles/cem-v1/cjx4tqsuf0ndu1clmieo3pc0u",
-                        zoom: 2
+                        center: [-75.3523, 39.9040],
+                        zoom: 15
                     });
 
                     const pretty_users = [];
@@ -81,12 +82,48 @@
                                 "text-anchor": "top"
                             }
                         });
+
+
+                        /* This function will build the listings of all of our pins that we need to display */
+                        function buildLocationList(data) {
+                            // Iterate through the list of pins
+                            for (i = 0; i < data.length; i++) {
+                                let currentFeature = data[i];
+                                console.log(currentFeature);
+                                // Shorten data.feature.properties to `prop` so we're not
+                                // writing this long form over and over again.
+                                let prop = currentFeature.properties;
+                                // Select the listing container in the HTML and append a div
+                                // with the class 'item' for each store
+                                let listings = document.getElementById('pin_listing');
+                                let listing = listings.appendChild(document.createElement('div'));
+                                listing.className = 'card';
+
+                                // Create a new link with the class 'title' for each store
+                                // and fill it with the store address
+                                let link = listing.appendChild(document.createElement('a'));
+                                link.href = '#';
+                                link.className = 'title';
+                                link.dataPosition = i;
+                                link.innerHTML = prop.title;
+
+                                // Create a new div with the class 'details' for each store
+                                // and fill it with the city and phone number
+                                let details = listing.appendChild(document.createElement('div'));
+                                details.innerHTML = prop.description;
+                                if (prop.phone) {
+                                    details.innerHTML += ' · ' + prop.phoneFormatted;
+                                }
+                            }
+                        }
+
+                        buildLocationList(pretty_users);
+
                     });
 
-                    /* inspect a point on click */
-                    map.on('click', 'points', function (e) {
+                    map.on('click', 'points', function(e) {
 
-                        /* use map.queryRenderedFeatures to grab that object on click */
+
                         let ele = map.queryRenderedFeatures(e.point, { layers: ['points'] });
 
                         /* These elements need to be parsed an extra time because they still had back slashes */
@@ -95,18 +132,6 @@
                         console.log(ele[0].properties.owner.username);
                         ele[0].properties.self = JSON.parse(ele[0].properties.self);
                         console.log(ele[0].properties.self._id);
-
-                        map.easeTo({
-                            center: (ele[0].geometry.coordinates),
-                            zoom: zoom
-                        });
-
-                    });
-
-                    map.on('click', 'points', function(e) {
-
-
-                        let ele = map.queryRenderedFeatures(e.point, { layers: ['points'] });
                         
 
                         /* Create an element with the popup content and add it to our popups DOMContent */

@@ -9,6 +9,7 @@ body{
     height: 100%;
     font-family: 'Mada', sans-serif;
     font-size: 1rem;
+    -webkit-font-smoothing: antialiased;
 }
 
 #wrap {
@@ -47,6 +48,7 @@ body:before {
 
 #map {
     height: 100vh;
+    border-left: 1px solid #fff;
 }
 
 .marker {
@@ -58,6 +60,24 @@ body:before {
   cursor: pointer;
 }
 
-#pin_content {
-    background: red;
+#pin_listing {
+
+    padding: 25px;
+}
+
+div.card:nth-of-type(1) {
+    margin-top: 10px;
+}
+
+div.card {
+    
+    margin-bottom: 10px;
+
+} 
+
+.listings .item {
+  display: block;
+  border-bottom: 1px solid #eee;
+  padding: 10px;
+  text-decoration: none;
 }

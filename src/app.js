@@ -212,13 +212,6 @@ app.get("/cem_map/new", isLoggedIn, (req, res) => {
  *
  */
 
-//Display a pins information route
-app.get("/cem_map/:id", (req, res) => {
-
-    res.send("DISPLAY A PIN ROUTE");
-});
-
-
 //UPDATE PIN ROUTE
 
 app.get("*", (req, res) => {
