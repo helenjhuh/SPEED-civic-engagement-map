@@ -8,7 +8,7 @@ const express = require("express"),
   M_OV = require("method-override"),
   GeoJSON = require("geojson"),
   User = require("./models/user.js");
-  geoUser = require("./models/geoUser.js"),
+  geoUser = require("./models/GeoJson.js"),
   passport = require("passport"),
   session = require("express-session"),
   path = require("path"),
@@ -104,24 +104,33 @@ app.use("/auth", require("./routes/auth"));
 });
 
 app.get("/cem_map", (req, res) => {
+
   /* Get all of the geoJSON representations of user information
    * and render our pages/index which should have all of our markers
    * for each one of those users.
    */
 
-  geoUser.find({}, (err, geoUsers) => {
+  geoUser.find({}, (err, pinGeo) => {
     //render our pages/index but pass in all of our geoUsers as users
     
-    console.log(err);
-    err ? res.redirect("pages/error") : res.render("pages/index", { users: JSON.stringify(geoUsers) });
+    console.log(pinGeo);
+    err ? res.redirect("pages/error") : res.render("pages/index", { users: JSON.stringify(pinGeo) });
 
   });
 });
 
 /* POST ROUTE */
-app.post("/cem_map", (req, res) => {
-  //create a new post and then redirect to our index page
-  //first we need to create a geoJson object that we can put to our dataset?
+app.post("/cem_map", isLoggedIn, (req, res) => {
+
+
+    /* 
+     * If a user is logged in then redirect them to our post page and have them fill out that form.
+     * but, if the user isn't logged in then they can't add a pin.
+     *
+     * We need to convert the form that the user inputted into geoJson and send it off to Mapbox Geocoding service.
+     * We also need to save that geoJson object to our database so it can render on our map and we need to link that geoJson
+     * to the user that posted it to the map.
+     */
 
   /* BUILD OUR ADDRESS */
   let this_address = req.body.address.concat(
@@ -146,6 +155,7 @@ app.post("/cem_map", (req, res) => {
     .then(response => {
       /* Grab the coordinates based on our query from here and begin to constuct geoJSON object */
 
+
       let temp = {
         title: req.body.title,
         description: req.body.description,
@@ -158,6 +168,7 @@ app.post("/cem_map", (req, res) => {
 
       temp = GeoJSON.parse(temp, { Point: ["lat", "lng"] });
       geoUser.create(temp, (err, success) => {
+          console.log(req.body);
           (err) ? res.render("pages/error") : res.redirect("/cem_map");
       });
     })
@@ -165,7 +176,7 @@ app.post("/cem_map", (req, res) => {
 });
 
 /* CREATE ROUTE */
-app.get("/cem_map/new", (req, res) => {
+app.get("/cem_map/new", isLoggedIn, (req, res) => {
   res.render("pages/new");
 });
 
@@ -175,7 +186,6 @@ app.get("/cem_map/new", (req, res) => {
  *
  *             READ MORE ABOUT A SPECIFIC POST ROUTES
  *
- *TODO: Figure out login/sign-up routes...
   TODO: Add routing for a read more about a specific pin...
   TODO: Should have edit and delete options...
  *
@@ -186,6 +196,16 @@ app.get("/cem_map/new", (req, res) => {
 app.get("*", (req, res) => {
   res.render("pages/error");
 });
+
+/* Middleware for preventing users who aren't logged in from adding pins to the map */
+function isLoggedIn(req, res, next) {
+
+    if(req.isAuthenticated()) {
+        return next();
+    }
+
+    res.render("pages/auth/login");
+}
 
 app.listen(process.env.PORT, process.env.IP, () => {
   console.log("CeM app server started");

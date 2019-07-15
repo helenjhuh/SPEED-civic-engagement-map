@@ -10,20 +10,17 @@ const bcrypt = require("bcryptjs");
  *  7/1 - TW
  */
 
+/* We need to add an id for user so that we can link it to our post */
+
+const Schema = mongoose.Schema;
+
 const userSchema = new mongoose.Schema({
-  title: String,
-  description: String,
-  contact: String,
-  community_partners: String,
-  contact: String,
-  contact_email: String,
-  address: String,
-  city: String,
-  state: String,
-  country: String,
-  zip: String,
+
   email: String,
-  password: String 
+  password: String,
+
+  /* our User model has its usersPins field set to an array of ObjectIds that are geoJsons*/
+  usersPins: [ {type: Schema.Types.ObjectId, ref: "geoJson"} ]
 });
 
 // This hashes a new user's password
@@ -46,6 +43,11 @@ userSchema.pre("save", function(next) {
 });
 
 // This compares the user's given password with the hash
-userSchema.methods.validPassword = password => (bcrypt.compareSync(password, this.password));
+
+userSchema.methods.validPassword = (password, encryptedPassword) => (
+        
+    bcrypt.compareSync(password, encryptedPassword)
+
+)
 
 module.exports = mongoose.model("User", userSchema);

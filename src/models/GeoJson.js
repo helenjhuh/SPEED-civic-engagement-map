@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
  * our database...
  */
 
-let geoUserSchema = new mongoose.Schema({
+let geoJsonSchema = new mongoose.Schema({
 
     type: {
         type: String
@@ -25,10 +25,18 @@ let geoUserSchema = new mongoose.Schema({
         description: {type: String},
         contact: {type: String},
         contact_email: {type: String},
-        community_partners: {type: String}
+        community_partners: {type: String},
+
+        /*field where we can associate a geoJson with an owner*/
+        owner: {
+            id: {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User"
+            },
+            username: {type: String}
+        }
     }
 });
 
 /* Export geoUser to represent our user as a geoJSON object */
-module.exports = new mongoose.model("geoUser", geoUserSchema);
-
+module.exports = new mongoose.model("geoJson", geoJsonSchema);
