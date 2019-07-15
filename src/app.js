@@ -113,7 +113,6 @@ app.get("/cem_map", (req, res) => {
   geoUser.find({}, (err, pinGeo) => {
     //render our pages/index but pass in all of our geoUsers as users
     
-    console.log(pinGeo);
     err ? res.redirect("pages/error") : res.render("pages/index", { users: JSON.stringify(pinGeo) });
 
   });
@@ -168,7 +167,25 @@ app.post("/cem_map", isLoggedIn, (req, res) => {
 
       temp = GeoJSON.parse(temp, { Point: ["lat", "lng"] });
       geoUser.create(temp, (err, success) => {
-          console.log(req.body);
+          
+          /* Here we're linking that geoJson post with the account it was made from */
+          success.properties.owner.id = req.user._id;
+          success.properties.owner.username = req.user.email;
+
+          /* Make sure this pin is added to the owners collection of pins */
+          User.
+              findById(req.user._id).
+              populate('usersPins'). 
+              exec( (error, ele) => {
+                  if(error) {
+                      res.render("pages/error");
+                  } else {
+                      ele.usersPins.push(success._id);
+                      ele.save();
+                  }
+              });
+          success.save();
+
           (err) ? res.render("pages/error") : res.redirect("/cem_map");
       });
     })

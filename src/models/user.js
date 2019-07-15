@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
   password: String,
 
   /* our User model has its usersPins field set to an array of ObjectIds that are geoJsons*/
-  usersPins: [ {type: Schema.Types.ObjectId, ref: "geoJson"} ]
+  usersPins: [ {type: mongoose.Schema.Types.ObjectId, ref: "geoJson"} ]
 });
 
 // This hashes a new user's password
