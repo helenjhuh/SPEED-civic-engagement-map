@@ -10,8 +10,9 @@
             <div class="section" style="margin-bottom: 0;">
                 <div class="row">
                     <!-- Div to contain a rendering of available elements to the right-->
-                    <div class="col-3" id="pin_listing">
-                        <h1> Listings </h1>
+                    <div class="col-3" id="pin_listing" style="overflow-y: scroll; height: 800px;">
+                        <h1> What's near you? </h1>
+                        <div id="listings" class="listings"></div>
                     </div>
                     <div class="col-9" id="map" style="padding-left: 0;"></div>
                 </div>
@@ -90,16 +91,18 @@
                         function buildLocationList(data) {
                             // Iterate through the list of pins
                             for (i = 0; i < data.length; i++) {
+                                console.log("Data at i is: ", data[i]);
                                 let currentFeature = data[i];
-                                console.log(currentFeature);
                                 // Shorten data.feature.properties to `prop` so we're not
                                 // writing this long form over and over again.
                                 let prop = currentFeature.properties;
                                 // Select the listing container in the HTML and append a div
                                 // with the class 'item' for each store
-                                let listings = document.getElementById('pin_listing');
+                                let listings = document.getElementById('listings');
                                 let listing = listings.appendChild(document.createElement('div'));
-                                listing.className = 'card border-secondary bg-light mb-3';
+                                listing.className = 'item';
+                                listing.id = 'listing-' + i;
+                                //listing.className = 'card border-secondary bg-light mb-3';
                             
                                 //Create a header for this card and append it to listing
                                 let listing_header = listing.appendChild(document.createElement('a'));
@@ -107,9 +110,22 @@
 
                                 var link = listing_header.appendChild(document.createElement('a')); 
                                 link.href = "#";
-                                link.className = 'card-title';
+                                link.className = 'title';
                                 link.dataPosition = i;
                                 link.innerHTML = prop.title;
+
+                                link.addEventListener('click', function(e) {
+                                    // Update the currentFeature to the store associated with the clicked link
+                                    var clickedListing = data[this.dataPosition];
+                                    // 1. Fly to the point associated with the clicked link
+                                    flyToPin(clickedListing);
+                                    // 2. Highlight listing in sidebar (and remove highlight for all other listings)
+                                    var activeItem = document.getElementsByClassName('active');
+                                    if (activeItem[0]) {
+                                        activeItem[0].classList.remove('active');
+                                    }
+                                    this.parentNode.classList.add('active');
+                                });
 
 
                                 //Create a body for this cards content and append it to listing
@@ -120,17 +136,19 @@
                                 let listing_text = listing_content.appendChild(document.createElement('p'));
                                 listing_text.className = 'card-text';
 
-                                //Here we truncate the string to make sure our card format stays nice and compact.
+                                //Here we truncate the string to make sure our card format stays nice and compact. If prop.description exists
                                 //This won't affect user visibility if we have an option to view more on a different page
-                                if(prop.description.length > 350) {
-                                    listing_text.innerHTML += "Description: " + "<br/ >";
-                                    listing_text.innerHTML += prop.description.substring(0, 350);
-                                    listing_text.innerHTML += "...";
-                                    listing_text.innerHTML += "<br/ >";
-                                } else {
-                                    listing_text.innerHTML += "Description: " + "<br/ >";
-                                    listing_text.innerHTML += prop.description;
-                                    listing_text.innerHTML += "<br/ >";
+                                if (prop.description) {
+                                    if(prop.description.length > 350) {
+                                        listing_text.innerHTML += "Description: " + "<br/ >";
+                                        listing_text.innerHTML += prop.description.substring(0, 350);
+                                        listing_text.innerHTML += "...";
+                                        listing_text.innerHTML += "<br/ >";
+                                    } else {
+                                        listing_text.innerHTML += "Description: " + "<br/ >";
+                                        listing_text.innerHTML += prop.description;
+                                        listing_text.innerHTML += "<br/ >";
+                                    }
                                 }
 
                                 //If prop contact email exists add it to our listing_text innerHTML
@@ -153,22 +171,18 @@
                                 }
                             }
 
-                            // Add an event listener for the links in the sidebar listing
-                            link.addEventListener('click', (e) => {
-                                // Update the currentFeature to the store associated with the clicked link
-                                let clickedListing = data[this.dataPosition];
-                                console.log(clickedListing);
-                            });
-
-                            function flyToPin(currentFeature) {
-                                map.flyTo({
-                                    center: currentFeature.geometry.coordinates,
-                                    zoom: 15
-                                });
-                            }
                         }
 
                         buildLocationList(pretty_users);
+
+                        /* Go to pin that the user clicks on from listings */
+                        function flyToPin(currentFeature) {
+                            map.flyTo({
+                                center: currentFeature.geometry.coordinates,
+                                zoom: 15
+                            });
+                        }
+                        // Add an event listener for the links in the sidebar listing
 
                     });
 
@@ -254,7 +268,6 @@
                         is above... I think this might be a security issue maybe?
                         */
                         view_more_button.className = 'btn btn-success';
-                        view_more_button.href = '/cem_map/:id';
                         view_more_button.innerHTML = 'view more';
 
                         div1.appendChild(div1_header);

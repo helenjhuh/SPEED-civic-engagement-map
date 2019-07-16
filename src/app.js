@@ -215,7 +215,8 @@ app.get("/cem_map/new", isLoggedIn, (req, res) => {
 //Show info about a pin route
 app.get("/cem_map/:id", (req, res) => {
 
-    res.render("show pin route yay!");
+    console.log(req.params);
+    res.send("Show info about a pin yay!");
 
 });
 
