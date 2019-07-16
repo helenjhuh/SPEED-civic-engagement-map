@@ -3,24 +3,58 @@
   <div id="wrap">
     <div id="main">
       <div class="container mt-5">
-        <h2>Signup</h2>
-        <form method="POST" action="/auth/signup">
-          <div class="form-group">
+        <h2 class='ui dividing header'>Sign up</h2>
+        <form class='ui big form' method="POST" action="/auth/signup">
+
+            <div class='two fields'>
+                <div class='field'>
+                    <label> First Name </label>
+                    <input type="text" name="first_name" placeholder='First Name'>
+                </div>
+                <div class='field'>
+                    <label> Last Name </label>
+                    <input type='text' name='last_name' placeholder='Last Name'>
+                </div>
+            </div>  
+
+            <div class='two fields'>
+                <div class='field'>
+                    <label> I am a... </label>
+                    <div class='ui selection dropdown'>
+                        <input type='hidden' name='occupation'>
+                        <i class='dropdown icon'></i>
+                        <div class='default text'> Select </div>
+                        <div class='menu'>
+                            <div class='item' data-value='3'>Student</div>
+                            <div class='item' data-value='2'>Faculty</div>
+                            <div class='item' data-value='1'>Staff</div>
+                            <div class='item' data-value='0'>Alumni</div>
+                        </div>
+                    </div>
+                </div>
+                <div class='field'>
+                    <label> College / University </label>
+                    <input type='text' name='college' placeholder='College/University'>
+                </div>
+            </div>
+
+
+          <div class="field">
             <label for="email">Email address</label>
             <input id="email" name="email" type="email" class="form-control"/>
           </div>
   
-          <div class="form-group">
+          <div class="field">
             <label for="password">Password</label>
             <input id="password" name="password" type="password" class="form-control" />
           </div>
   
-          <div class="form-group">
+          <div class="field">
             <label for="password2">Confirm your password</label>
             <input id="password2" name="password2" type="password" class="form-control" />
           </div>
   
-          <button type="submit" class="btn btn-primary">Submit</button> 
+          <button type="submit" class="ui primary basic button">Submit</button> 
         </form>
       </div>
     </div>

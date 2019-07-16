@@ -6,66 +6,94 @@
 
     <!-- TODO: Refactor this form and figure out a better way of saving the location a user adds. -->
     <div id="wrap">
-        <div class="ui container" id="main"> 
-            <form method="POST" action="/cem_map" class="ui form"> 
-                <div class="field">
-                    <label> title </label>
-                    <input type="text" name="title" placeholder="title">
-                </div>
+        <div id="main">
+            <div class="ui container" id="REGISTRATION_FORM" style="padding-top: 2rem; margin-bottom: 2rem;">
+                <form method="POST" action="/cem_map" class="ui big form"> 
 
-                <div class="field">
-                    <label> description of this organizations misson </label>
-                    <textarea name="description"></textarea>
-                </div>
+                    <div class="field">
+                        <label> Title </label>
+                        <input type="text" name="title" placeholder="Title">
+                    </div>
 
-                <div class="field">
-                    <label> other community partners? </label>
-                    <input type="text" name="community_partners" placeholder="Other community partners or resources">
-                </div>
-
-                <div class="field">
-                    <label> contact name </label>
-                    <input type="text" name="contact" placeholder="primary contact for this organization or individual">
-                </div>
-
-                <div class="field">
-                    <label> contact email address </label>
-                    <input type="email" name="contact_email" placeholder="best email to get more information from">
-                </div>
-
-                <div class="field">
-                    <label> address </label>
-                    <div class="fields">
-                        <div class="twelve wide field">
-                            <input type="text" name="address" placeholder="street address include zipcode">
+                    <div class='field'>
+                        <label> Project Type </label>
+                        <div class='ui selection dropdown'>
+                            <input type='hidden' name='project_type'>
+                            <i class='dropdown icon'></i>
+                            <div class='default text'> Select </div>
+                            <div class='menu'>
+                                <div class='item' data-value='3'>Project</div>
+                                <div class='item' data-value='2'>Organization</div>
+                                <div class='item' data-value='1'>Research</div>
+                                <div class='item' data-value='0'>Course</div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class= "field">
-                    <label> city </label>
-                    <input type="text" name="city" placeholder="city">
-                </div>
+                    <div class="field">
+                        <label> Project Description </label>
+                        <textarea name="description" placeholder='Tell us what your project is all about!'></textarea>
+                    </div>
 
-                <div class= "field">
-                    <label> state </label>
-                    <input type="text" name="state" placeholder="state">
-                </div>
+                    <div class="field">
+                        <label> Project Website </label>
+                        <input type="text" name="project_website" placeholder="Link your projects website!">
+                    </div>
 
-                <div class="field">
-                    <label> country </label>
-                    <input type="text" name="country" placeholder="country">
-                </div>
+                    <div class='two fields'>
+                        <div class='field'>
+                            <label> Location of your project </label>
+                            <input type='text' name='building' placeholder="What's your main building?">
+                        </div>
+                        <div class='field'>
+                            <label> Room Number </label>
+                            <input type='text' name='room_number' placeholder="Room number">
+                        </div>
+                    </div>
 
-                <div class="field">
-                    <label> zip code </label>
-                    <input type="text" name="zip" placeholder="zip_code">
-                </div>
+                    <div class="field">
+                        <label> Other community partners? </label>
+                        <input type="text" name="community_partners" placeholder="Are there people you've collaborated on this project with? List them here!">
+                    </div>
 
-                <div class="field">
-                    <button type="submit" class="big ui primary button"> submit </button>
-                </div>
-            </form>
+                    <div class="field">
+                        <label> Address </label>
+                        <div class="fields">
+                            <div class="twelve wide field">
+                                <input type="text" name="address" placeholder="Street address">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <Label> Project Focus </label>
+                    </div>
+
+                    <div class= "field">
+                        <label> City </label>
+                        <input type="text" name="city" placeholder="city">
+                    </div>
+
+                    <div class= "field">
+                        <label> State </label>
+                        <input type="text" name="state" placeholder="state">
+                    </div>
+
+                    <div class="field">
+                        <label> Zip code </label>
+                        <input type="text" name="zip" placeholder="Zip Code">
+                    </div>
+
+                    <div class="field">
+                        <label> Country </label>
+                        <input type="text" name="country" placeholder="country">
+                    </div>
+
+                    <div class="field">
+                        <button type="submit" class="big ui primary button"> Submit </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
