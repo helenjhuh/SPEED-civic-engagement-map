@@ -10,7 +10,9 @@
             <div class="section" style="margin-bottom: 0;">
                 <div class="row">
                     <!-- Div to contain a rendering of available elements to the right-->
-                    <div class="col-3" id="pin_listing">Listings</div>
+                    <div class="col-3" id="pin_listing">
+                        <h1> Listings </h1>
+                    </div>
                     <div class="col-9" id="map" style="padding-left: 0;"></div>
                 </div>
             </div>
@@ -97,23 +99,72 @@
                                 // with the class 'item' for each store
                                 let listings = document.getElementById('pin_listing');
                                 let listing = listings.appendChild(document.createElement('div'));
-                                listing.className = 'card';
+                                listing.className = 'card border-secondary bg-light mb-3';
+                            
+                                //Create a header for this card and append it to listing
+                                let listing_header = listing.appendChild(document.createElement('a'));
+                                listing_header.className = 'card-header';
 
-                                // Create a new link with the class 'title' for each store
-                                // and fill it with the store address
-                                let link = listing.appendChild(document.createElement('a'));
-                                link.href = '#';
-                                link.className = 'title';
+                                var link = listing_header.appendChild(document.createElement('a')); 
+                                link.href = "#";
+                                link.className = 'card-title';
                                 link.dataPosition = i;
                                 link.innerHTML = prop.title;
 
-                                // Create a new div with the class 'details' for each store
-                                // and fill it with the city and phone number
-                                let details = listing.appendChild(document.createElement('div'));
-                                details.innerHTML = prop.description;
-                                if (prop.phone) {
-                                    details.innerHTML += ' · ' + prop.phoneFormatted;
+
+                                //Create a body for this cards content and append it to listing
+                                let listing_content = listing.appendChild(document.createElement('div'));
+                                listing_content.className = 'card-body';
+
+                                //Append our text to body
+                                let listing_text = listing_content.appendChild(document.createElement('p'));
+                                listing_text.className = 'card-text';
+
+                                //Here we truncate the string to make sure our card format stays nice and compact.
+                                //This won't affect user visibility if we have an option to view more on a different page
+                                if(prop.description.length > 350) {
+                                    listing_text.innerHTML += "Description: " + "<br/ >";
+                                    listing_text.innerHTML += prop.description.substring(0, 350);
+                                    listing_text.innerHTML += "...";
+                                    listing_text.innerHTML += "<br/ >";
+                                } else {
+                                    listing_text.innerHTML += "Description: " + "<br/ >";
+                                    listing_text.innerHTML += prop.description;
+                                    listing_text.innerHTML += "<br/ >";
                                 }
+
+                                //If prop contact email exists add it to our listing_text innerHTML
+                                if(prop.community_partners) { 
+                                    listing_text.innerHTML += "<br/ >";
+                                    listing_text.innerHTML += "Other Community Partners: " + prop.community_partners;
+                                    listing_text.innerHTML += "<br/ >";
+                                }
+
+                                if(prop.contact) { 
+                                    listing_text.innerHTML += "<br/ >";
+                                    listing_text.innerHTML += "Contact Name: " + prop.contact;
+                                    listing_text.innerHTML += "<br/ >";
+                                }
+
+                                if(prop.contact_email) {
+                                    listing_text.innerHTML += "<br/ >";
+                                    listing_text.innerHTML += "Contact Email: " + prop.contact_email;
+                                    listing_text.innerHTML += "<br/ >";
+                                }
+                            }
+
+                            // Add an event listener for the links in the sidebar listing
+                            link.addEventListener('click', (e) => {
+                                // Update the currentFeature to the store associated with the clicked link
+                                let clickedListing = data[this.dataPosition];
+                                console.log(clickedListing);
+                            });
+
+                            function flyToPin(currentFeature) {
+                                map.flyTo({
+                                    center: currentFeature.geometry.coordinates,
+                                    zoom: 15
+                                });
                             }
                         }
 
@@ -125,13 +176,13 @@
 
 
                         let ele = map.queryRenderedFeatures(e.point, { layers: ['points'] });
+                        console.log(ele);
 
-                        /* These elements need to be parsed an extra time because they still had back slashes */
+                        /* These elements need to be parsed an extra time because they still had back slashes
                         ele[0].properties.owner = JSON.parse(ele[0].properties.owner);
                         console.log(ele[0].properties.owner.id);
                         console.log(ele[0].properties.owner.username);
-                        ele[0].properties.self = JSON.parse(ele[0].properties.self);
-                        console.log(ele[0].properties.self._id);
+                        */
                         
 
                         /* Create an element with the popup content and add it to our popups DOMContent */
@@ -154,7 +205,15 @@
                         div1_description.className = 'description';
 
                         let div1_description_text = window.document.createElement('p');
-                        div1_description_text.innerHTML = content.description;
+
+                        /* Truncate description so our pins content doesn't fill up entire screen */
+                        if(content.description.length > 350) {
+                            content.description = content.description.substring(0,349);
+                            div1_description_text.innerHTML += content.description;
+                            div1_description_text.innerHTML += "...";
+                        } else {
+                            div1_description_text.innerHTML += content.description;
+                        }
 
                         /* need to add contact, contact_email, community_partners */
 
@@ -183,8 +242,19 @@
 
                         /* We want to create a button that'll allow us to view more info about this pin! */
                         let view_more_div = window.document.createElement('div');
-                        let view_more_button = window.document.createElement('button');
-                        view_more_button.className = 'btn btn-secondary';
+                        let view_more_button = window.document.createElement('a');
+
+                        ele[0].properties.self = JSON.parse(ele[0].properties.self);
+                        console.log(ele[0].properties.self._id);
+
+                        /* TODO: Hey Tony, heres what I want to do... For this route I want to be able to
+                        route my user to a page where they can view information about this pin.
+                        I want to set the view_more_button.href to '/cem_map/ele[0].properties.self._id'
+                        But I keep getting a weird error... i.e. it says ele isn't defined which it clearly
+                        is above... I think this might be a security issue maybe?
+                        */
+                        view_more_button.className = 'btn btn-success';
+                        view_more_button.href = '/cem_map/:id';
                         view_more_button.innerHTML = 'view more';
 
                         div1.appendChild(div1_header);
