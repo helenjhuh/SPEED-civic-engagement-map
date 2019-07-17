@@ -20,8 +20,9 @@
 
         <!--Link in googlefonts-->
         <link href="https://fonts.googleapis.com/css?family=Asap:700|Encode+Sans+Semi+Expanded:200|Mada:300&display=swap" rel="stylesheet"> 
-
         <link href="https://fonts.googleapis.com/css?family=Raleway:300|Roboto:100&display=swap" rel="stylesheet">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.9.0/css/fontawesome.css">
 
         <!--Link in jQuery-->
         <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
@@ -30,14 +31,23 @@
 
     </head>
     <body> 
-
-        <!-- add in our navbar -->
-        <div class="ui red menu" id="header">
+        <div class="ui massive menu" style="margin-bottom: 0;">
             <div class="ui container">
-                <a class="header item" href="/"> HOME </a>
-                <a class="item" href="/cem_map"> View Map </a>
-                <a class="item" href="/auth/login">Login</a>
-                <a class="item" href="/auth/signup">Sign Up </a>
-                <a class="item" href="/auth/logout">Log out </a>
+                <div class="item">
+                    <a href="/"> Home  </a>
+                </div>
+
+                <div class="item">
+                    <a href="/cem_map"> View Map </a>
+                </div>
+                
+                <div class="right menu">
+                    <div class="item">
+                        <a href="/auth/login"><div class="ui violet basic button">Login</div></a>
+                    </div>
+                    <div class="item">
+                        <a href="/auth/signup"><div class="ui violet basic button"> Sign Up <i class="fas fa-user-plus"></i></div></a>
+                    </div>
+                </div>
             </div>
         </div>

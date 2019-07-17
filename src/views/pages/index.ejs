@@ -7,7 +7,6 @@
     <div id="wrap">
         <div id="main" style="padding-bottom: 0px;">
 
-            <div class="section" style="margin-bottom: 0;">
                 <div class="row">
                     <!-- Div to contain a rendering of available elements to the right-->
                     <div class="col-3" id="pin_listing" style="overflow-y: scroll; height: 800px;">
@@ -15,12 +14,20 @@
                         <div id="listings" class="listings"></div>
                     </div>
                     <div class="col-9" id="map" style="padding-left: 0;"></div>
+
+                    <script type="text/javascript">
+                        mapboxgl.accessToken =
+                            "pk.eyJ1IjoiY2VtLXYxIiwiYSI6ImNqeDN1YzhpMDAyemQ0YmtqZ215ZjNka28ifQ.VVjQaf1asGGBnwZKQf7ZyA";
+                        let map = new mapboxgl.Map({
+                            container: "map",
+                            style: "mapbox://styles/cem-v1/cjx4tqsuf0ndu1clmieo3pc0u",
+                            center: [-75.3523, 39.9040],
+                            zoom: 15
+                        });
+                    </script>
                 </div>
-            </div>
 
               <script type="text/javascript">
-
-                const zoom = 5;
 
                 /* Declaration for pop-up display */
                 let markerHeight = 50, markerRadius = 10, linearOffset = 25;
@@ -38,14 +45,6 @@
                 window.addEventListener("load", () => {
                     const gusers = <%- users %>;
 
-                    mapboxgl.accessToken =
-                    "pk.eyJ1IjoiY2VtLXYxIiwiYSI6ImNqeDN1YzhpMDAyemQ0YmtqZ215ZjNka28ifQ.VVjQaf1asGGBnwZKQf7ZyA";
-                    let map = new mapboxgl.Map({
-                        container: "map",
-                        style: "mapbox://styles/cem-v1/cjx4tqsuf0ndu1clmieo3pc0u",
-                        center: [-75.3523, 39.9040],
-                        zoom: 15
-                    });
 
                     const pretty_users = [];
 
@@ -289,11 +288,6 @@
                     map.on('mouseleave', 'points', function () {
                         map.getCanvas().style.cursor = '';
                     });
-
-                    map.addControl(new MapboxGeocoder({
-                        accessToken: mapboxgl.accessToken,
-                        mapboxgl: mapboxgl
-                    }));
                 });
               </script>
         </div>

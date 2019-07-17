@@ -3,7 +3,18 @@
     <div id="wrap">
         <div id="main">
             <div class="ui container" style="margin: 2rem;">
-                <h1> <%= thisPin.properties.title %> </h1>
+                <h1 class="ui dividing header"> <%= thisPin.properties.title %> </h1>
+                <div class="card">
+                    <div class="card-body">
+                        <p> <%= thisPin.properties.description %> </p>
+                        <p> <%= thisPin.properties.project_website %> </p>
+                        <p> <%= thisPin.properties.img %> </p>
+                        <p> <%= thisPin.properties.building %> </p>
+                        <p> <%= thisPin.properties.room_number %> </p>
+                        <p> <%= thisPin.properties.community_partners %> </p>
+                        <p> <%= thisPin.properties.project_mission %> </p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
