@@ -11,7 +11,7 @@
                 <div class="row">
                     <!-- Div to contain a rendering of available elements to the right-->
                     <div class="col-3" id="pin_listing" style="overflow-y: scroll; height: 800px;">
-                        <h1> What's near you? </h1>
+                        <h1 class='ui dividing header'> What's near you? </h1>
                         <div id="listings" class="listings"></div>
                     </div>
                     <div class="col-9" id="map" style="padding-left: 0;"></div>
@@ -256,7 +256,7 @@
 
                         /* We want to create a button that'll allow us to view more info about this pin! */
                         let view_more_div = window.document.createElement('div');
-                        let view_more_button = window.document.createElement('a');
+                        let view_more_anchor = window.document.createElement('a');
 
                         ele[0].properties.self = JSON.parse(ele[0].properties.self);
                         console.log(ele[0].properties.self._id);
@@ -267,8 +267,8 @@
                         But I keep getting a weird error... i.e. it says ele isn't defined which it clearly
                         is above... I think this might be a security issue maybe?
                         */
-                        view_more_button.className = 'btn btn-success';
-                        view_more_button.innerHTML = 'view more';
+                        view_more_anchor.href = 'cem_map/' + String(ele[0].properties.self._id);
+                        view_more_anchor.innerHTML = 'View More';
 
                         div1.appendChild(div1_header);
                         div1.appendChild(div1_meta);
@@ -281,7 +281,7 @@
                         div1.appendChild(div4_meta);
                         div1.appendChild(div4_description);
                         div1.appendChild(view_more_div);
-                        div1.appendChild(view_more_button);
+                        div1.appendChild(view_more_anchor);
 
                         /* ATTACH EVERYTHING TO OUR ROOT DIV */
                         root_div.appendChild(div1);

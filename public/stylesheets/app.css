@@ -9,7 +9,6 @@ body{
     height: 100%;
     font-family: 'Mada', sans-serif;
     font-size: 1rem;
-    -webkit-font-smoothing: antialiased;
 }
 
 #wrap {

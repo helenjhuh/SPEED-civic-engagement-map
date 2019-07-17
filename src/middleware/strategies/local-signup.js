@@ -13,7 +13,8 @@ const LocalSignupStrategy = new LocalStrategy(
       if (user) return done(null, false) // user already exists with that email!
 
       // destructure the fields from req.body to keep everything nice and neat
-      const { email, password } = req.body;
+      console.log(req.body);
+      const { email, password, first_name, last_name, college, occupation } = req.body;
 
       // validate the fields
       if (!email) return done("Email field is required!");
@@ -21,7 +22,7 @@ const LocalSignupStrategy = new LocalStrategy(
 
       // If everything checks out, the user can be created
       User.create({
-        email, password
+        email, password, first_name, last_name, college, occupation
       }, (error, user) => {
         if (error) return done(error);
         return done (null, user);

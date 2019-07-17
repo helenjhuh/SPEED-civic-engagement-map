@@ -99,8 +99,8 @@ mongoose.set("useCreateIndex", true);
 // Include auth routes
 app.use("/auth", require("./routes/auth"));
 
- app.get("/", (req, res) => {
-  res.render("pages/landing");
+app.get("/", (req, res) => {
+    res.render("pages/landing");
 });
 
 app.get("/cem_map", (req, res) => {
@@ -205,7 +205,6 @@ app.get("/cem_map/new", isLoggedIn, (req, res) => {
  *             READ MORE ABOUT A SPECIFIC POST ROUTES
  *
  *TODO: Add routing for updating and destroying pins
-  TODO: Add routing for a read more about a specific pin...
   TODO: Should have edit and delete options...
  *
  * ==========================================================
@@ -215,10 +214,39 @@ app.get("/cem_map/new", isLoggedIn, (req, res) => {
 //Show info about a pin route
 app.get("/cem_map/:id", (req, res) => {
 
-    console.log(req.params);
-    res.send("Show info about a pin yay!");
+    // res.render("pages/show", {thisPin: found});
+    geoUser.findById(req.params.id).exec( (err, found) => {
+        (err) ? res.render("pages/error") : console.log(found); res.render("pages/show", {thisPin: found});
+    });
 
 });
+
+//Edit a pins information
+app.get("/cem_map/:id/edit", (req, res) => {
+
+    geoUser.findById(req.params.id).exec( (err, found) => {
+        (err) ? res.render("pages/error") : res.send("Edit a pins information");
+    });
+
+});
+
+//Update a pins information (then redirect)
+app.get("/cem_map/:id", (req, res) => {
+
+    // NEED TO USE THIS METHOD geoUser.findByIdAndUpdate();
+    res.send("Update route");
+
+});
+
+//DESTROY A PIN
+app.get("/cem_map/:id", (req, res) => {
+
+    // NEED TO USE THIS METHOD geoUser.findByIdAndRemove()
+    res.send("Destroy a pin!");
+
+});
+
+
 
 app.get("*", (req, res) => {
   res.render("pages/error");
