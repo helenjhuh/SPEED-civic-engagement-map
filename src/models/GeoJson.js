@@ -22,10 +22,14 @@ let geoJsonSchema = new mongoose.Schema({
     properties:
     {
         title: {type: String},
+        project_type: {type: String},
         description: {type: String},
-        contact: {type: String},
-        contact_email: {type: String},
+        project_website: {type:String},
+        img: {type: String},
+        building: {type: String},
+        room_number: {type: String},
         community_partners: {type: String},
+        project_mission: {type: String},
 
         /*field where we can associate a geoJson with an owner*/
         owner: {

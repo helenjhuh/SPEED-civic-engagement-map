@@ -91,7 +91,6 @@
                         function buildLocationList(data) {
                             // Iterate through the list of pins
                             for (i = 0; i < data.length; i++) {
-                                console.log("Data at i is: ", data[i]);
                                 let currentFeature = data[i];
                                 // Shorten data.feature.properties to `prop` so we're not
                                 // writing this long form over and over again.
@@ -190,14 +189,8 @@
 
 
                         let ele = map.queryRenderedFeatures(e.point, { layers: ['points'] });
-                        console.log(ele);
 
-                        /* These elements need to be parsed an extra time because they still had back slashes
                         ele[0].properties.owner = JSON.parse(ele[0].properties.owner);
-                        console.log(ele[0].properties.owner.id);
-                        console.log(ele[0].properties.owner.username);
-                        */
-                        
 
                         /* Create an element with the popup content and add it to our popups DOMContent */
                         let content = ele[0].properties;
@@ -244,7 +237,7 @@
 
 
                         let div3_description = window.document.createElement('div');
-                        div3_description.innerHTML = content.contact_email;
+                        div3_description.innerHTML = content.owner.username;
 
                         let div4_meta = window.document.createElement('div');
                         div4_meta.className = 'meta';
@@ -259,14 +252,7 @@
                         let view_more_anchor = window.document.createElement('a');
 
                         ele[0].properties.self = JSON.parse(ele[0].properties.self);
-                        console.log(ele[0].properties.self._id);
 
-                        /* TODO: Hey Tony, heres what I want to do... For this route I want to be able to
-                        route my user to a page where they can view information about this pin.
-                        I want to set the view_more_button.href to '/cem_map/ele[0].properties.self._id'
-                        But I keep getting a weird error... i.e. it says ele isn't defined which it clearly
-                        is above... I think this might be a security issue maybe?
-                        */
                         view_more_anchor.href = 'cem_map/' + String(ele[0].properties.self._id);
                         view_more_anchor.innerHTML = 'View More';
 

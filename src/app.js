@@ -130,6 +130,7 @@ app.post("/cem_map", isLoggedIn, (req, res) => {
      * to the user that posted it to the map.
      */
 
+  console.log(req.body);
   /* BUILD OUR ADDRESS */
   let this_address = req.body.address.concat(
     " ",
@@ -156,21 +157,25 @@ app.post("/cem_map", isLoggedIn, (req, res) => {
 
       let temp = {
         title: req.body.title,
+        project_type: req.body.project,
         description: req.body.description,
-        contact: req.body.contact,
-        contact_email: req.body.contact_email,
+        project_website: req.body.project_website,
+        img: req.body.img,
+        building: req.body.building,
+        room_number: req.body.room_number,
         community_partners: req.body.community_partners,
+        project_mission: req.body.project_mission,
         lat: response.body.features[0].center[1],
         lng: response.body.features[0].center[0]
       };
 
       temp = GeoJSON.parse(temp, { Point: ["lat", "lng"] });
-      geoUser.create(temp, (err, success) => {
+      geoUser.create(temp, (err, newPin) => {
           
           /* Here we're linking that geoJson post with the account it was made from */
-          success.properties.owner.id = req.user._id;
-          success.properties.owner.username = req.user.email;
-          success.properties.self._id = success._id;
+          newPin.properties.owner.id = req.user._id;
+          newPin.properties.owner.username = req.user.email;
+          newPin.properties.self._id = newPin._id;
 
           /* Make sure this pin is added to the owners collection of pins */
           User.
@@ -180,12 +185,12 @@ app.post("/cem_map", isLoggedIn, (req, res) => {
                   if(error) {
                       res.render("pages/error");
                   } else {
-                      ele.usersPins.push(success._id);
+                      ele.usersPins.push(newPin._id);
                       ele.save();
                   }
               });
 
-          success.save();
+          newPin.save();
 
           (err) ? res.render("pages/error") : res.redirect("/cem_map");
       });
@@ -221,20 +226,22 @@ app.get("/cem_map/:id", (req, res) => {
 
 });
 
-//Edit a pins information
+//EDIT ROUTE
 app.get("/cem_map/:id/edit", (req, res) => {
 
     geoUser.findById(req.params.id).exec( (err, found) => {
-        (err) ? res.render("pages/error") : res.send("Edit a pins information");
+        (err) ? res.render("pages/error") : res.render("pages/edit", {thisPin: found});
     });
 
 });
 
-//Update a pins information (then redirect)
-app.get("/cem_map/:id", (req, res) => {
 
-    // NEED TO USE THIS METHOD geoUser.findByIdAndUpdate();
-    res.send("Update route");
+//UPDATE ROUTE
+app.put("/cem_map/:id", (req, res) => {
+
+    //Sanitize before we update all of this stuff
+    console.log(req.body);
+    res.redirect("/cem_map/" + req.params.id);
 
 });
 

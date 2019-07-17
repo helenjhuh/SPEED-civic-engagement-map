@@ -20,15 +20,15 @@
             <div class='two fields'>
                 <div class='field'>
                     <label> I am a... </label>
-                    <div class='ui dropdown'>
+                    <div class='ui selection dropdown'> 
                         <input type='hidden' name='occupation'>
                         <i class='dropdown icon'></i>
                         <div class='default text'> Select </div>
                         <div class='menu'>
-                            <div class='item' data-value='3'>Student</div>
-                            <div class='item' data-value='2'>Faculty</div>
-                            <div class='item' data-value='1'>Staff</div>
-                            <div class='item' data-value='0'>Alumni</div>
+                            <div class='item' data-value='student'>Student</div>
+                            <div class='item' data-value='faculty'>Faculty</div>
+                            <div class='item' data-value='staff'>Staff</div>
+                            <div class='item' data-value='alumni'>Alumni</div>
                         </div>
                     </div>
                 </div>
@@ -38,12 +38,12 @@
                 </div>
             </div>
 
-              <script>
-                  $('.ui.dropdown')
-                      .dropdown()
-                  ;
-              </script>
-
+            <!-- This adds the dropdown effect to our menu -->
+            <script>
+                $('.ui.dropdown')
+                    .dropdown()
+                ;
+            </script>
 
           <div class="field">
             <label for="email">Email address</label>

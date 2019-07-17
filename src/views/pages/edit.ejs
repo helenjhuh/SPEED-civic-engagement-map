@@ -1,0 +1,21 @@
+<% include ../partials/HEAD %>
+
+    <div id="wrap">
+        <div id="main">
+            <div class="ui main text container segment">
+                <div class="ui huge header"> Edit <%=thisPin.properties.title%> </div>
+
+                <!--Method override for a put request we need to add a ?_method=PUT to the end of our action-->
+                <form class="ui form" action="/cem_map/<%=thisPin.properties.self._id%>?_method=PUT" method="POST">
+
+                    <!--Recall that the syntax here for name actually creates a blog object within our req.body
+                        Therefore, if we want to reference our blog object or pass it into our index.ejs we would just
+                        pass it in as req.body.blog
+                    -->
+                    <input class="ui violet big inverted button" type="submit">
+                </form>
+            </div>
+        </div>
+    </div>
+
+<% include ../partials/FOOT %>

@@ -22,13 +22,19 @@
                             <i class='dropdown icon'></i>
                             <div class='default text'> Select </div>
                             <div class='menu'>
-                                <div class='item' data-value='3'>Project</div>
-                                <div class='item' data-value='2'>Organization</div>
-                                <div class='item' data-value='1'>Research</div>
-                                <div class='item' data-value='0'>Course</div>
+                                <div class='item' data-value='project'> Independent Project</div>
+                                <div class='item' data-value='organization'>Organization</div>
+                                <div class='item' data-value='research'>Research</div>
+                                <div class='item' data-value='course'>Course</div>
                             </div>
                         </div>
                     </div>
+
+                    <script>
+                        $('.ui.dropdown')
+                            .dropdown()
+                        ;
+                    </script>
 
                     <div class="field">
                         <label> Project Description </label>
@@ -38,6 +44,11 @@
                     <div class="field">
                         <label> Project Website </label>
                         <input type="text" name="project_website" placeholder="Link your projects website!">
+                    </div>
+
+                    <div class="field">
+                        <label> Include an image for your project! </label>
+                        <input type="text" name="img"> 
                     </div>
 
                     <div class='two fields'>
@@ -57,6 +68,11 @@
                     </div>
 
                     <div class="field">
+                        <label> Project Mission </label>
+                        <input type="text" name="project_mission" placeholder="What's your projects misson?">
+                    </div>
+
+                    <div class="field">
                         <label> Address </label>
                         <div class="fields">
                             <div class="twelve wide field">
@@ -65,9 +81,6 @@
                         </div>
                     </div>
 
-                    <div class="field">
-                        <Label> Project Focus </label>
-                    </div>
 
                     <div class= "field">
                         <label> City </label>
