@@ -2,7 +2,7 @@
 
     <div id="wrap">
         <div id="main">
-            <div class="ui container" style="margin: 2rem;">
+            <div class="ui main text container segment" style="margin-top: 10px;">
                 <h1 class="ui dividing header"> <%= thisPin.properties.title %> </h1>
                 <div class="card">
                     <div class="card-body">
@@ -15,6 +15,15 @@
                         <p> <%= thisPin.properties.project_mission %> </p>
                     </div>
                 </div>
+
+                <form action="/cem_map/<%= thisPin.properties.self._id%>/edit" method="GET" style="display: inline;">
+                    <button class="big positive ui button"> Edit </button>
+                </form>
+
+                <form action="/cem_map/<%= thisPin.properties.self._id%>?_method=DELETE" method="POST" style="display: inline;">
+                    <button class="ui big right floated negative button"> Delete </button>
+                </form>
+
             </div>
         </div>
     </div>

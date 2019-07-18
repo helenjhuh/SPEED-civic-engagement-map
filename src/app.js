@@ -45,6 +45,11 @@ require("./middleware/passport")(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use( (req, res, next) => {
+    res.locals.currentUser = req.user;
+    next();
+});
+
 // configure ejs as the view engine and set the views directory
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -71,30 +76,9 @@ mongoose
   .then(() => console.log("Connection successful"))
   .catch(err => console.log(err));
 
+mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
 
-/* =========================
- * RESTful routes to build
- *
- * INDEX        GET         /cem_map         Display our map and current pins that it has
- * CREATE       POST        /cem_map         Add a new pin to our map page and render it
- * NEW          GET         /cem_map/new     Display our form to add the content of a pin
- * =========================
- */
-
-/*
- * Need to render a map that has a dataset of all of the users in our map.
- *
- * We need a map with a dataset of geoJSON features that are pins which contain
- * the form data we got from app.post"/cem_map"...
- *
- * Create a dataset... POST request to /datasets/v1/{cem-v1}
- *                     Response will be a new, empty dataset.
- *
- *  For now, lets just try to create a pin on a map with some information
- *
- *
- */
 
 // Include auth routes
 app.use("/auth", require("./routes/auth"));
@@ -103,6 +87,7 @@ app.get("/", (req, res) => {
     res.render("pages/landing");
 });
 
+/* Show the map */
 app.get("/cem_map", (req, res) => {
 
   /* Get all of the geoJSON representations of user information
@@ -129,8 +114,7 @@ app.post("/cem_map", isLoggedIn, (req, res) => {
      * We also need to save that geoJson object to our database so it can render on our map and we need to link that geoJson
      * to the user that posted it to the map.
      */
-
-  console.log(req.body);
+    
   /* BUILD OUR ADDRESS */
   let this_address = req.body.address.concat(
     " ",
@@ -203,63 +187,88 @@ app.get("/cem_map/new", isLoggedIn, (req, res) => {
   res.render("pages/new");
 });
 
-/* CATCH ALL OF OTHER REQUESTS THAT AREN'T ANY OF THE ABOVE */
-
-/* ==========================================================
- *
- *             READ MORE ABOUT A SPECIFIC POST ROUTES
- *
- *TODO: Add routing for updating and destroying pins
-  TODO: Should have edit and delete options...
- *
- * ==========================================================
- *
- */
-
 //Show info about a pin route
 app.get("/cem_map/:id", (req, res) => {
 
     // res.render("pages/show", {thisPin: found});
     geoUser.findById(req.params.id).exec( (err, found) => {
-        (err) ? res.render("pages/error") : console.log(found); res.render("pages/show", {thisPin: found});
+        (err) ? res.render("pages/error") : res.render("pages/show", {thisPin: found});
     });
 
 });
 
 //EDIT ROUTE
-app.get("/cem_map/:id/edit", (req, res) => {
+app.get("/cem_map/:id/edit", checkOwner, (req, res) => {
 
     geoUser.findById(req.params.id).exec( (err, found) => {
-        (err) ? res.render("pages/error") : res.render("pages/edit", {thisPin: found});
+        res.render("pages/edit", {thisPin: found});
+    });
+
+    /*If not we're gonna redirect*/
+
+});
+
+
+//UPDATE A PIN ROUTE
+app.put("/cem_map/:id", checkOwner, (req, res) => {
+
+    let newPin = {
+        'properties.title': req.body.title,
+        'properties.project_type': req.body.project_type,
+        'properties.description': req.body.description,
+        'properties.project_website': req.body.project_website,
+        'properties.img': req.body.img,
+        'properties.building': req.body.building,
+        'properties.room_number': req.body.room_number,
+        'properties.community_partners': req.body.community_partners,
+        'properties.project_mission': req.body.project_mission
+    };
+
+    geoUser.findByIdAndUpdate(
+        req.params.id, 
+        { $set: newPin},
+        {new: true},
+        (err, updatedPin) => {
+            (err) ? res.redirect("pages/error") : res.redirect("/cem_map/" + req.params.id);
     });
 
 });
 
-
-//UPDATE ROUTE
-app.put("/cem_map/:id", (req, res) => {
-
-    //Sanitize before we update all of this stuff
-    console.log(req.body);
-    res.redirect("/cem_map/" + req.params.id);
-
-});
-
 //DESTROY A PIN
-app.get("/cem_map/:id", (req, res) => {
+app.delete("/cem_map/:id", checkOwner, (req, res) => {
 
-    // NEED TO USE THIS METHOD geoUser.findByIdAndRemove()
-    res.send("Destroy a pin!");
+    // We also need to remove this object from this owners userPins field!
 
+    /* Get the owner of this pin */
+    geoUser.findById(req.params.id).exec((err, found) => {
+        if(err) {
+            res.render("pages/error");
+        } else {
+            /*Access the owner field and grab the users id*/
+            User.findById(found.properties.owner.id).exec((err, thisUser) => {
+                if(err) {
+                    res.redirect("pages/error");
+                } else {
+
+                    /*Access usersPins and remove the reference to this pins id*/
+                    let idx = thisUser.usersPins.indexOf(req.params.id);
+                    if(idx !== -1) thisUser.usersPins.splice(idx, 1);
+                }
+            });
+        }
+    });
+
+    /*And now we can finally delete that pin from geoUser*/
+    geoUser.findByIdAndRemove(req.params.id, (err) => {
+        (err) ? res.redirect("pages/error") : res.redirect("/");
+    });
 });
-
-
 
 app.get("*", (req, res) => {
   res.render("pages/error");
 });
 
-/* Middleware for preventing users who aren't logged in from adding pins to the map */
+/* MIDDLEWARE */
 function isLoggedIn(req, res, next) {
 
     if(req.isAuthenticated()) {
@@ -267,7 +276,28 @@ function isLoggedIn(req, res, next) {
     }
 
     res.render("pages/auth/login");
-}
+};
+
+function checkOwner(req, res, next) {
+
+    /*Check if user is logged in... */
+    if(req.isAuthenticated()) {
+        /*If user is logged in does the user own the campground?*/
+        geoUser.findById(req.params.id).exec( (err, found) => {
+           if (err) { 
+               res.redirect("back");
+           } else {
+               if(found.properties.owner.id.equals(req.user._id)) {
+                   next();
+               } else {
+                   res.redirect("back");
+               }
+           }
+        });
+    } else {
+        res.redirect("back");
+    }
+};
 
 app.listen(process.env.PORT, process.env.IP, () => {
   console.log("CeM app server started");

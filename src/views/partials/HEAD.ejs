@@ -42,12 +42,26 @@
                 </div>
                 
                 <div class="right menu">
+
+                <!-- If no user then show login and register
+                     else show logout
+                -->
+                <% if(!currentUser) { %>
                     <div class="item">
                         <a href="/auth/login"><div class="ui violet basic button">Login</div></a>
                     </div>
                     <div class="item">
                         <a href="/auth/signup"><div class="ui violet basic button"> Sign Up <i class="fas fa-user-plus"></i></div></a>
                     </div>
+                <% } else { %>
+                    <div class="item">
+                        <div class="ui small violet basic button"> Signed in as <%= currentUser.email %> </div>
+                    </div>
+                    <div class="item">
+                        <a href="/auth/logout"><div class="ui violet basic button"> Logout </div></a>
+                    </div>
+                <% } %>
+
                 </div>
             </div>
         </div>
