@@ -3,7 +3,7 @@
   <div id="wrap">
     <div id="main">
       <div class="container mt-5">
-        <h2 class='ui dividing header'>Sign up</h2>
+        <h1 class='ui dividing header'>Sign up</h2>
         <form class='ui big form' method="POST" action="/auth/signup">
 
             <div class='two fields'>
@@ -60,8 +60,83 @@
             <input id="password2" name="password2" type="password" class="form-control" />
           </div>
   
-          <button type="submit" class="ui primary basic button">Submit</button> 
+          <div class="ui submit button">Submit</div>
+          <div class="ui error message"></div>
+
         </form>
+
+        <!-- BEGIN FORM VALIDATION -->
+        <script>
+
+            let validationRules = { 
+                first_name: {
+                    identifier: 'first_name',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Please enter your first name!'
+                        }
+                    ]
+                },
+                last_name: {
+                    identifier: 'last_name',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Please enter your last name!'
+                        }
+                    ]
+                },
+                dropdown: {
+                    identifier: 'occupation',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: "What's your current occupation"
+                        }
+                    ]
+                },
+                college: {
+                    identifier: 'college',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: "Which college are you based in?"
+                        }
+                    ]
+                },
+                password: {
+                    identifier: 'password',
+                    rules: [
+                        {
+                            type: 'empty',
+                            prompt: 'Please enter a password'
+                        },
+                        {
+                            type: 'minLength[8]',
+                            prompt: 'Your password needs to be at least {ruleValue} characters'
+                        }
+                    ]
+                },
+                password2: {
+                    identifier: 'password2',
+                    rules: [
+                        {
+                            type: 'match[password]',
+                            prompt: 'Your passwords need to be the same'
+                        }
+                    ]
+                }
+           };
+
+            $('.ui.form')
+                .form({
+                    fields: validationRules,
+                    inline: true,
+                    on: 'blur'
+                })
+            ;
+        </script>
       </div>
     </div>
  </div>

@@ -3,7 +3,7 @@
   <div id="wrap">
     <div id="main">
       <div class="container mt-5">
-        <h2 class='ui dividing header'>Login</h2>
+        <h1 class='ui dividing header'>Login</h2>
         <form class="ui form" method="POST" action="/auth/login">
           <div class="field"> 
             <label for="email">Email address</label>
@@ -16,6 +16,38 @@
 
           <button type="submit" class="ui primary basic button"> Submit</button> 
         </form>
+
+        <!-- Begin form validation -->
+          <script>
+              let validationRules = {
+                  email: {
+                      identifier: 'email',
+                      rules: [
+                          {
+                              type: 'empty',
+                              prompt: 'Please enter an email address'
+                          }
+                      ]
+                  },
+                  password: {
+                      identifier: 'password',
+                      rules: [
+                          {
+                              type: 'empty',
+                              prompt: 'Please enter a password'
+                          }
+                      ]
+                  }
+              };
+              $('.ui.form')
+                  .form({
+                      fields: validationRules,
+                      inline: 'true',
+                      on: 'blur'
+                  })
+              ;
+          </script>
+          <!-- End form validation -->
       </div>
     </div>
  </div>

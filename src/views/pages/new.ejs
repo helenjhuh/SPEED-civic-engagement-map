@@ -110,10 +110,85 @@
         </div>
     </div>
 
-    <!-- FORM VALIDATION -->
+    <!-- Begin form validation -->
     <script>
+        let validationRules = {
+            title: {
+                identifier: 'title',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Please enter a project title'
+                    }
+                ]
+            },
+            description: {
+                identifier: 'description',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Please enter a project description'
+                    }
+                ]
+            },
+            address: {
+                identifier: 'address',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Please enter where this project is located'
+                    }
+                ]
+            },
+            city: {
+                identifier: 'city',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Please enter a city'
+                    }
+                ]
+            },
+            state: {
+                identifier: 'state',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Please enter a state'
+                    }
+                ]
+            },
+            zip: {
+                identifier: 'zip',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Please enter a zip code'
+                    }
+                ]
+            },
+            country: {
+                identifier: 'country',
+                rules: [
+                    {
+                        type: 'empty',
+                        prompt: 'Please enter a country'
+                    }
+                ]
+            }
+        }
+        ;
 
+                        
+        $('.ui.form')
+            .form({
+                fields: validationRules,
+                inline: 'true',
+                on: 'blur'
+            })
+        ;
     </script>
+    <!-- End form validation -->
 
 
 <% include ../partials/FOOT %>
