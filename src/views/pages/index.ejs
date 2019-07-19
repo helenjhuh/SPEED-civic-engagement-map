@@ -10,7 +10,7 @@
                 <div class="row">
                     <!-- Div to contain a rendering of available elements to the right-->
                     <div class="col-3" id="pin_listing" style="overflow-y: scroll; height: 800px;">
-                        <h1 class='ui dividing header'> What's near you? </h1>
+                        <h1 class='ui dividing header'> Civic Engagement Listing </h1>
                         <div id="listings" class="listings"></div>
                     </div>
                     <div class="col-9" id="map" style="padding-left: 0;"></div>
@@ -94,16 +94,21 @@
                                 // Shorten data.feature.properties to `prop` so we're not
                                 // writing this long form over and over again.
                                 let prop = currentFeature.properties;
+
+                                console.log(prop);
                                 // Select the listing container in the HTML and append a div
                                 // with the class 'item' for each store
                                 let listings = document.getElementById('listings');
                                 let listing = listings.appendChild(document.createElement('div'));
                                 listing.className = 'item';
+
+                                let listing_pretty = listing.appendChild(document.createElement('div'));
+                                listing_pretty.className = 'card';
                                 listing.id = 'listing-' + i;
                                 //listing.className = 'card border-secondary bg-light mb-3';
                             
                                 //Create a header for this card and append it to listing
-                                let listing_header = listing.appendChild(document.createElement('a'));
+                                let listing_header = listing_pretty.appendChild(document.createElement('a'));
                                 listing_header.className = 'card-header';
 
                                 var link = listing_header.appendChild(document.createElement('a')); 
@@ -127,7 +132,7 @@
 
 
                                 //Create a body for this cards content and append it to listing
-                                let listing_content = listing.appendChild(document.createElement('div'));
+                                let listing_content = listing_pretty.appendChild(document.createElement('div'));
                                 listing_content.className = 'card-body';
 
                                 //Append our text to body
@@ -156,15 +161,30 @@
                                     listing_text.innerHTML += "<br/ >";
                                 }
 
-                                if(prop.contact) { 
+                                if(prop.project_mission) {
                                     listing_text.innerHTML += "<br/ >";
-                                    listing_text.innerHTML += "Contact Name: " + prop.contact;
+                                    listing_text.innerHTML += "Project Mission: " + prop.project_mission;
                                     listing_text.innerHTML += "<br/ >";
                                 }
 
-                                if(prop.contact_email) {
+                                if(prop.project_website) {
                                     listing_text.innerHTML += "<br/ >";
-                                    listing_text.innerHTML += "Contact Email: " + prop.contact_email;
+                                    listing_text.innerHTML += "Project Website: " + prop.project_website;
+                                    listing_text.innerHTML += "<br/ >";
+                                }
+                                    
+                                if(prop.building) {
+                                    listing_text.innerHTML += "<br/ >";
+                                    listing_text.innerHTML += "Campus Location: " + prop.building;
+                                    if(prop.room_number) {
+                                        listing_text.innerHTML += " " + prop.room_number;
+                                    }
+                                    listing_text.innerHTML += "<br/ >";
+                                }
+
+                                if(prop.owner.username) {
+                                    listing_text.innerHTML += "<br/ >";
+                                    listing_text.innerHTML += "Contact Email: " + prop.owner.username;
                                     listing_text.innerHTML += "<br/ >";
                                 }
                             }

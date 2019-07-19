@@ -31,6 +31,7 @@ body{
     margin-top: -180px;
     height: 180px;
     clear: both;
+    background-color: rgb(142,42,42);
 }
 
 body:before {
@@ -41,8 +42,19 @@ body:before {
     margin-top: -32767px;
 }
 
-#LANDING_JUMBO {
-    align-items: center;
+#landing_video {
+    text-align: center;
+    height: 100vh;
+    width: 100%;
+    background-size: cover;
+}
+
+#jumbotron_text {
+    width: fit-content;
+    padding-top: 20%;
+    color: white;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-weight: bold;
 }
 
 #map {
@@ -79,4 +91,33 @@ div.card {
   border-bottom: 1px solid #eee;
   padding: 10px;
   text-decoration: none;
+}
+
+/* Selector for our menu */
+div.ui.massive.secondary.menu {
+    margin-bottom: 0;
+    /* background-color: rgb(162, 42, 42); */
+}
+div a {
+    font-family: 'Raleway', sans-serif;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: rgb(162,42,42);
+    text-transform: uppercase;
+}
+
+a.title {
+    color: black;
+}
+
+div.item a:hover {
+    
+}
+
+div.ui.inverted.button {
+    font-family: 'Raleway', sans-serif;
+}
+
+h1.ui.dividing.header {
+    font-family: 'Raleway', sans-serif;
 }

@@ -83,8 +83,23 @@ mongoose.set("useCreateIndex", true);
 // Include auth routes
 app.use("/auth", require("./routes/auth"));
 
+//ROOT REDIRECTS TO HOME
 app.get("/", (req, res) => {
+    res.redirect("/home");
+});
+
+//HOME ROUTE
+app.get("/home", (req, res) => {
+
     res.render("pages/landing");
+
+});
+
+//SHOW ACCOUNT WE'LL BE ABLE TO MANAGE PINS HERE EVENTUALLY!
+app.get("/home/account/:id", (req, res) => {
+
+    console.log(req.user);
+    res.render("pages/account");
 });
 
 /* Show the map */
@@ -234,6 +249,13 @@ app.put("/cem_map/:id", checkOwner, (req, res) => {
 
 });
 
+//SHOW ACCOUNT PAGE
+app.get("/cem_map/account/:id", checkOwner, (req, res) => {
+
+    res.send("Show accounts page!");
+
+});
+
 //DESTROY A PIN
 app.delete("/cem_map/:id", checkOwner, (req, res) => {
 
@@ -245,23 +267,31 @@ app.delete("/cem_map/:id", checkOwner, (req, res) => {
             res.render("pages/error");
         } else {
             /*Access the owner field and grab the users id*/
-            User.findById(found.properties.owner.id).exec((err, thisUser) => {
+            User.findById(found.properties.owner.id, (err, thisUser) => {
                 if(err) {
                     res.redirect("pages/error");
                 } else {
-
+                    
                     /*Access usersPins and remove the reference to this pins id*/
-                    let idx = thisUser.usersPins.indexOf(req.params.id);
-                    if(idx !== -1) thisUser.usersPins.splice(idx, 1);
+                    for(let i=0; i<thisUser.usersPins.length; i++) {
+
+                        /* If the object id at usersPins[i] is the same as req.params.id remove it */
+                        if(thisUser.usersPins[i].equals(req.params.id)) {
+                            console.log("OBJECT ID HERE IS: ", thisUser.usersPins[i]);
+                            console.log("OBJECT ID WE WANT TO DELETE: ", req.params.id);
+                            thisUser.usersPins = thisUser.usersPins.slice(0, i).concat(thisUser.usersPins.slice(-i));
+                        }
+                    }
+                    
+                    /*And now we can finally delete that pin from geoUser*/
+                    geoUser.findByIdAndRemove(req.params.id, (err) => {
+                        (err) ? res.redirect("pages/error") : res.redirect("/");
+                    });
                 }
             });
         }
     });
 
-    /*And now we can finally delete that pin from geoUser*/
-    geoUser.findByIdAndRemove(req.params.id, (err) => {
-        (err) ? res.redirect("pages/error") : res.redirect("/");
-    });
 });
 
 app.get("*", (req, res) => {
