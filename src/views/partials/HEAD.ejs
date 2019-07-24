@@ -19,7 +19,7 @@
         <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.0.0/mapbox-gl.css' rel='stylesheet' />
 
         <!--Link in googlefonts-->
-        <link href="https://fonts.googleapis.com/css?family=Darker+Grotesque:300|Asap:700|Source+Sans+Pro:600|Mada:300|Raleway:100&display=swap" rel="stylesheet"> 
+        <link href="https://fonts.googleapis.com/css?family=Darker+Grotesque:300|Asap:700|Source+Sans+Pro:600|Mada:300|Raleway:600&display=swap" rel="stylesheet"> 
 
         <!-- Link in Fontawesome -->
         <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.9.0/css/all.css" integrity="sha384-i1LQnF23gykqWXg6jxC2ZbCbUMxyw5gLZY6UiUS98LYV5unm8GWmfkIS6jqJfb4E" crossorigin="anonymous">
@@ -27,6 +27,10 @@
         <!-- Scroll Magic -->
         <script src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.7/ScrollMagic.min.js"></script>
         <script src="//cdnjs.cloudflare.com/ajax/libs/ScrollMagic/2.0.7/plugins/debug.addIndicators.min.js"></script>
+
+        <!-- Add scripts here needed for mapbox geocoding -->
+        <script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.0/mapbox-gl-geocoder.min.js'></script>
+        <link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.0/mapbox-gl-geocoder.css' type='text/css' />
 
         <!--Link in jQuery-->
         <script src="https://code.jquery.com/jquery-3.1.1.min.js" crossorigin="anonymous"></script>
@@ -57,7 +61,11 @@
                     </a>
                 </div>
                 <div class="item">
-                    <a href="/"> Home </a>
+                    <a href="/home/about"> About </a>
+                </div>
+
+                <div class="item">
+                    <a href="/home/faq"> F.A.Q </a>
                 </div>
 
                 <div class="item">
@@ -69,24 +77,46 @@
                 <!-- If no user then show login and register
                      else show logout
                 -->
+
+                <!-- Else block is for if the user is signed in.
+                    If the user is signed in then display an account icon
+                    with a dropdown menu
+                -->
                 <% if(!currentUser) { %>
                     <div class="item">
-                        <a href="/auth/login"><div class="ui red button"> Sign in <i class="fas fa-sign-in-alt"></i></div></a>
+                        <a href="/auth/login"><div class="ui red button"> Sign in <i class="fas fa-sign-in-alt" style="color: white"></i></div></a>
                     </div>
                     <div class="item">
-                        <a href="/auth/signup"><div class="ui red button"> Sign Up <i class="fas fa-user-plus"></i></div></a>
+                        <a href="/auth/signup"><div class="ui red button"> Sign Up <i class="fas fa-user-plus" style="color: white"></i></div></a>
                     </div>
                 <% } else { %>
-                    <div class="item">
-                        <a href="/home/account/<%=currentUser._id%>"><i class="fas fa-user-circle fa-2x"></i></a>
-                    </div>
+                        <div class="ui floating icon dropdown button">
+                            <i class="fas fa-user-circle fa-2x"></i>
+                            <div class="menu">
+                                <div class="header">
+                                    Signed in as <%= currentUser.email %>
+                                </div>
+                                <div class="divider"></div>
+                                <div class="item">
+                                    <a href="/home/account/<%=currentUser._id%>"> Account </a>
+                                </div>
+                                <div class="item">
+                                    <a href="/auth/logout"> Sign Out </a>
+                                </div>
+                                <div class="item">
+                                    <a href="/cem_map/new"> Add a Pin! </a>
+                                </div>
+                            </div>
+                        </div>
 
-                    <div class="item">
-                        <a href="/cem_map/new"> Add a Pin! </a>
-                    </div>
+                    <script>
+                        $('.dropdown')
+                            .dropdown({
+                                transition: 'drop'
+                            })
+                        ;
+                    </script>
                 <% } %>
-
-
                 </div>
             </div>
         </div>

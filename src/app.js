@@ -95,11 +95,29 @@ app.get("/home", (req, res) => {
 
 });
 
-//SHOW ACCOUNT WE'LL BE ABLE TO MANAGE PINS HERE EVENTUALLY!
-app.get("/home/account/:id", (req, res) => {
+//ABOUT ROUTE
+app.get("/home/about", (req, res) => {
 
-    console.log(req.user);
-    res.render("pages/account");
+    res.render("pages/about");
+
+});
+
+//FAQ ROUTE
+app.get("/home/faq", (req, res) => {
+    
+    res.render("pages/faq");
+
+});
+
+//SHOW ACCOUNT WE'LL BE ABLE TO MANAGE PINS HERE EVENTUALLY!
+app.get("/home/account/:id", isLoggedIn, (req, res) => {
+
+
+    /* Here we're going to show the specific information for a user
+     * we can pass in our req.user as an object because it contains all of
+     * the information of an account owner already
+     */
+    res.render("pages/account", { currUser: req.user});
 });
 
 /* Show the map */
@@ -139,7 +157,6 @@ app.post("/cem_map", isLoggedIn, (req, res) => {
     })
     .send()
     .then(response => {
-        console.log(response);
     });
   /* BUILD OUR ADDRESS */
   let this_address = req.body.address.concat(
@@ -321,7 +338,7 @@ function checkOwner(req, res, next) {
 
     /*Check if user is logged in... */
     if(req.isAuthenticated()) {
-        /*If user is logged in does the user own the campground?*/
+        /*If user is logged in does the user own the pin?*/
         geoUser.findById(req.params.id).exec( (err, found) => {
            if (err) { 
                res.redirect("back");
