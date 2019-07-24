@@ -130,6 +130,17 @@ app.post("/cem_map", isLoggedIn, (req, res) => {
      * to the user that posted it to the map.
      */
     
+
+
+    /*Try A search*/
+    geocodingService
+    .forwardGeocode({
+        query: "Searchable"
+    })
+    .send()
+    .then(response => {
+        console.log(response);
+    });
   /* BUILD OUR ADDRESS */
   let this_address = req.body.address.concat(
     " ",

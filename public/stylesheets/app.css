@@ -7,7 +7,6 @@
 html,
 body{
     height: 100%;
-    font-family: 'Mada', sans-serif;
     font-size: 1rem;
 }
 
@@ -63,10 +62,10 @@ body:before {
 }
 
 .marker {
-  background-image: url('mapbox-icon.png');
+  background-image: url('');
   background-size: cover;
-  width: 25px;
-  height: 25px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
   cursor: pointer;
 }
@@ -118,6 +117,26 @@ div.ui.inverted.button {
     font-family: 'Raleway', sans-serif;
 }
 
-h1.ui.dividing.header {
+h1.ui.header {
     font-family: 'Raleway', sans-serif;
+}
+
+#sign_in_form {
+    font-family: 'Asap', sans-serif;
+    margin-top: 10%;
+    width: 300px;
+    display: inline-block;
+    margin-left: 35%;
+}
+
+#sign_in_header {
+    font-family: 'Asap', sans-serif;
+    font-weight: bold;
+}
+
+#sign_in_anchor {
+    font-weight: inherit;
+    font-family: inherit;
+    font-size: inherit;
+    padding-left: 5px;
 }
