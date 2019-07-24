@@ -270,8 +270,6 @@ app.get("/cem_map/account/:id", checkOwner, (req, res) => {
 //DESTROY A PIN
 app.delete("/cem_map/:id", checkOwner, (req, res) => {
 
-    // We also need to remove this object from this owners userPins field!
-
     /* Get the owner of this pin */
     geoUser.findById(req.params.id).exec((err, found) => {
         if(err) {
@@ -283,26 +281,26 @@ app.delete("/cem_map/:id", checkOwner, (req, res) => {
                     res.redirect("pages/error");
                 } else {
                     
-                    /*Access usersPins and remove the reference to this pins id*/
-                    for(let i=0; i<thisUser.usersPins.length; i++) {
+                    /* After finding user we can update their fields */
+                    User
+                    .updateOne(
+                        {_id: thisUser._id},
+                        { $pull: { usersPins: { $in: [req.params.id] }}}
+                    )
 
-                        /* If the object id at usersPins[i] is the same as req.params.id remove it */
-                        if(thisUser.usersPins[i].equals(req.params.id)) {
-                            console.log("OBJECT ID HERE IS: ", thisUser.usersPins[i]);
-                            console.log("OBJECT ID WE WANT TO DELETE: ", req.params.id);
-                            thisUser.usersPins = thisUser.usersPins.slice(0, i).concat(thisUser.usersPins.slice(-i));
-                        }
-                    }
-                    
-                    /*And now we can finally delete that pin from geoUser*/
-                    geoUser.findByIdAndRemove(req.params.id, (err) => {
-                        (err) ? res.redirect("pages/error") : res.redirect("/");
-                    });
-                }
+                    /* Delete was successful if we reach then so we can remove it from our geoUser*/
+                    .then( () => successfulDeleteBlock() )
+                    .catch( (err) => res.redirect("pages/error"));
+
+                    function successfulDeleteBlock() {
+                        geoUser.findByIdAndRemove(req.params.id, (err) => {
+                            (err) ? res.redirect("pages/error") : res.redirect("/");
+                        });
+                    };
+                };
             });
-        }
+        };
     });
-
 });
 
 app.get("*", (req, res) => {
