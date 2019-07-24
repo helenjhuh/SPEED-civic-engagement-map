@@ -1,0 +1,175 @@
+<% include ../partials/HEAD %>
+
+<!-- Add scripts here needed for mapbox geocoding -->
+<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.0/mapbox-gl-geocoder.min.js'></script>
+<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.0/mapbox-gl-geocoder.css' type='text/css' />
+
+<div id="wrap">
+    <div id="main" style="padding-bottom: 0px;">
+        <div class="row">
+            <!-- Div to contain a rendering of available elements to the right-->
+            <div class="col-3" id="pin_listing" style="overflow-y: scroll; height: 800px;">
+                <h1 class='ui dividing header'> Civic Engagement Listing </h1>
+                <div class='map-overlay'>
+                    <fieldset>
+                        <input id='feature-filter' type='text' placeholder='Filter results by name'>
+                    </fieldset>
+                    <div id="listings" class="listings"></div>
+                </div>
+            </div>
+            <div class="col-9" id="map" style="padding-left: 0;"></div>
+        </div>
+
+        <script type="text/javascript">
+
+
+          document.addEventListener("DOMContentLoaded", function(){
+            mapboxgl.accessToken = "pk.eyJ1IjoiY2VtLXYxIiwiYSI6ImNqeDN1YzhpMDAyemQ0YmtqZ215ZjNka28ifQ.VVjQaf1asGGBnwZKQf7ZyA";
+
+            let map = new mapboxgl.Map({
+              container: "map",
+              style: "mapbox://styles/cem-v1/cjx4tqsuf0ndu1clmieo3pc0u",
+              center: [-98, 38.88],
+              maxZoom: 8,
+              minZoom: 1,
+              zoom: 5
+            });
+
+            let airports = [];
+            let popup = new mapboxgl.Popup({
+              closeButton: false
+            });
+
+            let filterEl = document.getElementById("feature-filter");
+            let listingEl = document.getElementById("listings");
+
+            function renderListings(features) {
+                // Clear any existing listings
+              listingEl.innerHTML = '';
+              if (features.length) {
+                features.forEach(function(feature) {
+                  let prop = feature.properties;
+                  let item = document.createElement('a');
+                  item.href = prop.wikipedia;
+                  item.target = '_blank';
+                  item.textContent = prop.name + ' (' + prop.abbrev + ')';
+                  item.addEventListener('mouseover', function() {
+                    // Highlight corresponding feature on the map
+                    popup.setLngLat(feature.geometry.coordinates)
+                      .setText(feature.properties.name + ' (' + feature.properties.abbrev + ')')
+                      .addTo(map);
+                  });
+                  listingEl.appendChild(item);
+                });
+
+                // Show the filter input
+                filterEl.parentNode.style.display = 'block';
+              } else {
+                let empty = document.createElement('p');
+                empty.textContent = 'Drag the map to populate results';
+                listingEl.appendChild(empty);
+
+                // Hide the filter input
+                filterEl.parentNode.style.display = 'none';
+
+                // remove features filter
+                map.setFilter('airport', ['has', 'abbrev']);
+              }
+            }
+
+            function normalize(string) {
+              return string.trim().toLowerCase();
+            }
+
+            function getUniqueFeatures(array, comparatorProperty) {
+              let existingFeatureKeys = {};
+                // Because features come from tiled vector data, feature geometries may be split
+                // or duplicated across tile boundaries and, as a result, features may appear
+                // multiple times in query results.
+              let uniqueFeatures = array.filter(function(el) {
+                if (existingFeatureKeys[el.properties[comparatorProperty]]) {
+                  return false;
+                } else {
+                  existingFeatureKeys[el.properties[comparatorProperty]] = true;
+                  return true;
+                }
+              });
+
+              return uniqueFeatures;
+            }
+
+            map.on("load", function() {
+              map.addLayer({
+                "id": "airport",
+                "source": {
+                  "type": "vector",
+                  "url": "mapbox://mapbox.04w69w5j"
+                },
+                "source-layer": "ne_10m_airports",
+                "type": "symbol",
+                "layout": {
+                  "icon-image": "airport-15",
+                  "icon-padding": 0,
+                  "icon-allow-overlap":true
+                }
+              })
+            })
+
+            map.on('moveend', function() {
+              let features = map.queryRenderedFeatures({layers:['airport']});
+
+              if (features) {
+                let uniqueFeatures = getUniqueFeatures(features, "iata_code");
+                // Populate features for the listing overlay.
+                renderListings(uniqueFeatures);
+
+                // Clear the input container
+                filterEl.value = '';
+
+                // Store the current features in sn `airports` variable to
+                // later use for filtering on `keyup`.
+                airports = uniqueFeatures;
+              }
+            })
+
+            map.on('mousemove', 'airport', function(e) {
+              // Change the cursor style as a UI indicator.
+              map.getCanvas().style.cursor = 'pointer';
+
+              // Populate the popup and set its coordinates based on the feature.
+              let feature = e.features[0];
+              popup.setLngLat(feature.geometry.coordinates)
+                .setText(feature.properties.name + ' (' + feature.properties.abbrev + ')')
+                .addTo(map);
+            });
+
+            map.on('mouseleave', 'airport', function() {
+              map.getCanvas().style.cursor = '';
+              popup.remove();
+            });
+
+            filterEl.addEventListener('keyup', function(e) {
+              let value = normalize(e.target.value);
+
+                // Filter visible features that don't match the input value.
+              let filtered = airports.filter(function(feature) {
+                let name = normalize(feature.properties.name);
+                let code = normalize(feature.properties.abbrev);
+                return name.indexOf(value) > -1 || code.indexOf(value) > -1;
+              });
+
+                // Populate the sidebar with filtered results
+              renderListings(filtered);
+
+                // Set the filter to populate features into the layer.
+              map.setFilter('airport', ['match', ['get', 'abbrev'], filtered.map(function(feature) {
+                return feature.properties.abbrev;
+              }), true, false]);
+            });
+          });
+
+        </script>
+    </div>
+</div>
+
+<% include ../partials/FOOT %>
