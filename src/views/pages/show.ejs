@@ -15,15 +15,6 @@
                         <p> <%= thisPin.properties.project_mission %> </p>
                     </div>
                 </div>
-
-                <form action="/cem_map/<%= thisPin.properties.self._id%>/edit" method="GET" style="display: inline;">
-                    <button class="big positive ui button"> Edit </button>
-                </form>
-
-                <form action="/cem_map/<%= thisPin.properties.self._id%>?_method=DELETE" method="POST" style="display: inline;">
-                    <button class="ui big right floated negative button"> Delete </button>
-                </form>
-
             </div>
         </div>
     </div>

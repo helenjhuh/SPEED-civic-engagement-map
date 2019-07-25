@@ -14,7 +14,6 @@ const LocalLoginStrategy = new LocalStrategy({
 
     // user supplied incorrect password
     
-    console.log(user.password);
     if (!user.validPassword(password, user.password)) return done(null, false);
 
     // everything is good

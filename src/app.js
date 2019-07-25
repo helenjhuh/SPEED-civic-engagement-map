@@ -109,8 +109,8 @@ app.get("/home/faq", (req, res) => {
 
 });
 
-//SHOW ACCOUNT WE'LL BE ABLE TO MANAGE PINS HERE EVENTUALLY!
-app.get("/home/account/:id", isLoggedIn, (req, res) => {
+//SHOW ACCOUNT PAGE 
+app.get("/home/account/:id", checkOwner, isLoggedIn, (req, res) => {
 
 
     /* Here we're going to show the specific information for a user
@@ -118,6 +118,21 @@ app.get("/home/account/:id", isLoggedIn, (req, res) => {
      * the information of an account owner already
      */
     res.render("pages/account", { currUser: req.user});
+});
+
+//FROM SHOW ACCOUNT PAGE ALLOW THE USER TO EDIT THIS PIN
+app.get("/home/account/:id/edit", checkOwner, isLoggedIn, (req, res) => {
+
+    let result = [];
+
+    geoUser.find({
+        '_id': {$in: 
+            req.user.usersPins
+        }
+    }, (err, docs) => {
+        err ? res.redirect('pages/error') : res.render('pages/manage_pins', {pins: docs});
+    });
+
 });
 
 /* Show the map */

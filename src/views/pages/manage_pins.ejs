@@ -1,0 +1,30 @@
+<% include ../partials/HEAD %>
+
+    <div id="wrap">
+        <div id="main">
+
+            <% if(pins.length !== 0) { %>
+                <% pins.forEach( function(thisPin) { %>
+                    <div class="ui main text container segment" style="margin-top: 10px;">
+                        <h1> <%= thisPin.properties.title %> </h1>
+                        <form action="/cem_map/<%= thisPin.properties.self._id%>/edit" method="GET" style="display: inline;">
+                            <button class="big positive ui button"> Edit </button>
+                        </form>
+
+                        <form action="/cem_map/<%= thisPin.properties.self._id%>?_method=DELETE" method="POST" style="display: inline;">
+                            <button class="ui big right floated negative button"> Delete </button>
+                        </form>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="ui main text container segment" style="margin-top: 10px;">
+                    <h1> You don't have any pins to edit! </h1>
+                    <h1> But you can create one! </h1>
+                    <a class="ui red inverted button" href="/cem_map/new"> Add a Pin! <i class="fas fa-map-pin"></i></a>
+            <% } %>
+
+            </div>
+        </div>
+    </div>
+
+<% include ../partials/FOOT %>

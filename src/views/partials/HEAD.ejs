@@ -90,21 +90,21 @@
                         <a href="/auth/signup"><div class="ui red button"> Sign Up <i class="fas fa-user-plus" style="color: white"></i></div></a>
                     </div>
                 <% } else { %>
-                        <div class="ui floating icon dropdown button">
-                            <i class="fas fa-user-circle fa-2x"></i>
+                        <div class="ui icon dropdown">
+                            <i class="fas fa-user-circle fa-2x"></i> 
                             <div class="menu">
+                                <div class="item">
+                                    <a href="/home/account/<%=currentUser._id%>"> Account <i class="fas fa-file"></i></a>
+                                </div>
+                                <div class="item">
+                                    <a href="/cem_map/new"> Add a Pin! <i class="fas fa-map-pin"></i></a>
+                                </div>
+                                <div class="divider"></div>
                                 <div class="header">
                                     Signed in as <%= currentUser.email %>
                                 </div>
-                                <div class="divider"></div>
                                 <div class="item">
-                                    <a href="/home/account/<%=currentUser._id%>"> Account </a>
-                                </div>
-                                <div class="item">
-                                    <a href="/auth/logout"> Sign Out </a>
-                                </div>
-                                <div class="item">
-                                    <a href="/cem_map/new"> Add a Pin! </a>
+                                    <a href="/auth/logout"> Sign Out <i class="fas fa-sign-out-alt"></i></a>
                                 </div>
                             </div>
                         </div>
