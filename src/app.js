@@ -110,7 +110,7 @@ app.get("/home/faq", (req, res) => {
 });
 
 //SHOW ACCOUNT PAGE 
-app.get("/home/account/:id", checkOwner, isLoggedIn, (req, res) => {
+app.get("/home/account/:id", isLoggedIn, (req, res) => {
 
 
     /* Here we're going to show the specific information for a user
@@ -121,7 +121,7 @@ app.get("/home/account/:id", checkOwner, isLoggedIn, (req, res) => {
 });
 
 //FROM SHOW ACCOUNT PAGE ALLOW THE USER TO EDIT THIS PIN
-app.get("/home/account/:id/edit", checkOwner, isLoggedIn, (req, res) => {
+app.get("/home/account/:id/edit", isLoggedIn, (req, res) => {
 
     let result = [];
 

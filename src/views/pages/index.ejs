@@ -9,87 +9,135 @@
                     <h1 class='ui dividing header'> Civic Engagement Listing </h1>
                     <div class='map-overlay'>
                         <fieldset>
-                            <input id='feature-filter' type='text' placeholder='Filter results by name'>
+                            <div class='ui input'>
+                                <input id='feature-filter' type='text' placeholder='Search by name...'>
+                            </div>
                         </fieldset>
                         <div id="listings" class="listings"> </div>
                     </div>
                 </div>
                 <div class="col-9" id="map" style="padding-left: 0;"></div>
-
-                <script type="text/javascript">
-                    mapboxgl.accessToken =
-                        "pk.eyJ1IjoiY2VtLXYxIiwiYSI6ImNqeDN1YzhpMDAyemQ0YmtqZ215ZjNka28ifQ.VVjQaf1asGGBnwZKQf7ZyA";
-                    let map = new mapboxgl.Map({
-                        container: "map",
-                        style: "mapbox://styles/cem-v1/cjx4tqsuf0ndu1clmieo3pc0u",
-                        center: [-98, 38.88],
-                            maxZoom: 8,
-                            minZoom: 1,
-                            zoom: 5
-                    });
-                </script>
             </div>
 
 
             <script type="text/javascript">
 
-                /* Replace users with the dynamic rendering from object passed in from app.js */
-                const users = [
-                    {
-                        type: "Feature",
-                        geometry: {
-                            type: "Point",
-                            coordinates: [-73.876583, 40.682851]
-                        },
-                        properties: {
-                            title: "Searchable Pin",
-                            description: "Stuff",
-                            project_website: "Google.com",
-                            img: "img",
-                            building: "Beardsley",
-                            room_number: "118",
-                            community_partners: "No one really",
-                            project_mission: "Do stuff quickly",
-                            owner: {
-                                id: "5d3870c9068ab923473ca4fc",
-                                username: "TestDelete@gmail.com"
-                            }
-                        }
-                    },
-                    {
-                        type: "Feature",
-                        geometry: {
-                            type: "Point",
-                            coordinates: [-73.877078, 40.685062]
-                        },
-                        properties: {
-                            title: "Speed",
-                            description: "ss",
-                            project_website: "google.com",
-                            img: "sss",
-                            building: "Beardsley",
-                            room_number: "ss",
-                            community_partners: "Searchable partners",
-                            project_mission: "",
-                            owner: {
-                                id: "5d3870c9068ab923473ca4fc",
-                                username: "TestDelete@gmail.com"
-                            }
-                        }
-                    }
-                ];
 
                 document.addEventListener("DOMContentLoaded", function() {
 
+                    /* This function will take object passed in and render a pretty listing for it */
+                    function buildLocation(data) {
+                        let currentFeature = data;
+                        // Shorten data.feature.properties to `prop` so we're not
+                        // writing this long form over and over again.
+                        let prop = currentFeature.properties;
+                        console.log(prop);
+                        let listing = document.createElement('div');
+                        listing.className = 'item';
+                        let listing_pretty = listing.appendChild(document.createElement('div'));
+                        listing_pretty.className = 'card';
+                        //listing.className = 'card border-secondary bg-light mb-3';
+
+                        //Create a header for this card and append it to listing
+                        let listing_header = listing_pretty.appendChild(document.createElement('a'));
+                        listing_header.className = 'card-header';
+
+                        let link = listing_header.appendChild(document.createElement('a')); 
+                        link.href = "#";
+                        link.className = 'title';
+                        link.innerHTML = prop.title;
+                        link.addEventListener('click', function(e) {
+                            // Update the currentFeature to the store associated with the clicked link
+                            let clickedListing = data;
+                            // 1. Fly to the point associated with the clicked link
+                            flyToPin(clickedListing);
+                            // 2. Highlight listing in sidebar (and remove highlight for all other listings)
+                            var activeItem = document.getElementsByClassName('active');
+                            if (activeItem[0]) {
+                                activeItem[0].classList.remove('active');
+                            }
+                            this.parentNode.classList.add('active');
+                        });
+                        //Create a body for this cards content and append it to listing
+                        let listing_content = listing_pretty.appendChild(document.createElement('div'));
+                        listing_content.className = 'card-body';
+                        //Append our text to body
+                        let listing_text = listing_content.appendChild(document.createElement('p'));
+                        listing_text.className = 'card-text';
+                        //Here we truncate the string to make sure our card format stays nice and compact. If prop.description exists
+                        //This won't affect user visibility if we have an option to view more on a different page
+                        if (prop.description) {
+                            if(prop.description.length > 350) {
+                                listing_text.innerHTML += "Description: " + "<br/ >";
+                                listing_text.innerHTML += prop.description.substring(0, 350);
+                                listing_text.innerHTML += "...";
+                                listing_text.innerHTML += "<br/ >";
+                            } else {
+                                listing_text.innerHTML += "Description: " + "<br/ >";
+                                listing_text.innerHTML += prop.description;
+                                listing_text.innerHTML += "<br/ >";
+                            }
+                        }
+                        //If prop contact email exists add it to our listing_text innerHTML
+                        if(prop.community_partners) { 
+                            listing_text.innerHTML += "<br/ >";
+                            listing_text.innerHTML += "Other Community Partners: " + prop.community_partners;
+                            listing_text.innerHTML += "<br/ >";
+                        }
+                        if(prop.project_mission) {
+                            listing_text.innerHTML += "<br/ >";
+                            listing_text.innerHTML += "Project Mission: " + prop.project_mission;
+                            listing_text.innerHTML += "<br/ >";
+                        }
+                        if(prop.project_website) {
+                            listing_text.innerHTML += "<br/ >";
+                            listing_text.innerHTML += "Project Website: " + prop.project_website;
+                            listing_text.innerHTML += "<br/ >";
+                        }
+
+                        if(prop.building) {
+                            listing_text.innerHTML += "<br/ >";
+                            listing_text.innerHTML += "Campus Location: " + prop.building;
+                            if(prop.room_number) {
+                                listing_text.innerHTML += " " + prop.room_number;
+                            }
+                            listing_text.innerHTML += "<br/ >";
+                        }
+                        if(prop.owner.username) {
+                            listing_text.innerHTML += "<br/ >";
+                            listing_text.innerHTML += "Contact Email: " + prop.owner.username;
+                            listing_text.innerHTML += "<br/ >";
+                        }
+
+                        return(listing);
+                    }
+                    /* Go to pin that the user clicks on from listings */
+                    function flyToPin(currentFeature) {
+                        map.flyTo({
+                            center: currentFeature.geometry.coordinates,
+                            zoom: 15
+                        });
+                    };
+                    
                     mapboxgl.accessToken = "pk.eyJ1IjoiY2VtLXYxIiwiYSI6ImNqeDN1YzhpMDAyemQ0YmtqZ215ZjNka28ifQ.VVjQaf1asGGBnwZKQf7ZyA";
 
+                    const gusers = <%- users %>;
+
+                    const toRender = [];
+
+                    gusers.forEach( function(ele) {
+                        toRender.push({
+                            "type": ele.type,
+                            "geometry": ele.geometry,
+                            "properties": ele.properties
+                        })
+                    });
                     let map = new mapboxgl.Map({
                         container: "map",
                         style: "mapbox://styles/cem-v1/cjx4tqsuf0ndu1clmieo3pc0u",
                         center: [-98, 38.88],
-                        maxZoom: 8,
                         minZoom: 1,
-                        zoom: 5
+                        zoom: 1.5
                     });
 
                     /* Declaration for pop-up display */
@@ -123,13 +171,8 @@
                         listingEl.innerHTML = "";
                         if (features.length) {
                             features.forEach(function(feature) {
-                                var prop = feature.properties;
-                                var item = document.createElement("a");
-                                item.target = "_blank";
-                                item.textContent = prop.title + " (" + prop.building + ")";
-                                listingEl.appendChild(item);
+                                listingEl.appendChild(buildLocation(feature));
                             });
-
                             // Show the filter input
                             filterEl.parentNode.style.display = "block";
                         } else {
@@ -229,6 +272,7 @@
                         ele[0].properties.self = JSON.parse(ele[0].properties.self);
 
                         view_more_anchor.href = "cem_map/" + String(ele[0].properties.self._id);
+                        view_more_anchor.className = 'ui big red button';
                         view_more_anchor.innerHTML = "View More";
 
                         div1.appendChild(div1_header);
@@ -266,7 +310,7 @@
                                 type: "geojson",
                                 data: {
                                     type: "FeatureCollection",
-                                    features: users
+                                    features: toRender 
                                 }
                             },
 
@@ -293,14 +337,16 @@
                             /*Clear existing listing to stop repeat appearances of the same feature */
                             listingEl.innerHTML = "";
 
+                            /*
                             let uniqueFeatures = getUniqueFeatures(features, "iata_code");
+                            */
 
                             //Build location list using unique features...
-                            renderListings(uniqueFeatures);
+                            renderListings(features);
 
                             filterEl.value = "";
 
-                            pins = uniqueFeatures;
+                            pins = features;
                         }
                     });
 
@@ -317,6 +363,8 @@
                         let filter = [
                             "match",
                             ["get", "title"],
+                            ["get", "building"],
+                            ["get", "description"],
                             filtered.map(function(feature) {
                                 return feature.properties.title;
                             }),
@@ -341,6 +389,7 @@
                     });
 
                 });
+
             </script>
         </div>
     </div>

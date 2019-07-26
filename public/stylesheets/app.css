@@ -25,12 +25,13 @@ body{
     height: 4rem;
     margin-bottom: 0;
 }
+
 #footer {
     position: relative;
     margin-top: -180px;
     height: 180px;
     clear: both;
-    background-color: rgb(142,42,42);
+    background-color: rgb(162,42,42);
 }
 
 body:before {
@@ -46,14 +47,6 @@ body:before {
     height: 90vh;
     width: 100%;
     background-size: cover;
-}
-
-#jumbotron_text {
-    width: fit-content;
-    padding-top: 20%;
-    color: white;
-    font-family: 'Source Sans Pro', sans-serif;
-    font-weight: bold;
 }
 
 #map {
@@ -100,17 +93,10 @@ div a {
     font-size: 1.2rem;
     color: black;
 }
-.fas {
 
-    color: rgb(162,42,42);
-
-}
 a.title {
-    color: black;
-}
-
-div.item a:hover {
-    
+    color: rgb(162,42,42);
+    font-size: 2rem; 
 }
 
 div.ui.inverted.button {
@@ -168,8 +154,9 @@ div.row:nth-child(4) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > 
 }
 
 /* Selector for icon */
-.fas {
+i {
     margin-top: 5px;
+    color: rgb(162,42,42);
 }
 
 /* My account text */
@@ -178,4 +165,82 @@ div.row:nth-child(4) > div:nth-child(1) > div:nth-child(1) > div:nth-child(2) > 
     font-size: 1.2rem;
     color: black;
     margin-top: -5px;
+}
+
+/*Styling for when there are no pins to manage on manage_pins.ejs*/ 
+.jumbotron {
+    text-align: center;
+    height: 100vh;
+    background-size: cover;
+    margin-bottom: 0;
+}
+
+/*Styling for when there are no pins to manage on manage_pins.ejs*/
+#jumbotron_text {
+    width: fit-content;
+    padding-top: 17%;
+    color: rgb(162,42,42);
+    font-family: 'Asap', sans-serif;
+    font-weight: bold;
+    margin-bottom: 0;
+}
+
+#man_pins_h1 {
+    font-family: 'Raleway', sans-serif !important;
+    font-weight: 900;
+    letter-spacing: 1px;
+    color: black;
+    font-size: 3rem;
+}
+button.circular.ui.big.positive.button {
+    box-shadow: 0 10px 20px 5px rgba(0, 0, 0,0.15);
+    z-index: -1;
+}
+
+button.circular.ui.big.floated.negative.button {
+    box-shadow: 0 10px 20px 5px rgba(0, 0, 0, 0.15);
+    z-index: -1;
+}
+
+#sign_up_header {
+    font-size: 3rem;
+    color: rgb(162,42,42);
+}
+
+
+
+@-webkit-keyframes rotating /* Safari and Chrome */ {
+    from {
+        -webkit-transform: translateX(12px)
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+@keyframes rotating {
+    from {
+        -ms-transform: rotate(0deg);
+        -moz-transform: rotate(0deg);
+        -webkit-transform: rotate(0deg);
+        -o-transform: rotate(0deg);
+        transform: rotate(0deg);
+    }
+    to {
+        -ms-transform: rotate(360deg);
+        -moz-transform: rotate(360deg);
+        -webkit-transform: rotate(360deg);
+        -o-transform: rotate(360deg);
+        transform: rotate(360deg);
+    }
+}
+.rotating {
+    -webkit-animation: rotating 2s linear infinite;
+    -moz-animation: rotating 2s linear infinite;
+    -ms-animation: rotating 2s linear infinite;
+    -o-animation: rotating 2s linear infinite;
+    animation: rotating 2s linear infinite;
 }
