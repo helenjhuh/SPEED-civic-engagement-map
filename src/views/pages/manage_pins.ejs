@@ -1,0 +1,35 @@
+<% include ../partials/HEAD %>
+
+    <div id="wrap">
+        <div id="main">
+
+            <% if(pins.length !== 0) { %>
+                <% pins.forEach( function(thisPin) { %>
+                    <div class="ui container" style="width: 20%; margin: 0 auto; margin-top: 1%; margin-bottom: 2%;">
+                        <h1 id="man_pins_h1"> <%= thisPin.properties.title %> </h1>
+                        <form action="/cem_map/<%= thisPin.properties.self._id%>/edit" method="GET" style="display: inline;">
+                            <button class="circular ui big positive button"> Edit <i style='color: inherit;' class="far fa-edit"></i></button>
+                        </form>
+
+                        <form action="/cem_map/<%= thisPin.properties.self._id%>?_method=DELETE" method="POST" style="display: inline;">
+                            <button class="circular ui big right floated negative button"> Delete <i style='color: inherit' class="fas fa-trash-alt"></i></button>
+                        </form>
+                    </div>
+
+                <% }); %>
+            <% } else { %>
+                <div class="jumbotron jumbotron-fluid">
+                    <div class="container-fluid">
+                        <div class="container" id="jumbotron_text">
+                            <h1 style="font-family: 'Raleway', sans-serif; font-weight: 900; font-size: 8rem;"> Nothing here! </h1>
+                            <a class='ui massive inverted red button' href='/cem_map/new'> Add a pin! <i style="color: inherit" class="fas fa-map-pin"></i> </a>
+                        </div>
+                    </div>
+                </div> 
+            <% } %>
+
+            </div>
+        </div>
+    </div>
+
+<% include ../partials/FOOT %>

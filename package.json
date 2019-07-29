@@ -4,21 +4,26 @@
   "description": "First iterartion for our civic engagement map",
   "main": "app.js",
   "scripts": {
-    "start": "nodemon app.js"
+    "start": "nodemon src/app.js"
   },
   "author": "Steven Fernandez",
   "license": "ISC",
   "dependencies": {
     "@mapbox/mapbox-sdk": "^0.6.0",
+    "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
     "dotenv": "^8.0.0",
     "ejs": "^2.6.2",
     "express": "^4.17.1",
     "express-sanitizer": "^1.0.5",
+    "express-session": "^1.16.2",
     "geojson": "^0.5.0",
     "method-override": "^3.0.0",
     "mongodb": "^3.2.7",
     "mongoose": "^5.6.0",
-    "nodemon": "^1.19.1"
+    "morgan": "^1.9.1",
+    "nodemon": "^1.19.1",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0"
   }
 }

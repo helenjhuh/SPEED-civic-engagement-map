@@ -1,0 +1,397 @@
+<% include ../partials/HEAD %>
+
+    <div id="wrap">
+        <div id="main" style="padding-bottom: 0px;">
+
+            <div class="row">
+                <!-- Div to contain a rendering of available elements to the right-->
+                <div class="col-3" id="pin_listing" style="overflow-y: scroll; height: 800px;">
+                    <h1 class='ui dividing header'> Civic Engagement Listing </h1>
+                    <div class='map-overlay'>
+                        <fieldset>
+                            <div class='ui input'>
+                                <input id='feature-filter' type='text' placeholder='Search by name...'>
+                            </div>
+                        </fieldset>
+                        <div id="listings" class="listings"> </div>
+                    </div>
+                </div>
+                <div class="col-9" id="map" style="padding-left: 0;"></div>
+            </div>
+
+
+            <script type="text/javascript">
+
+
+                document.addEventListener("DOMContentLoaded", function() {
+
+                    /* This function will take object passed in and render a pretty listing for it */
+                    function buildLocation(data) {
+                        let currentFeature = data;
+                        // Shorten data.feature.properties to `prop` so we're not
+                        // writing this long form over and over again.
+                        let prop = currentFeature.properties;
+                        console.log(prop);
+                        let listing = document.createElement('div');
+                        listing.className = 'item';
+                        let listing_pretty = listing.appendChild(document.createElement('div'));
+                        listing_pretty.className = 'card';
+                        //listing.className = 'card border-secondary bg-light mb-3';
+
+                        //Create a header for this card and append it to listing
+                        let listing_header = listing_pretty.appendChild(document.createElement('a'));
+                        listing_header.className = 'card-header';
+
+                        let link = listing_header.appendChild(document.createElement('a')); 
+                        link.href = "#";
+                        link.className = 'title';
+                        link.innerHTML = prop.title;
+                        link.addEventListener('click', function(e) {
+                            // Update the currentFeature to the store associated with the clicked link
+                            let clickedListing = data;
+                            // 1. Fly to the point associated with the clicked link
+                            flyToPin(clickedListing);
+                            // 2. Highlight listing in sidebar (and remove highlight for all other listings)
+                            var activeItem = document.getElementsByClassName('active');
+                            if (activeItem[0]) {
+                                activeItem[0].classList.remove('active');
+                            }
+                            this.parentNode.classList.add('active');
+                        });
+                        //Create a body for this cards content and append it to listing
+                        let listing_content = listing_pretty.appendChild(document.createElement('div'));
+                        listing_content.className = 'card-body';
+                        //Append our text to body
+                        let listing_text = listing_content.appendChild(document.createElement('p'));
+                        listing_text.className = 'card-text';
+                        //Here we truncate the string to make sure our card format stays nice and compact. If prop.description exists
+                        //This won't affect user visibility if we have an option to view more on a different page
+                        if (prop.description) {
+                            if(prop.description.length > 350) {
+                                listing_text.innerHTML += "Description: " + "<br/ >";
+                                listing_text.innerHTML += prop.description.substring(0, 350);
+                                listing_text.innerHTML += "...";
+                                listing_text.innerHTML += "<br/ >";
+                            } else {
+                                listing_text.innerHTML += "Description: " + "<br/ >";
+                                listing_text.innerHTML += prop.description;
+                                listing_text.innerHTML += "<br/ >";
+                            }
+                        }
+                        //If prop contact email exists add it to our listing_text innerHTML
+                        if(prop.community_partners) { 
+                            listing_text.innerHTML += "<br/ >";
+                            listing_text.innerHTML += "Other Community Partners: " + prop.community_partners;
+                            listing_text.innerHTML += "<br/ >";
+                        }
+                        if(prop.project_mission) {
+                            listing_text.innerHTML += "<br/ >";
+                            listing_text.innerHTML += "Project Mission: " + prop.project_mission;
+                            listing_text.innerHTML += "<br/ >";
+                        }
+                        if(prop.project_website) {
+                            listing_text.innerHTML += "<br/ >";
+                            listing_text.innerHTML += "Project Website: " + prop.project_website;
+                            listing_text.innerHTML += "<br/ >";
+                        }
+
+                        if(prop.building) {
+                            listing_text.innerHTML += "<br/ >";
+                            listing_text.innerHTML += "Campus Location: " + prop.building;
+                            if(prop.room_number) {
+                                listing_text.innerHTML += " " + prop.room_number;
+                            }
+                            listing_text.innerHTML += "<br/ >";
+                        }
+                        if(prop.owner.username) {
+                            listing_text.innerHTML += "<br/ >";
+                            listing_text.innerHTML += "Contact Email: " + prop.owner.username;
+                            listing_text.innerHTML += "<br/ >";
+                        }
+
+                        return(listing);
+                    }
+                    /* Go to pin that the user clicks on from listings */
+                    function flyToPin(currentFeature) {
+                        map.flyTo({
+                            center: currentFeature.geometry.coordinates,
+                            zoom: 15
+                        });
+                    };
+                    
+                    mapboxgl.accessToken = "pk.eyJ1IjoiY2VtLXYxIiwiYSI6ImNqeDN1YzhpMDAyemQ0YmtqZ215ZjNka28ifQ.VVjQaf1asGGBnwZKQf7ZyA";
+
+                    const gusers = <%- users %>;
+
+                    const toRender = [];
+
+                    gusers.forEach( function(ele) {
+                        toRender.push({
+                            "type": ele.type,
+                            "geometry": ele.geometry,
+                            "properties": ele.properties
+                        })
+                    });
+                    let map = new mapboxgl.Map({
+                        container: "map",
+                        style: "mapbox://styles/cem-v1/cjx4tqsuf0ndu1clmieo3pc0u",
+                        center: [-98, 38.88],
+                        minZoom: 1,
+                        zoom: 1.5
+                    });
+
+                    /* Declaration for pop-up display */
+                    let markerHeight = 50, markerRadius = 10, linearOffset = 25;
+
+                    const popupOffsets = {
+                        "top": [0, 0],
+                        "top-left": [0, 0],
+                        "top-right": [0, 0],
+                        "bottom": [0, -markerHeight],
+                        "bottom-left": [
+                            linearOffset,
+                            (markerHeight - markerRadius + linearOffset) * -1
+                        ],
+                        "bottom-right": [
+                            -linearOffset,
+                            (markerHeight - markerRadius + linearOffset) * -1
+                        ],
+                        "left": [markerRadius, (markerHeight - markerRadius) * -1],
+                        "right": [-markerRadius, (markerHeight - markerRadius) * -1]
+                    };
+
+                    /* Need to figure out what all of this is doing */
+
+                    let pins = [];
+                    let listingEl = document.getElementById("listings");
+                    let filterEl = document.getElementById("feature-filter");
+
+                    function renderListings(features) {
+                        // Clear any existing listings
+                        listingEl.innerHTML = "";
+                        if (features.length) {
+                            features.forEach(function(feature) {
+                                listingEl.appendChild(buildLocation(feature));
+                            });
+                            // Show the filter input
+                            filterEl.parentNode.style.display = "block";
+                        } else {
+                            var empty = document.createElement("p");
+                            empty.textContent = "Drag the map to populate results";
+                            listingEl.appendChild(empty);
+
+                            // Hide the filter input
+                            filterEl.parentNode.style.display = "none";
+                        }
+                    }
+
+                    /* GET UNIQUE FEATURES FROM FILTERING */
+                    function getUniqueFeatures(array, comparatorProperty) {
+                        var existingFeatureKeys = {};
+                        // Because features come from tiled vector data, feature geometries may be split
+                        // or duplicated across tile boundaries and, as a result, features may appear
+                        // multiple times in query results.
+                        var uniqueFeatures = array.filter(function(el) {
+                            if (existingFeatureKeys[el.properties[comparatorProperty]]) {
+                                return false;
+                            } else {
+                                existingFeatureKeys[el.properties[comparatorProperty]] = true;
+                                return true;
+                            }
+                        });
+
+                        return uniqueFeatures;
+                    }
+
+                    function normalize(string) {
+                        return string.trim().toLowerCase();
+                    }
+
+                    map.on("click", "points", function(e) {
+                        let ele = map.queryRenderedFeatures({ layers: ["points"] });
+
+                        ele[0].properties.owner = JSON.parse(ele[0].properties.owner);
+
+                        /* Create an element with the popup content and add it to our popups DOMContent */
+                        let content = ele[0].properties;
+
+                        /* everything is a child of our root div */
+                        let root_div = window.document.createElement("div");
+                        root_div.className = "ui card";
+
+                        let div1 = window.document.createElement("div");
+                        div1.className = "content";
+                        div1_header = window.document.createElement("div");
+                        div1_header.className = "header";
+                        div1_header.innerHTML = content.title;
+
+                        let div1_meta = window.document.createElement("div");
+                        div1_meta.className = "meta";
+                        div1_meta.innerHTML = "our mission";
+                        div1_description = window.document.createElement("div");
+                        div1_description.className = "description";
+
+                        let div1_description_text = window.document.createElement("p");
+
+                        /* Truncate description so our pins content doesn't fill up entire screen */
+                        if (content.description.length > 350) {
+                            content.description = content.description.substring(0, 349);
+                            div1_description_text.innerHTML += content.description;
+                            div1_description_text.innerHTML += "...";
+                        } else {
+                            div1_description_text.innerHTML += content.description;
+                        }
+
+                        /* need to add contact, contact_email, community_partners */
+
+                        let div2_meta = window.document.createElement("div");
+                        div2_meta.className = "meta";
+                        div2_meta.innerHTML = "contact name";
+
+                        let div2_description = window.document.createElement("div");
+                        div2_description.innerHTML = content.contact;
+
+                        let div3_meta = window.document.createElement("div");
+                        div3_meta.className = "meta";
+                        div3_meta.innerHTML = "contact email";
+
+                        let div3_description = window.document.createElement("div");
+                        div3_description.innerHTML = content.owner.username;
+
+                        let div4_meta = window.document.createElement("div");
+                        div4_meta.className = "meta";
+                        div4_meta.innerHTML = "community partners";
+
+                        let div4_description = window.document.createElement("div");
+                        div4_description.innerHTML = content.community_partners;
+
+                        /* We want to create a button that'll allow us to view more info about this pin! */
+                        let view_more_div = window.document.createElement("div");
+                        let view_more_anchor = window.document.createElement("a");
+
+                        ele[0].properties.self = JSON.parse(ele[0].properties.self);
+
+                        view_more_anchor.href = "cem_map/" + String(ele[0].properties.self._id);
+                        view_more_anchor.className = 'ui big red button';
+                        view_more_anchor.innerHTML = "View More";
+
+                        div1.appendChild(div1_header);
+                        div1.appendChild(div1_meta);
+                        div1_description.appendChild(div1_description_text);
+                        div1.appendChild(div1_description);
+                        div1.appendChild(div2_meta);
+                        div1.appendChild(div2_description);
+                        div1.appendChild(div3_meta);
+                        div1.appendChild(div3_description);
+                        div1.appendChild(div4_meta);
+                        div1.appendChild(div4_description);
+                        div1.appendChild(view_more_div);
+                        div1.appendChild(view_more_anchor);
+
+                        /* ATTACH EVERYTHING TO OUR ROOT DIV */
+                        root_div.appendChild(div1);
+
+                        /* Create a popup but dont add it to our map yet */
+                        let popup = new mapboxgl.Popup({
+                            offset: popupOffsets,
+                            className: "my-class"
+                        })
+                            .setLngLat(ele[0].geometry.coordinates)
+                            .setDOMContent(root_div)
+                            .setMaxWidth("300px")
+                            .addTo(map);
+                    });
+
+                    map.on("load", function() {
+                        map.addLayer({
+                            id: "points",
+                            type: "symbol",
+                            source: {
+                                type: "geojson",
+                                data: {
+                                    type: "FeatureCollection",
+                                    features: toRender 
+                                }
+                            },
+
+                            /* Here we need to add all of our styling and make sure that
+            the appropriate text descriptions appear for our markers.
+                             */
+
+                            layout: {
+                                "icon-image": "marker-15",
+                                "icon-allow-overlap": true,
+                                "text-font": ["Open Sans Semibold", "Arial Unicode MS Bold"],
+                                "text-offset": [0, 0.6],
+                                "text-anchor": "top"
+                            }
+
+                        });
+
+                    });
+
+                    map.on("moveend", function() {
+                        let features = map.queryRenderedFeatures({ layers: ["points"] });
+
+                        if (features) {
+                            /*Clear existing listing to stop repeat appearances of the same feature */
+                            listingEl.innerHTML = "";
+
+                            /*
+                            let uniqueFeatures = getUniqueFeatures(features, "iata_code");
+                            */
+
+                            //Build location list using unique features...
+                            renderListings(features);
+
+                            filterEl.value = "";
+
+                            pins = features;
+                        }
+                    });
+
+                    /* Add an event listener for when user begins to enter into results */
+                    filterEl.addEventListener("keyup", e => {
+                        let value = normalize(e.target.value);
+
+                        let filtered = pins.filter(function(feature) {
+                            let name = normalize(feature.properties.title);
+                            let building = normalize(feature.properties.building);
+                            return name.indexOf(value) > -1 || building.indexOf(value) > -1;
+                        });
+
+                        let filter = [
+                            "match",
+                            ["get", "title"],
+                            ["get", "building"],
+                            ["get", "description"],
+                            filtered.map(function(feature) {
+                                return feature.properties.title;
+                            }),
+                            true,
+                            false
+                        ];
+
+                        renderListings(filtered);
+
+                        //Set the filter on our map to populate features into the layer
+                        map.setFilter("points", filter);
+                    });
+
+                    //renderListings([]);
+
+                    map.on("mouseenter", "points", function() {
+                        map.getCanvas().style.cursor = "pointer";
+                    });
+
+                    map.on("mouseleave", "points", function() {
+                        map.getCanvas().style.cursor = "";
+                    });
+
+                });
+
+            </script>
+        </div>
+    </div>
+
+<% include ../partials/FOOT %>

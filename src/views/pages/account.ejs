@@ -1,0 +1,48 @@
+<% include ../partials/HEAD %>
+
+    <!-- Show accounts page... User should be able to manage their pins here and change their account settings I guess? -->
+    <div id='wrap'>
+        <div id='main'>
+            <div class='ui container' style="width: 50%; margin-top: 10%;">
+                <a id="spinning_icon"><img src='assets/images/icons8-map-16.png' /> </a>
+                <h1 class='ui dividing header' style="font-size: 3rem; font-family: 'Asap', sans-serif; font-weight: light;"> Hello, <%= currUser.first_name %> <%= currUser.last_name %>! </h1>
+                <div class='row'>
+                    <div class='col-12'>
+                        <div class="ui simple dropdown item"> 
+                            Manage my organizations
+                            <i class="dropdown icon"></i> 
+                            <div class="left menu">
+                                <div class="item"> <a href="/home/account/<%= currUser._id%>/edit"> Edit my pins </a></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class='row'>
+                    <div class='col-12'>
+                        <div class="ui simple dropdown item" style="font-size: 3rem; padding-top: 2.5rem;">
+                            Manage my account
+                            <i class="dropdown icon"></i>
+                            <div class="left menu">
+                                <div class="item"> manage account settings </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class='row'>
+                    <div class='col-12'>
+                        <div class="ui simple dropdown item" style="font-size: 3rem; padding-top: 2.5rem;">
+                            Feedback
+                            <i class="dropdown icon"></i>
+                            <div class="left menu">
+                                <div class="item"> Give feedback here! </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<% include ../partials/FOOT %>
