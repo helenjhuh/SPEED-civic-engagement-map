@@ -1,10 +1,51 @@
 <% include ../partials/HEAD %>
 
     <!-- Show accounts page... User should be able to manage their pins here and change their account settings I guess? -->
+
+
     <div id='wrap'>
         <div id='main'>
             <div class='ui container' style="width: 50%; margin-top: 10%;">
-                <a id="spinning_icon"><img src='assets/images/icons8-map-16.png' /> </a>
+
+              <div id='CIRCULAR_ICONS_ANIMATION'></div>
+
+                <script>
+
+                  /* an array of images for icons that we can use */
+
+                  let icons = [
+
+                        'https://img.icons8.com/doodle/48/000000/map-marker.png',
+                        'https://img.icons8.com/clouds/100/000000/map-pin.png',
+                        'https://img.icons8.com/ios/50/000000/china-map.png',
+                        'https://img.icons8.com/dusk/64/000000/map-pin.png',
+                        'https://img.icons8.com/bubbles/50/000000/map-pin.png',
+                        'https://img.icons8.com/dusk/64/000000/change.png',
+                        'https://img.icons8.com/clouds/100/000000/guest-male.png',
+                        'https://img.icons8.com/bubbles/50/000000/cloud-account-login-female.png',
+                        'https://img.icons8.com/dusk/64/000000/social-network.png',
+                        'https://img.icons8.com/clouds/100/000000/world-map.png'
+
+                  ];
+                  /*get heights and width*/
+                  let body = document.body,
+                    html = document.documentElement;
+
+                  let height = Math.max( body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+                  let width = Math.max( body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth);
+                    
+                  for(let i=0; i<10; i++) {
+                    el = document.getElementById('CIRCULAR_ICONS_ANIMATION').appendChild(document.createElement('div'));
+                    el.style.position = 'absolute';
+                    
+                    el.className = 'circular_path';
+                    el.style.left = (Math.random() * width) + 'px';
+                    el.style.right = (Math.random() * width) + 'px';
+                    el.style.top = (Math.random() * height) + 'px';
+                    el.style.bottom = (Math.random() * height) + 'px';
+                  };
+                </script>
+
                 <h1 class='ui dividing header' style="font-size: 3rem; font-family: 'Asap', sans-serif; font-weight: light;"> Hello, <%= currUser.first_name %> <%= currUser.last_name %>! </h1>
                 <div class='row'>
                     <div class='col-12'>

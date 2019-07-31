@@ -207,40 +207,50 @@ button.circular.ui.big.floated.negative.button {
     color: rgb(162,42,42);
 }
 
+/* Increase contrast of footer right item for accessibility */
+div.right:nth-child(1) {
+    color: white !important;
+}
 
-
-@-webkit-keyframes rotating /* Safari and Chrome */ {
-    from {
-        -webkit-transform: translateX(12px)
-        -o-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-    to {
-        -webkit-transform: rotate(360deg);
-        -o-transform: rotate(360deg);
-        transform: rotate(360deg);
+@-webkit-keyframes xAxis /* Safari and Chrome */ {
+    50% {
+        animation-timing-function: cubic-bezier(0.3, 0.27, 0.07, 1.64);
+        transform: translateX(100px);
     }
 }
-@keyframes rotating {
-    from {
-        -ms-transform: rotate(0deg);
-        -moz-transform: rotate(0deg);
-        -webkit-transform: rotate(0deg);
-        -o-transform: rotate(0deg);
-        transform: rotate(0deg);
-    }
-    to {
-        -ms-transform: rotate(360deg);
-        -moz-transform: rotate(360deg);
-        -webkit-transform: rotate(360deg);
-        -o-transform: rotate(360deg);
-        transform: rotate(360deg);
+@keyframes xAxis {
+    50% {
+        animation-timing-function: cubic-bezier(0.3, 0.27, 0.07, 1.64);
+        transform: translateX(100px);
     }
 }
-.rotating {
-    -webkit-animation: rotating 2s linear infinite;
-    -moz-animation: rotating 2s linear infinite;
-    -ms-animation: rotating 2s linear infinite;
-    -o-animation: rotating 2s linear infinite;
-    animation: rotating 2s linear infinite;
+
+
+@-webkit-keyframes yAxis /* Safari and Chrome */ {
+    50% {
+        animation-timing-function: cubic-bezier(0.02, 0.01, 0.21, 1);
+        transform: translateY(-100px);
+    }
+}
+@keyframes yAxis {
+    50% {
+        animation-timing-function: cubic-bezier(0.02, 0.01, 0.21, 1);
+        transform: translateY(-100px);
+    }
+}
+
+/* Container for the circular path */
+.circular_path {
+    animation: xAxis 7s infinite cubic-bezier(0.02, 0.01, 0.21, 1);
+}
+
+/* Element after the circular path */
+.circular_path::after {
+    content: url('');
+    display: block;
+    width: 20px;
+    height: 20px;
+    border-radius: 20px;
+    background-color: #fff;
+    animation: yAxis 10s infinite cubic-bezier(0.3, 0.27, 0.07, 1.64);
 }
