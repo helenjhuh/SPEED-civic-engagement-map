@@ -246,7 +246,7 @@ div.right:nth-child(1) {
 
 /* Element after the circular path */
 .circular_path::after {
-    content: url('');
+
     display: block;
     width: 20px;
     height: 20px;

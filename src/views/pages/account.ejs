@@ -11,21 +11,21 @@
 
                 <script>
 
-                  /* an array of images for icons that we can use */
-
+                    
+                  /* Now we need an array of our assets to set them with the attr*/
+                  
                   let icons = [
 
-                        'https://img.icons8.com/doodle/48/000000/map-marker.png',
-                        'https://img.icons8.com/clouds/100/000000/map-pin.png',
-                        'https://img.icons8.com/ios/50/000000/china-map.png',
-                        'https://img.icons8.com/dusk/64/000000/map-pin.png',
-                        'https://img.icons8.com/bubbles/50/000000/map-pin.png',
-                        'https://img.icons8.com/dusk/64/000000/change.png',
-                        'https://img.icons8.com/clouds/100/000000/guest-male.png',
-                        'https://img.icons8.com/bubbles/50/000000/cloud-account-login-female.png',
-                        'https://img.icons8.com/dusk/64/000000/social-network.png',
-                        'https://img.icons8.com/clouds/100/000000/world-map.png'
-
+                    '/assets/images/icons8-map-100.png',
+                    '/assets/images/icons8-map-editing-64.png',
+                    '/assets/images/icons8-map-marker-50.png',
+                    '/assets/images/icons8-map-pin-100.png',
+                    '/assets/images/icons8-people-100.png',
+                    '/assets/images/icons8-people-48.png',
+                    '/assets/images/icons8-pin-48.png',
+                    '/assets/images/icons8-world-map-64.png',
+                    '/assets/images/icons8-map-100.png',
+                    '/assets/images/icons8-map-pin-100.png'
                   ];
                   /*get heights and width*/
                   let body = document.body,
@@ -35,14 +35,18 @@
                   let width = Math.max( body.scrollWidth, body.offsetWidth, html.clientWidth, html.scrollWidth, html.offsetWidth);
                     
                   for(let i=0; i<10; i++) {
-                    el = document.getElementById('CIRCULAR_ICONS_ANIMATION').appendChild(document.createElement('div'));
+                    let el = document.getElementById('CIRCULAR_ICONS_ANIMATION').appendChild(document.createElement('img'));
                     el.style.position = 'absolute';
-                    
+                    el.src = '';
+                    el.setAttribute('id', i);
+                     
                     el.className = 'circular_path';
                     el.style.left = (Math.random() * width) + 'px';
                     el.style.right = (Math.random() * width) + 'px';
                     el.style.top = (Math.random() * height) + 'px';
                     el.style.bottom = (Math.random() * height) + 'px';
+                    
+                    $(`#${i}`).attr('src', icons[i]);
                   };
                 </script>
 

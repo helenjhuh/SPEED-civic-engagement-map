@@ -3,8 +3,7 @@ process.setMaxListeners(0);
 
 const express = require("express"),
   mongoose = require("mongoose"),
-  bodyParser = require("body-parser"),
-  sanitizer = require("express-sanitizer"),
+  bodyParser = require("body-parser"), sanitizer = require("express-sanitizer"),
   M_OV = require("method-override"),
   GeoJSON = require("geojson"),
   User = require("./models/user.js");
