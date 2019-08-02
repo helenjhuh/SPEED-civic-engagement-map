@@ -67,9 +67,8 @@ app.use(sanitizer());
 app.use(M_OV("_method"));
 
 /* Start mongoose and make sure database is connected */
-const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${
-  process.env.DB_HOST}
-/cem-data`;
+const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}`;
+
 mongoose
   .connect(uri, { useNewUrlParser: true })
   .then(() => console.log("Connection successful"))
