@@ -11,9 +11,9 @@ The Eugene M. Lang Center for Civic and Social Responsibility(https://www.swarth
 ## Motivation
 
 The Civic Engagement Map is a platform that allows the entire campus community to 
-1) visualization,  through pins, of the variety of civic engagement activities on campus for Faculty, Staff, Students and Community Partners, 
-2) an opportunity to see and support new partnerships, and 
-3) a way to measure our civic engagement social impact.  
+1) visualize,  through pins,  the variety of civic engagement activities on campus for Faculty, Staff, Students and Community Partners, 
+2) seize the opportunity to see and support new partnerships, and 
+3) measure our civic engagement social impact.  
 
 ## Goals
 
@@ -30,3 +30,11 @@ We wanted to upgrade the current civic engagement map [site](http://mapmyorg.net
 ## Accessibility
 
 ## Acknowledgements
+
+We would like to thank Denise for proposing the civic engagement project in order to help all faculty, staff, alumni, and students understand and better communicate their passions and interests through a collaborative platform. It has shown us the power of creating a tool for everyone to use in order to make positive impact locally as well as globally.
+
+We are incredibly grateful to our project as well as SPEED program supervisor, Doug Willen, project contributor, Anthony Weed, and our associates at Mapbox, Megan Danielson and Mikel Maron, for their constant support and considerate insight. All provided us with their own expertise and encouragement as we learned how to navigate through designing, implementing, and deploying the civic engagement map. Thank you also to the Swarthmore College Librarians and ITS for all their support behind the scenes through the whole process.
+
+Additionally, we would like to thank all of our fellow SPEED members, Alice Huang ('22), Bilal Soukouna ('22) and Katie Knox ('21), for providing us with supportive feedback and constant support during the duration of this project.
+
+This project was funded by the Swarthmore Projects for Educational Exploration and Development (SPEED) Program at Swarthmore College.
