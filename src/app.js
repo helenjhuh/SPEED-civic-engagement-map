@@ -89,24 +89,8 @@ mongoose.connect(`mongodb+srv://${config.db.user}:${config.db.pass}@${config.db.
 .then(() => console.log(`Connected to ${config.db.host}/${config.db.name}`))
 .catch(err => console.error(err));
 
-// Include auth routes
+app.use("/", require("./routes"));
 app.use("/auth", require("./routes/auth"));
-
-app.get("/", (req, res) => {
-    res.redirect("/home");
-});
-
-app.get("/home", (req, res) => {
-    res.render("pages/landing");
-});
-
-app.get("/home/about", (req, res) => {
-    res.render("pages/about");
-});
-
-app.get("/home/faq", (req, res) => {  
-    res.render("pages/faq");
-});
 
 /* Here we're going to show the specific information for a user
 * we can pass in our req.user as an object because it contains all of
