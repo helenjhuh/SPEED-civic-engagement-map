@@ -1,31 +1,42 @@
 require("dotenv").config();
-process.setMaxListeners(0);
 
-const express = require("express"),
-  mongoose = require("mongoose"),
-  bodyParser = require("body-parser"), sanitizer = require("express-sanitizer"),
-  M_OV = require("method-override"),
-  GeoJSON = require("geojson"),
-  User = require("./models/user.js");
-  geoUser = require("./models/GeoJson.js"),
-  passport = require("passport"),
-  session = require("express-session"),
-  path = require("path"),
-  logger = require("morgan");
+import express from "express";
+import mongoose from "mongoose";
+import bodyParser from "body-parser";
+import sanitizer from "express-sanitizer";
+import session from "express-session";
+import path from "path";
+import logger from "morgan";
+import GeoJSON from "geojson";
+
+import config from "./config";
+
+//process.setMaxListeners(0);
+// const express = require("express"),
+//       mongoose = require("mongoose"),
+//       bodyParser = require("body-parser"), sanitizer = require("express-sanitizer"),
+//       M_OV = require("method-override"),
+//       GeoJSON = require("geojson"),
+//      User = require("./models/user.js");
+//   geoUser = require("./models/GeoJson.js"),
+//   passport = require("passport"),
+//   session = require("express-session"),
+//   path = require("path"),
+//   logger = require("morgan");
 
 /* Share a base client with multiple services with mapbox*/
-const mbxClient = require("@mapbox/mapbox-sdk"),
-  mbxStyles = require("@mapbox/mapbox-sdk/services/styles"),
-  mbxTilesets = require("@mapbox/mapbox-sdk/services/tilesets"),
-  mbxDatasets = require("@mapbox/mapbox-sdk/services/datasets");
-  mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
+const mbxClient = require("@mapbox/mapbox-sdk");
+const mbxStyles = require("@mapbox/mapbox-sdk/services/styles");
+const mbxTilesets = require("@mapbox/mapbox-sdk/services/tilesets");
+const mbxDatasets = require("@mapbox/mapbox-sdk/services/datasets");
+const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 
 /* Initialize our base client with our token */
-const baseClient = mbxClient({ accessToken: process.env.CEM_ID }),
-  stylesService = mbxStyles(baseClient),
-  tilesetsService = mbxTilesets(baseClient);
-  datasetsService = mbxDatasets(baseClient);
-  geocodingService = mbxGeocoding(baseClient);
+const baseClient = mbxClient({ accessToken: config.mapbox.apiToken });
+const stylesService = mbxStyles(baseClient);
+const tilesetsService = mbxTilesets(baseClient);
+const datasetsService = mbxDatasets(baseClient);
+const geocodingService = mbxGeocoding(baseClient);
 
 /* Begin initialization for our app and set up stuff */
 const app = express();
@@ -34,17 +45,18 @@ const app = express();
 // with passport. If we switch to something like token-based authentication
 // we can remove this
 app.use(session({
-  secret: process.env.SESSION_SECRET,
+  secret: config.app.sessionSecret,
   resave: false,
   saveUninitialized: false 
 }));
 
 // require passport as a middleware of express
 require("./middleware/passport")(passport);
+
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use( (req, res, next) => {
+app.use((req, res, next) => {
     res.locals.currentUser = req.user;
     next();
 });
@@ -67,62 +79,43 @@ app.use(sanitizer());
 app.use(M_OV("_method"));
 
 /* Start mongoose and make sure database is connected */
-const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@${process.env.DB_HOST}/${process.env.DB_NAME}`;
-
+const uri = `mongodb://${config.db.user}:${config.db.pass}@${config.db.host}/${config.db.name}`;
 mongoose
   .connect(uri, { useNewUrlParser: true })
   .then(() => console.log("Connection successful"))
   .catch(err => console.log(err));
-
 mongoose.set("useFindAndModify", false);
 mongoose.set("useCreateIndex", true);
-
 
 // Include auth routes
 app.use("/auth", require("./routes/auth"));
 
-//ROOT REDIRECTS TO HOME
 app.get("/", (req, res) => {
     res.redirect("/home");
 });
 
-//HOME ROUTE
 app.get("/home", (req, res) => {
-
     res.render("pages/landing");
-
 });
 
-//ABOUT ROUTE
 app.get("/home/about", (req, res) => {
-
     res.render("pages/about");
-
 });
 
-//FAQ ROUTE
-app.get("/home/faq", (req, res) => {
-    
+app.get("/home/faq", (req, res) => {  
     res.render("pages/faq");
-
 });
 
-//SHOW ACCOUNT PAGE 
+/* Here we're going to show the specific information for a user
+* we can pass in our req.user as an object because it contains all of
+* the information of an account owner already
+*/
 app.get("/home/account/:id", isLoggedIn, (req, res) => {
-
-
-    /* Here we're going to show the specific information for a user
-     * we can pass in our req.user as an object because it contains all of
-     * the information of an account owner already
-     */
     res.render("pages/account", { currUser: req.user});
 });
 
-//FROM SHOW ACCOUNT PAGE ALLOW THE USER TO EDIT THIS PIN
 app.get("/home/account/:id/edit", isLoggedIn, (req, res) => {
-
     let result = [];
-
     geoUser.find({
         '_id': {$in: 
             req.user.usersPins
@@ -130,39 +123,28 @@ app.get("/home/account/:id/edit", isLoggedIn, (req, res) => {
     }, (err, docs) => {
         err ? res.redirect('pages/error') : res.render('pages/manage_pins', {pins: docs});
     });
-
 });
 
-/* Show the map */
+
+/* Get all of the geoJSON representations of user information
+* and render our pages/index which should have all of our markers
+* for each one of those users.
+*/
 app.get("/cem_map", (req, res) => {
-
-  /* Get all of the geoJSON representations of user information
-   * and render our pages/index which should have all of our markers
-   * for each one of those users.
-   */
-
   geoUser.find({}, (err, pinGeo) => {
-    
     err ? res.redirect("pages/error") : res.render("pages/index", { users: JSON.stringify(pinGeo) });
-
   });
 });
 
-/* POST ROUTE */
+/* 
+* If a user is logged in then redirect them to our post page and have them fill out that form.
+* but, if the user isn't logged in then they can't add a pin.
+*
+* We need to convert the form that the user inputted into geoJson and send it off to Mapbox Geocoding service.
+* We also need to save that geoJson object to our database so it can render on our map and we need to link that geoJson
+* to the user that posted it to the map.
+*/
 app.post("/cem_map", isLoggedIn, (req, res) => {
-
-
-    /* 
-     * If a user is logged in then redirect them to our post page and have them fill out that form.
-     * but, if the user isn't logged in then they can't add a pin.
-     *
-     * We need to convert the form that the user inputted into geoJson and send it off to Mapbox Geocoding service.
-     * We also need to save that geoJson object to our database so it can render on our map and we need to link that geoJson
-     * to the user that posted it to the map.
-     */
-    
-
-
     /*Try A search*/
     geocodingService
     .forwardGeocode({
@@ -193,8 +175,6 @@ app.post("/cem_map", isLoggedIn, (req, res) => {
     .send()
     .then(response => {
       /* Grab the coordinates based on our query from here and begin to constuct geoJSON object */
-
-
       let temp = {
         title: req.body.title,
         project_type: req.body.project,
@@ -245,29 +225,23 @@ app.get("/cem_map/new", isLoggedIn, (req, res) => {
 
 //Show info about a pin route
 app.get("/cem_map/:id", (req, res) => {
-
     // res.render("pages/show", {thisPin: found});
     geoUser.findById(req.params.id).exec( (err, found) => {
         (err) ? res.render("pages/error") : res.render("pages/show", {thisPin: found});
     });
-
 });
 
 //EDIT ROUTE
 app.get("/cem_map/:id/edit", checkOwner, (req, res) => {
-
     geoUser.findById(req.params.id).exec( (err, found) => {
         res.render("pages/edit", {thisPin: found});
     });
-
     /*If not we're gonna redirect*/
-
 });
 
 
 //UPDATE A PIN ROUTE
 app.put("/cem_map/:id", checkOwner, (req, res) => {
-
     let newPin = {
         'properties.title': req.body.title,
         'properties.project_type': req.body.project_type,
@@ -279,7 +253,6 @@ app.put("/cem_map/:id", checkOwner, (req, res) => {
         'properties.community_partners': req.body.community_partners,
         'properties.project_mission': req.body.project_mission
     };
-
     geoUser.findByIdAndUpdate(
         req.params.id, 
         { $set: newPin},
@@ -287,14 +260,11 @@ app.put("/cem_map/:id", checkOwner, (req, res) => {
         (err, updatedPin) => {
             (err) ? res.redirect("pages/error") : res.redirect("/cem_map/" + req.params.id);
     });
-
 });
 
 //SHOW ACCOUNT PAGE
 app.get("/cem_map/account/:id", checkOwner, (req, res) => {
-
     res.send("Show accounts page!");
-
 });
 
 //DESTROY A PIN
@@ -302,34 +272,33 @@ app.delete("/cem_map/:id", checkOwner, (req, res) => {
 
     /* Get the owner of this pin */
     geoUser.findById(req.params.id).exec((err, found) => {
-        if(err) {
-            res.render("pages/error");
-        } else {
-            /*Access the owner field and grab the users id*/
-            User.findById(found.properties.owner.id, (err, thisUser) => {
-                if(err) {
-                    res.redirect("pages/error");
-                } else {
-                    
-                    /* After finding user we can update their fields */
-                    User
-                    .updateOne(
-                        {_id: thisUser._id},
-                        { $pull: { usersPins: { $in: [req.params.id] }}}
-                    )
+        if(err) res.render("pages/error");
 
-                    /* Delete was successful if we reach then so we can remove it from our geoUser*/
-                    .then( () => successfulDeleteBlock() )
-                    .catch( (err) => res.redirect("pages/error"));
+        /*Access the owner field and grab the users id*/
+        User.findById(found.properties.owner.id, (err, thisUser) => {
+            if(err) {
+                res.redirect("pages/error");
+            } else {
+                
+                /* After finding user we can update their fields */
+                User
+                .updateOne(
+                    {_id: thisUser._id},
+                    { $pull: { usersPins: { $in: [req.params.id] }}}
+                )
 
-                    function successfulDeleteBlock() {
-                        geoUser.findByIdAndRemove(req.params.id, (err) => {
-                            (err) ? res.redirect("pages/error") : res.redirect("/");
-                        });
-                    };
+                /* Delete was successful if we reach then so we can remove it from our geoUser*/
+                .then( () => successfulDeleteBlock() )
+                .catch( (err) => res.redirect("pages/error"));
+
+                function successfulDeleteBlock() {
+                    geoUser.findByIdAndRemove(req.params.id, (err) => {
+                        (err) ? res.redirect("pages/error") : res.redirect("/");
+                    });
                 };
-            });
-        };
+            };
+        });
+
     });
 });
 
@@ -339,11 +308,7 @@ app.get("*", (req, res) => {
 
 /* MIDDLEWARE */
 function isLoggedIn(req, res, next) {
-
-    if(req.isAuthenticated()) {
-        return next();
-    }
-
+    if(req.isAuthenticated()) return next();
     res.render("pages/auth/login");
 };
 
@@ -368,6 +333,4 @@ function checkOwner(req, res, next) {
     }
 };
 
-app.listen(process.env.PORT, process.env.IP, () => {
-  console.log("CeM app server started");
-});
+app.listen(config.app.port, () => console.log(`App is listening on port ${config.app.port}`));

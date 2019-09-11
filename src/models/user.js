@@ -1,5 +1,5 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
+import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 /**
  * I added an email and password field for this, both of which are required
@@ -10,19 +10,13 @@ const bcrypt = require("bcryptjs");
  *  7/1 - TW
  */
 
-/* We need to add an id for user so that we can link it to our post */
-
-const Schema = mongoose.Schema;
-
 const userSchema = new mongoose.Schema({
-
     first_name: String,
     last_name: String,
     who_am_i: String,
     college: String,
     email: String,
     password: String,
-
     /* our User model has its usersPins field set to an array of ObjectIds that are geoJsons*/
     usersPins: [ {type: mongoose.Schema.Types.ObjectId, ref: "geoJson"} ]
 });
@@ -30,10 +24,8 @@ const userSchema = new mongoose.Schema({
 // This hashes a new user's password
 userSchema.pre("save", function(next) {
   let user = this;
-
   // The password only needs to be hashed if it is new
   if (!user.isModified("password")) return next();
-
   const salt_work_factor = 11;
   bcrypt.genSalt(salt_work_factor, (error, salt) => {
     if (error) return next(error);
@@ -42,16 +34,11 @@ userSchema.pre("save", function(next) {
       user.password = hash;
       next();
     })
-  })  
-  
+  })
 });
 
-// This compares the user's given password with the hash
+// This compares the user's given password with the hash. It will return true or false, depending
+// on if the provided password was correct
+userSchema.methods.validPassword = (password, encryptedPassword) => bcrypt.compareSync(password, encryptedPassword)
 
-userSchema.methods.validPassword = (password, encryptedPassword) => (
-        
-    bcrypt.compareSync(password, encryptedPassword)
-
-)
-
-module.exports = mongoose.model("User", userSchema);
+export default mongoose.model("User", userSchema);
