@@ -1,12 +1,12 @@
 {
   "name": "v1",
   "version": "1.0.0",
-  "description": "First iterartion for our civic engagement map",
+  "description": "Civic Engagement map project for Swarthmore College",
   "main": "app.js",
   "scripts": {
     "start": "nodemon src/app.js"
   },
-  "author": "Steven Fernandez",
+  "author": "Swarthmore College, Steven Fernandez",
   "license": "ISC",
   "dependencies": {
     "@mapbox/mapbox-sdk": "^0.6.0",

@@ -1,5 +1,6 @@
-const config = {
+module.exports = {
     app: {
+        env: process.env.NODE_ENV || "development",
         port: process.env.APP_PORT,
         sessionSecret: process.env.SESSION_SECRET,
         saltWorkFactor: process.env.SALT_WORK_FACTOR
@@ -11,8 +12,6 @@ const config = {
         name: process.env.DB_NAME
     },
     mapbox: {
-        apiToken: process.env.MABOX_TOKEN
+        apiToken: process.env.MAPBOX_TOKEN
     }
 }
-
-export default config;

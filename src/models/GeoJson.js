@@ -1,11 +1,10 @@
-import mongoose from "mongoose";
-
+const mongoose = require("mongoose");
 /* This is our geoUserSchema which will convert our form data
  * into a geoJSON correct format that can then be inserted into
  * our database...
  */
 
-let geoJsonSchema = new mongoose.Schema({
+let geoJsonSchema = mongoose.Schema({
 
     type: {
         type: String
@@ -49,4 +48,4 @@ let geoJsonSchema = new mongoose.Schema({
     }
 });
 
-export default mongoose.model("geoJson", geoJsonSchema);
+module.exports = mongoose.model("geoJson", geoJsonSchema);

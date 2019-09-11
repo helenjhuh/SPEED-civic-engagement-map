@@ -1,5 +1,5 @@
-import mongoose from "mongoose";
-import bcrypt from "bcryptjs";
+const mongoose = require("mongoose");
+const bcrypt = require("bcryptjs");
 
 /**
  * I added an email and password field for this, both of which are required
@@ -10,7 +10,7 @@ import bcrypt from "bcryptjs";
  *  7/1 - TW
  */
 
-const userSchema = new mongoose.Schema({
+const userSchema = mongoose.Schema({
     first_name: String,
     last_name: String,
     who_am_i: String,
@@ -41,4 +41,4 @@ userSchema.pre("save", function(next) {
 // on if the provided password was correct
 userSchema.methods.validPassword = (password, encryptedPassword) => bcrypt.compareSync(password, encryptedPassword)
 
-export default mongoose.model("User", userSchema);
+module.exports = mongoose.model("User", userSchema);
