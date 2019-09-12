@@ -2,9 +2,10 @@
   "name": "v1",
   "version": "1.0.0",
   "description": "Civic Engagement map project for Swarthmore College",
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
-    "start": "nodemon src/app.js"
+    "start": "node src/app.js",
+    "start:dev": "nodemon src/app.js"
   },
   "author": "Swarthmore College, Steven Fernandez",
   "license": "ISC",
@@ -24,6 +25,7 @@
     "morgan": "^1.9.1",
     "nodemon": "^1.19.1",
     "passport": "^0.4.0",
-    "passport-local": "^1.0.0"
+    "passport-local": "^1.0.0",
+    "pug": "^2.0.4"
   }
 }
