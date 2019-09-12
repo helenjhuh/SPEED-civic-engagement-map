@@ -9,6 +9,11 @@
   },
   "author": "Swarthmore College, Steven Fernandez",
   "license": "ISC",
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged --pattern \"**/*.js\""
+    }
+  },
   "dependencies": {
     "@mapbox/mapbox-sdk": "^0.6.0",
     "bcryptjs": "^2.4.3",
@@ -27,5 +32,9 @@
     "passport": "^0.4.0",
     "passport-local": "^1.0.0",
     "pug": "^2.0.4"
+  },
+  "devDependencies": {
+    "husky": "^3.0.5",
+    "pretty-quick": "^1.11.1"
   }
 }
