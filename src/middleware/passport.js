@@ -1,5 +1,5 @@
 const passport = require("passport");
-const User = require("../models/user");
+const User = require("../models");
 
 const LocalLoginStrategy = require("./strategies/local-login");
 const LocalSignupStrategy = require("./strategies/local-signup");
@@ -11,10 +11,10 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((id, done) => {
   User.findById(id, (err, user) => {
     done(err, user);
-  })
+  });
 });
 
 module.exports = passport => {
   passport.use("local-login", LocalLoginStrategy),
-  passport.use("local-signup", LocalSignupStrategy)
+    passport.use("local-signup", LocalSignupStrategy);
 };
