@@ -45,12 +45,19 @@ exports.edit = (req, res) => {
 
 exports.add = (req, res) => {
   Joi.validate(req.body, userValidator, (error, isValid) => {
-    if (error) return SendFailure(res, 400, error.toString());
+    if (error) {
+      console.error(error);
+      return SendFailure(res, 400, error.toString());
+    }
 
     const { first, last, email, password } = req.body;
 
     User.create({ first, last, email, password }, (error, user) => {
-      if (error) return SendError(res, 500, error);
+      if (error) {
+        console.error(error.toString());
+
+        return SendError(res, 500, error);
+      }
       return SendSuccess(res, 200, { user });
     });
   });

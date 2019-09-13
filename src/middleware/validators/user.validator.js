@@ -9,7 +9,7 @@ module.exports = Joi.object().keys({
     .min(2)
     .max(64),
   email: Joi.string().required(),
-  projects: Joi.array().items(Joi.string().required()),
+  projects: Joi.array().items(Joi.string()),
   address: Joi.string(),
-  roles: Joi.array().items(Joi.string().required())
+  roles: Joi.array().items(Joi.string())
 });

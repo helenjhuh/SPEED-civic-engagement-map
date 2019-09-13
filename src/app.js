@@ -11,7 +11,7 @@ const path = require("path");
 const logger = require("morgan");
 const GeoJSON = require("geojson");
 const passport = require("passport");
-const M_OV = require("method-override"); // TODO: not sure if this is needed.
+//const M_OV = require("method-override"); // TODO: not sure if this is needed.
 const mbxClient = require("@mapbox/mapbox-sdk");
 const mbxStyles = require("@mapbox/mapbox-sdk/services/styles");
 const mbxTilesets = require("@mapbox/mapbox-sdk/services/tilesets");
@@ -19,6 +19,7 @@ const mbxDatasets = require("@mapbox/mapbox-sdk/services/datasets");
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 
 const routes = require("./routes");
+const apiRoutes = require("./routes/api");
 
 const baseClient = mbxClient({ accessToken: config.mapbox.apiToken });
 const stylesService = mbxStyles(baseClient);
@@ -46,6 +47,11 @@ require("./middleware/passport")(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.use("/api/users", apiRoutes.userRoutes);
+app.use("/api/pins", apiRoutes.pinRoutes);
+app.use("/api/projects", apiRoutes.projectRoutes);
+app.use("/api/roles", apiRoutes.roleRoutes);
+
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   next();
@@ -65,8 +71,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 /* We'll use sanitizer for our inputs before we add them to our database */
 app.use(sanitizer());
 
-/* We'll use method override for DELETE, PUT, EDIT requests ! */
-app.use(M_OV("_method"));
+// /* We'll use method override for DELETE, PUT, EDIT requests ! */
+// app.use(M_OV("_method"));
 
 /* Start mongoose and make sure database is connected */
 mongoose
@@ -86,7 +92,7 @@ mongoose
 //app.use("/auth",  routes.authRoutes);
 //app.use("/map",   routes.mapRoutes)
 
-app.get("*", (req, res) => res.render("pages/error"));
+//app.get("*", (req, res) => res.render("pages/error"));
 
 app.listen(config.app.port, () =>
   console.log(
