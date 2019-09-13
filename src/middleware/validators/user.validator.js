@@ -1,6 +1,6 @@
 import Joi from "@hapi/joi";
 
-export default Joi.object().keys({
+module.exports = Joi.object().keys({
   first: Joi.string()
     .min(2)
     .max(64)

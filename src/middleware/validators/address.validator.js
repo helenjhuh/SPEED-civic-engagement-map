@@ -1,6 +1,6 @@
 import Joi from "@hapi/joi";
 
-export default Joi.object().keys({
+module.exports = Joi.object().keys({
   belongsTo: Joi.string().required(),
   street1: Joi.string(),
   street2: Joi.string(),

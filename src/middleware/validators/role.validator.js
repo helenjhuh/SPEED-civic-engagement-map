@@ -1,6 +1,6 @@
 import Joi from "@hapi/joi";
 
-export default Joi.object().keys({
+module.exports = Joi.object().keys({
   name: Joi.string().required(),
   description: Joi.string().required()
 });
