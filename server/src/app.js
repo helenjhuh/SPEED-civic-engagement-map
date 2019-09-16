@@ -58,8 +58,8 @@ app.use((req, res, next) => {
 });
 
 // configure ejs as the view engine and set the views directory
-app.set("view engine", "ejs");
-app.set("views", path.join(__dirname, "views"));
+// app.set("view engine", "ejs");
+// app.set("views", path.join(__dirname, "views"));
 
 // Use logger
 app.use(logger(config.app.env === "development" ? "dev" : "tiny"));
@@ -76,15 +76,12 @@ app.use(sanitizer());
 
 /* Start mongoose and make sure database is connected */
 mongoose
-  .connect(
-    `mongodb+srv://${config.db.user}:${config.db.pass}@${config.db.host}/${config.db.name}`,
-    {
-      useNewUrlParser: true,
-      useFindAndModify: false,
-      useCreateIndex: true,
-      useUnifiedTopology: true
-    }
-  )
+  .connect(`mongodb+srv://${config.db.user}:${config.db.pass}@${config.db.host}/${config.db.name}`, {
+    useNewUrlParser: true,
+    useFindAndModify: false,
+    useCreateIndex: true,
+    useUnifiedTopology: true
+  })
   .then(() => console.log(`Connected to ${config.db.host}/${config.db.name}`))
   .catch(err => console.error(err));
 
