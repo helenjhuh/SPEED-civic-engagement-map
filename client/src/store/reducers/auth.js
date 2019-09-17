@@ -12,13 +12,23 @@ export default function(state = initialState, action) {
     case AUTH.LOGIN_REQUEST:
       return { ...state, isLoading: true };
     case AUTH.LOGIN_SUCCESS:
-      return { ...state, isLoading: false, isLoggedIn: true };
+      return {
+        ...state,
+        isLoading: false,
+        isLoggedIn: true,
+        loggedInAs: action.payload.data.user
+      };
     case AUTH.LOGIN_FAILURE:
       return { ...state, isLoading: false, error: action.payload.message };
     case AUTH.SIGNUP_REQUEST:
       return { ...state, isLoading: true };
     case AUTH.SIGNUP_SUCCESS:
-      return { ...state, isLoading: false, isLoggedIn: true };
+      return {
+        ...state,
+        isLoading: false,
+        isLoggedIn: true,
+        loggedInAs: action.payload.data.user
+      };
     case AUTH.SIGNUP_FAILURE:
       return { ...state, isLoading: false, error: action.payload.message };
     case AUTH.LOGOUT:
