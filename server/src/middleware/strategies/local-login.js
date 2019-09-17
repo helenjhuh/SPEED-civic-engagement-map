@@ -1,5 +1,5 @@
 const LocalStrategy = require("passport-local").Strategy;
-const User = require("../../models");
+const User = require("../../models/user.model");
 
 const LocalLoginStrategy = new LocalStrategy(
   {
@@ -14,7 +14,6 @@ const LocalLoginStrategy = new LocalStrategy(
       if (!user) return done(null, false);
 
       // user supplied incorrect password
-
       if (!user.validPassword(password, user.password))
         return done(null, false);
 

@@ -7,10 +7,10 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const sanitizer = require("express-sanitizer");
 const session = require("express-session");
-const path = require("path");
 const logger = require("morgan");
 const GeoJSON = require("geojson");
 const passport = require("passport");
+
 //const M_OV = require("method-override"); // TODO: not sure if this is needed.
 const mbxClient = require("@mapbox/mapbox-sdk");
 const mbxStyles = require("@mapbox/mapbox-sdk/services/styles");
@@ -35,20 +35,42 @@ const app = express();
 app.use(
   session({
     secret: config.app.sessionSecret,
-    resave: false,
-    saveUninitialized: false
+    resave: true,
+    saveUninitialized: true
   })
 );
 
-// require passport as a middleware of express
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// Set up passport
 require("./middleware/passport")(passport);
 
-app.use(passport.initialize());
+app.use(passport.initialize(null));
 app.use(passport.session());
 
-app.use("/api/auth", require("./routes/api/auth.routes"));
+//
+// Set up cross-origin policy for development
+//
 
-//app.use("/api/users", apiRoutes.userRoutes);
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  next();
+});
+
+// Use logger
+app.use(logger("dev"));
+
+/* Point to stylesheets in ./public */
+app.use(express.static("public"));
+
+app.use("/api/auth", apiRoutes.authRoutes);
+app.use("/api/users", apiRoutes.userRoutes);
+
 //app.use("/api/pins", apiRoutes.pinRoutes);
 //app.use("/api/projects", apiRoutes.projectRoutes);
 //app.use("/api/roles", apiRoutes.roleRoutes);
@@ -62,13 +84,6 @@ app.use("/api/auth", require("./routes/api/auth.routes"));
 // app.set("view engine", "ejs");
 // app.set("views", path.join(__dirname, "views"));
 
-// Use logger
-app.use(logger(config.app.env === "development" ? "dev" : "tiny"));
-
-/* Point to stylesheets in ./public */
-app.use(express.static("public"));
-app.use(bodyParser.urlencoded({ extended: true }));
-
 /* We'll use sanitizer for our inputs before we add them to our database */
 app.use(sanitizer());
 
@@ -77,12 +92,15 @@ app.use(sanitizer());
 
 /* Start mongoose and make sure database is connected */
 mongoose
-  .connect(`mongodb+srv://${config.db.user}:${config.db.pass}@${config.db.host}/${config.db.name}`, {
-    useNewUrlParser: true,
-    useFindAndModify: false,
-    useCreateIndex: true,
-    useUnifiedTopology: true
-  })
+  .connect(
+    `mongodb+srv://${config.db.user}:${config.db.pass}@${config.db.host}/${config.db.name}`,
+    {
+      useNewUrlParser: true,
+      useFindAndModify: false,
+      useCreateIndex: true,
+      useUnifiedTopology: true
+    }
+  )
   .then(() => console.log(`Connected to ${config.db.host}/${config.db.name}`))
   .catch(err => console.error(err));
 
