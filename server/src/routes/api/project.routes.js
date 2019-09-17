@@ -23,6 +23,11 @@ router.put("/:id/edit", projectController.edit);
 router.post("/add", projectController.add);
 
 /**
+ * @description Add a project with an address
+ */
+router.post("/add-with-address", projectController.addWithAddress);
+
+/**
  * @description Delete a project
  */
 router.delete("/:id/delete", projectController.delete);

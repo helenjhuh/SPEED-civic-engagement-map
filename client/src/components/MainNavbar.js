@@ -50,7 +50,7 @@ const MainNavbar = ({ isLoggedIn, loggedInAs, logout }) => {
         {isLoggedIn && (
           <>
             <NavDropdown title="Dropdown" id="basic-nav-dropdown">
-              <LinkContainer to="/projects/new">
+              <LinkContainer to="/projects/add">
                 <NavDropdown.Item>Add project</NavDropdown.Item>
               </LinkContainer>
               <LinkContainer to="/projects/my">

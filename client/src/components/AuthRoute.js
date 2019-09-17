@@ -10,12 +10,12 @@ const mapStateToProps = state => ({
   loggedInAs: state.auth.loggedInAs
 });
 
-const AuthRoute = ({ component: Component, ...rest }) => {
+const AuthRoute = ({ component: Component, isLoggedIn, ...rest }) => {
   return (
     <Route
       {...rest}
       render={props =>
-        props.isLoggedIn ? (
+        isLoggedIn ? (
           <Component {...props} />
         ) : (
           <Redirect

@@ -1,9 +1,9 @@
 import React from "react";
 import { HashRouter, Switch, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Home, Faq, About, IMap, Signup, Login } from "./pages";
+import { Home, Faq, About, IMap, Signup, Login, AddProject } from "./pages";
 import { connect } from "react-redux";
-import { Layout } from "./components";
+import { Layout, AuthRoute } from "./components";
 
 const mapStateToProps = state => ({
   isLoggedIn: state.auth.isLoggedIn,
@@ -21,6 +21,7 @@ const App = ({ isLoggedIn, loggedInAs }) => {
           <Route exact path="/faq" component={Faq} />
           <Route exact path="/login" component={Login} />
           <Route exact path="/signup" component={Signup} />
+          <AuthRoute exact path="/projects/add" component={AddProject} />
         </Switch>
       </Layout>
     </HashRouter>

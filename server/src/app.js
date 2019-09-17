@@ -60,10 +60,9 @@ app.use(cors());
 
 app.use("/api/auth", apiRoutes.authRoutes);
 app.use("/api/users", apiRoutes.userRoutes);
-
-//app.use("/api/pins", apiRoutes.pinRoutes);
-//app.use("/api/projects", apiRoutes.projectRoutes);
-//app.use("/api/roles", apiRoutes.roleRoutes);
+app.use("/api/pins", apiRoutes.pinRoutes);
+app.use("/api/projects", apiRoutes.projectRoutes);
+app.use("/api/roles", apiRoutes.roleRoutes);
 
 //app.use((req, res, next) => {
 //  res.locals.currentUser = req.user;

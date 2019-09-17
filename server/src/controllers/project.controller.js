@@ -1,4 +1,4 @@
-const { Project } = require("../models");
+const { Project, Address } = require("../models");
 const { Types } = require("mongoose");
 const { SendSuccess, SendFailure, SendError } = require("../helpers/responses");
 const en_US = require("../localization/en_US");
@@ -61,6 +61,53 @@ exports.add = (req, res) => {
       }
     );
   });
+};
+
+exports.addWithAddress = (req, res) => {
+  const {
+    name,
+    description,
+    type,
+    website,
+    street1,
+    street2,
+    city,
+    region,
+    zip,
+    country,
+    owner
+  } = req.body;
+  // create the address first
+  Address.create(
+    {
+      street1,
+      street2,
+      city,
+      region,
+      zip,
+      country
+    },
+    (error, address) => {
+      if (error) return SendError(res, 500, error);
+
+      // now that we have the address, we can create the project, and establish a
+      // relationship between the address and the project
+      Project.create(
+        {
+          name,
+          description,
+          type,
+          website,
+          address: address._id,
+          owner
+        },
+        (error, project) => {
+          if (error) return SendError(res, 500, error);
+          return SendSuccess(res, 200, { project });
+        }
+      );
+    }
+  );
 };
 
 exports.delete = (req, res) => {

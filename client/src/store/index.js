@@ -12,10 +12,15 @@ const initialState = {
     token,
     loggedInAs: JSON.parse(user),
     isLoggedIn: token && user ? true : false
-  }
+  },
+  project: {}
 };
 
-const store = createStore(rootReducer, initialState, applyMiddleware(thunk, apiMiddleware, logger));
+const store = createStore(
+  rootReducer,
+  initialState,
+  applyMiddleware(thunk, apiMiddleware, logger)
+);
 
 store.subscribe(() => {
   const state = store.getState();
