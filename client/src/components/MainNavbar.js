@@ -2,6 +2,7 @@ import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import { LinkContainer } from "react-router-bootstrap";
 import Nav from "react-bootstrap/Nav";
+import NavDropdown from "react-bootstrap/NavDropdown";
 import { connect } from "react-redux";
 
 const mapStateToProps = state => ({
@@ -11,7 +12,7 @@ const mapStateToProps = state => ({
 
 const MainNavbar = ({ isLoggedIn, loggedInAs }) => {
   return (
-    <Navbar bg="light" expand="lg" className="container">
+    <Navbar bg="light" expand="lg">
       <LinkContainer to="/">
         <Navbar.Brand href="/">Swarthmore</Navbar.Brand>
       </LinkContainer>
@@ -27,24 +28,39 @@ const MainNavbar = ({ isLoggedIn, loggedInAs }) => {
           <LinkContainer to="/map">
             <Nav.Link>View map</Nav.Link>
           </LinkContainer>
-          {/* Only show these links of the user is not authed */}
-          <LinkContainer to="/login">
-            <Nav.Link>Login</Nav.Link>
-          </LinkContainer>
-          <LinkContainer to="/signup">
-            <Nav.Link>Signup</Nav.Link>
-          </LinkContainer>
-          {/* Only show these links if the user is authed */}
-          <LinkContainer to="/projects/new">
-            <Nav.Link>Add a project</Nav.Link>
-          </LinkContainer>
-          <LinkContainer to="/account">
-            <Nav.Link>Manage account</Nav.Link>
-          </LinkContainer>
-          <LinkContainer to="/logout">
-            <Nav.Link>Logout</Nav.Link>
-          </LinkContainer>
         </Nav>
+        {/* Only show these links of the user is not authed */}
+        {!isLoggedIn && (
+          <>
+            <LinkContainer to="/login">
+              <Nav.Link>Login</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to="/signup">
+              <Nav.Link>Signup</Nav.Link>
+            </LinkContainer>
+          </>
+        )}
+
+        {/* Only show these links if the user is authed */}
+        {isLoggedIn && (
+          <>
+            <NavDropdown title="Dropdown" id="basic-nav-dropdown">
+              <LinkContainer to="/projects/new">
+                <NavDropdown.Item>Add project</NavDropdown.Item>
+              </LinkContainer>
+              <LinkContainer to="/projects/my">
+                <NavDropdown.Item>My projects</NavDropdown.Item>
+              </LinkContainer>
+            </NavDropdown>
+
+            <LinkContainer to="/account">
+              <Nav.Link>Manage account</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to="/logout">
+              <Nav.Link>Logout</Nav.Link>
+            </LinkContainer>
+          </>
+        )}
       </Navbar.Collapse>
     </Navbar>
   );

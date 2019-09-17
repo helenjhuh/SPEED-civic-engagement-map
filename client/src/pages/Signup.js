@@ -3,6 +3,7 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { actions } from "../store/actions";
 import { connect } from "react-redux";
+import { Redirect } from "react-router-dom";
 
 const mapStateToProps = state => ({
   isLoggedIn: state.auth.isLoggedIn,
@@ -36,7 +37,8 @@ class Signup extends Component {
     });
   }
 
-  signup() {
+  signup(e) {
+    e.preventDefault();
     // construct the payload
     const payload = {
       first: this.state.first,
@@ -45,27 +47,51 @@ class Signup extends Component {
       college: this.state.college,
       password: this.state.password
     };
-
     this.props.signup(payload);
   }
 
   render() {
     return (
       <div>
+        {/* if there's an error, display it to the user */}
+        {this.props.error && <p className="error">{this.props.error}</p>}
+
+        {/* if the user is already logged in, redirect them to the home page */}
+        {this.props.isLoggedIn && (
+          <Redirect
+            to={{ pathname: "/", state: { from: this.props.location } }}
+          />
+        )}
+
         <Form>
           <Form.Group controlId="formFirstName">
             <Form.Label>First Name</Form.Label>
-            <Form.Control type="text" placeholder="First name" name="first" onChange={this.onFormChange} />
+            <Form.Control
+              type="text"
+              placeholder="First name"
+              name="first"
+              onChange={this.onFormChange}
+            />
           </Form.Group>
 
           <Form.Group controlId="formLastName">
             <Form.Label>Last Name</Form.Label>
-            <Form.Control type="text" placeholder="Last name" name="last" onChange={this.onFormChange} />
+            <Form.Control
+              type="text"
+              placeholder="Last name"
+              name="last"
+              onChange={this.onFormChange}
+            />
           </Form.Group>
 
           <Form.Group controlId="formEmail">
             <Form.Label>Email</Form.Label>
-            <Form.Control type="email" placeholder="Email" name="email" onChange={this.onFormChange} />
+            <Form.Control
+              type="email"
+              placeholder="Email"
+              name="email"
+              onChange={this.onFormChange}
+            />
           </Form.Group>
 
           <Form.Group controlId="formCollege">
