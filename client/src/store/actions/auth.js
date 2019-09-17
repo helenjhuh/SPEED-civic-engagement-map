@@ -17,14 +17,14 @@ export function login(payload) {
 }
 
 export function signup(payload) {
-  const { username, email, password } = payload;
+  const { first, last, email, college, password } = payload;
   return {
     [RSAA]: {
       endpoint: "/auth/signup",
       method: "POST",
       headers: { "Content-Type": "application/json" },
       types: [AUTH.SIGNUP_REQUEST, AUTH.SIGNUP_SUCCESS, AUTH.SIGNUP_FAILURE],
-      body: JSON.stringify({ username, email, password })
+      body: JSON.stringify({ first, last, email, college, password })
     }
   };
 }

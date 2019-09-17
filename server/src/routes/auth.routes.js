@@ -15,14 +15,4 @@ router.get("/logout", (req, res) => {
   res.redirect("/");
 });
 
-router.post("/signup", passport.authenticate("local-signup", {
-  successRedirect: "/",
-  failureRedirect: "/signup"
-}));
-
-router.post("/login", passport.authenticate("local-login", {
-  successRedirect: "/",
-  failureRedirect: "/login"
-}));
-
 module.exports = router;

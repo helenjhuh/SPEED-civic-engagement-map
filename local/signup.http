@@ -1,0 +1,12 @@
+POST http://localhost:9000/auth/signup
+Content-Type: application/json
+
+{
+  "first": "Anthony",
+  "last": "Weed",
+  "email": "someone@somewhere.com",
+  "college": "Swarthmore",
+  "password": "notsosecret998"
+}
+
+GET http://localhost:9000/auth/test

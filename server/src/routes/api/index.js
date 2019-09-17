@@ -3,5 +3,6 @@ module.exports = {
   pinRoutes: require("./pin.routes"),
   projectRoutes: require("./project.routes"),
   roleRoutes: require("./role.routes"),
-  userRoutes: require("./user.routes")
+  userRoutes: require("./user.routes"),
+  authRoutes: require("./auth.routes")
 };

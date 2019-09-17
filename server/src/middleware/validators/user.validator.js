@@ -8,7 +8,9 @@ module.exports = Joi.object().keys({
   last: Joi.string()
     .min(2)
     .max(64),
+  college: Joi.string(),
   email: Joi.string().required(),
+  password: Joi.string().required(),
   projects: Joi.array().items(Joi.string()),
   address: Joi.string(),
   roles: Joi.array().items(Joi.string())

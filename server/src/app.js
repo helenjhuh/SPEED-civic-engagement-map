@@ -18,7 +18,6 @@ const mbxTilesets = require("@mapbox/mapbox-sdk/services/tilesets");
 const mbxDatasets = require("@mapbox/mapbox-sdk/services/datasets");
 const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
 
-const routes = require("./routes");
 const apiRoutes = require("./routes/api");
 
 const baseClient = mbxClient({ accessToken: config.mapbox.apiToken });
@@ -47,15 +46,17 @@ require("./middleware/passport")(passport);
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use("/api/users", apiRoutes.userRoutes);
-app.use("/api/pins", apiRoutes.pinRoutes);
-app.use("/api/projects", apiRoutes.projectRoutes);
-app.use("/api/roles", apiRoutes.roleRoutes);
+app.use("/api/auth", require("./routes/api/auth.routes"));
 
-app.use((req, res, next) => {
-  res.locals.currentUser = req.user;
-  next();
-});
+//app.use("/api/users", apiRoutes.userRoutes);
+//app.use("/api/pins", apiRoutes.pinRoutes);
+//app.use("/api/projects", apiRoutes.projectRoutes);
+//app.use("/api/roles", apiRoutes.roleRoutes);
+
+//app.use((req, res, next) => {
+//  res.locals.currentUser = req.user;
+//  next();
+//});
 
 // configure ejs as the view engine and set the views directory
 // app.set("view engine", "ejs");
