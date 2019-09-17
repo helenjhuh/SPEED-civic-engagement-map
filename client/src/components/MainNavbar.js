@@ -4,13 +4,18 @@ import { LinkContainer } from "react-router-bootstrap";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import { connect } from "react-redux";
+import { actions } from "../store/actions/auth";
 
 const mapStateToProps = state => ({
   isLoggedIn: state.auth.isLoggedIn,
   loggedInAs: state.auth.loggedInAs
 });
 
-const MainNavbar = ({ isLoggedIn, loggedInAs }) => {
+const mapDispatchToProps = dispatch => ({
+  logout: () => dispatch(actions.logout())
+});
+
+const MainNavbar = ({ isLoggedIn, loggedInAs, logout }) => {
   return (
     <Navbar bg="light" expand="lg">
       <LinkContainer to="/">
@@ -56,9 +61,8 @@ const MainNavbar = ({ isLoggedIn, loggedInAs }) => {
             <LinkContainer to="/account">
               <Nav.Link>Manage account</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/logout">
-              <Nav.Link>Logout</Nav.Link>
-            </LinkContainer>
+
+            <Nav.Link onClick={logout}>Logout</Nav.Link>
           </>
         )}
       </Navbar.Collapse>
@@ -66,4 +70,7 @@ const MainNavbar = ({ isLoggedIn, loggedInAs }) => {
   );
 };
 
-export default connect(mapStateToProps)(MainNavbar);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(MainNavbar);
