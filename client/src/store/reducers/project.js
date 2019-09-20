@@ -3,7 +3,8 @@ import { PROJECT } from "../types";
 const initialState = {
   isLoading: false,
   error: null,
-  added: "" // holds the added project
+  added: "", // holds the added project
+  byUser: ""
 };
 
 export default function(state = initialState, action) {
@@ -25,6 +26,25 @@ export default function(state = initialState, action) {
       return {
         ...state,
         isLoading: false,
+        error: action.payload.message
+      };
+    case PROJECT.BY_USER_REQUEST:
+      return {
+        ...state,
+        isLoading: true,
+        error: null
+      };
+    case PROJECT.BY_USER_SUCCESS:
+      return {
+        ...state,
+        isLoading: false,
+        byUser: action.payload.data.projects
+      };
+    case PROJECT.BY_USER_FAILURE:
+      return {
+        ...state,
+        isLoading: false,
+        byUser: "",
         error: action.payload.message
       };
     default:

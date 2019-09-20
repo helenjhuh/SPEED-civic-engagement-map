@@ -1,10 +1,10 @@
 import { RSAA } from "redux-api-middleware";
 import { PROJECT } from "../types";
 
-export const actions = { add };
+export const actions = { add, byUser };
 
 // This should return any projects owned by a given user
-export function ownedBy(payload) {
+export function byUser(payload) {
   const { id } = payload;
 
   return {

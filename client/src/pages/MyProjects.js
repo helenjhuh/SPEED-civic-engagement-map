@@ -4,11 +4,14 @@ import { connect } from "react-redux";
 import { actions } from "../store/actions";
 
 const mapStateToProps = state => ({
-  loggedInAs: state.auth.loggedInAs
+  loggedInAs: state.auth.loggedInAs,
+  userProjects: state.project.byUser,
+  isLoading: state.project.isLoading,
+  error: state.project.error
 });
 
 const mapDispatchToProps = dispatch => ({
-  read: payload => dispatch(actions.project.read(payload))
+  getUserProjects: payload => dispatch(actions.project.byUser(payload))
 });
 
 class MyProjects extends Component {
@@ -16,7 +19,6 @@ class MyProjects extends Component {
     super();
     this.state = {
       error: "",
-      projects: "",
       isLoading: false
     };
 
@@ -24,27 +26,14 @@ class MyProjects extends Component {
     this.projectDeleteClick = this.projectDeleteClick.bind(this);
   }
   componentDidMount() {
-    // First, set the loading state to true
-    this.setState({ isLoading: true });
-
-    const promises = [];
-
-    // When the component starts, get all of the logged in user's projects
-    this.props.loggedInAs.projects.map(pid =>
-      promises.push(fetch(`/api/projects/${pid}`))
-    );
-
-    Promise.all(promises)
-      .then(projects => this.setState({ projects: projects.data }))
-      .catch(error => this.setState({ error }))
-      .finally(() => this.setState({ isLoading: false }));
+    this.props.getUserProjects({ id: this.props.loggedInAs._id });
   }
 
-  projectEditClick() {
-    console.log("Clicked edit button");
+  projectEditClick(id) {
+    console.log("Clicked edit button for ", id);
   }
-  projectDeleteClick() {
-    console.log("Clicked delete button");
+  projectDeleteClick(id) {
+    console.log("Clicked delete button for ", id);
   }
 
   render() {
@@ -58,9 +47,9 @@ class MyProjects extends Component {
         )}
 
         {/* If there are projects, display them to the user */}
-        {this.state.projects &&
-          this.state.projects.length > 0 &&
-          this.state.projects.map((p, i) => (
+        {this.props.userProjects &&
+          this.props.userProjects.length > 0 &&
+          this.props.userProjects.map((p, i) => (
             <ProjectCard
               key={i}
               id={p._id}
@@ -68,8 +57,8 @@ class MyProjects extends Component {
               description={p.description}
               type={p.type}
               website={p.website}
-              editOnClick={this.projectEditClick}
-              delOnClick={this.projectDeleteClick}
+              editOnClick={() => this.projectEditClick(p._id)}
+              delOnClick={() => this.projectDeleteClick(p._id)}
             />
           ))}
       </>
