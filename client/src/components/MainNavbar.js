@@ -53,12 +53,12 @@ const MainNavbar = ({ isLoggedIn, loggedInAs, logout }) => {
               <LinkContainer to="/projects/add">
                 <NavDropdown.Item>Add project</NavDropdown.Item>
               </LinkContainer>
-              <LinkContainer to="/projects/my">
+              <LinkContainer to="/my/projects">
                 <NavDropdown.Item>My projects</NavDropdown.Item>
               </LinkContainer>
             </NavDropdown>
 
-            <LinkContainer to="/account">
+            <LinkContainer to="/my/account">
               <Nav.Link>Manage account</Nav.Link>
             </LinkContainer>
 

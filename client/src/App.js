@@ -1,7 +1,16 @@
 import React from "react";
 import { HashRouter, Switch, Route } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { Home, Faq, About, IMap, Signup, Login, AddProject } from "./pages";
+import {
+  Home,
+  Faq,
+  About,
+  IMap,
+  Signup,
+  Login,
+  AddProject,
+  MyProjects
+} from "./pages";
 import { connect } from "react-redux";
 import { Layout, AuthRoute } from "./components";
 
@@ -22,6 +31,7 @@ const App = ({ isLoggedIn, loggedInAs }) => {
           <Route exact path="/login" component={Login} />
           <Route exact path="/signup" component={Signup} />
           <AuthRoute exact path="/projects/add" component={AddProject} />
+          <AuthRoute exact path="/my/projects" component={MyProjects} />
         </Switch>
       </Layout>
     </HashRouter>

@@ -1,4 +1,4 @@
-const { Project, Address } = require("../models");
+const { Project, Address, User } = require("../models");
 const { Types } = require("mongoose");
 const { SendSuccess, SendFailure, SendError } = require("../helpers/responses");
 const en_US = require("../localization/en_US");
@@ -103,11 +103,32 @@ exports.addWithAddress = (req, res) => {
         },
         (error, project) => {
           if (error) return SendError(res, 500, error);
-          return SendSuccess(res, 200, { project });
+          // once we have the project, we need to add the project id to
+          // the user's project stack
+          User.findOne({ _id: owner }, (error, user) => {
+            if (error) return SendError(res, 500, error);
+            user.projects.push(project._id);
+            user.save(error => {
+              if (error) return SendError(res, 500, error);
+              return SendSuccess(res, 200, { project });
+            });
+          });
         }
       );
     }
   );
+};
+
+exports.byUser = (req, res) => {
+  const { id } = req.params;
+
+  if (!Types.ObjectId.isValid(id) || !id)
+    return SendFailure(res, 400, en_US.BAD_REQUEST);
+
+  Project.find({ owner: id }, (error, projects) => {
+    if (error) return SendError(res, 500, error);
+    return SendSuccess(res, 200, { projects });
+  });
 };
 
 exports.delete = (req, res) => {

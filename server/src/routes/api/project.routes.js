@@ -28,6 +28,12 @@ router.post("/add", projectController.add);
 router.post("/add-with-address", projectController.addWithAddress);
 
 /**
+ * @description Get projects owned by a user
+ * @param :id The user id
+ */
+router.get("/by-user/:id", projectController.byUser);
+
+/**
  * @description Delete a project
  */
 router.delete("/:id/delete", projectController.delete);

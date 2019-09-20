@@ -1,17 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
+const en_US = require("../../localization/en_US");
 
 const { SendSuccess, SendFailure } = require("../../helpers/responses");
 
 router.get("/success", (req, res) => SendSuccess(res, 200, { user: req.user }));
-//router.get("/failure", (req, res) => SendFailure(res, 400, "There was an error logging you in :("));
-router.get("/failure", (req, res) => {
-  res.send({
-    message: "Failed request",
-    provided: req.body
-  });
-});
+router.get("/failure", (req, res) =>
+  SendFailure(res, 400, { message: en_US.BAD_REQUEST })
+);
 
 router.post(
   "/signup",

@@ -4,5 +4,14 @@ import MainNavbar from "./MainNavbar";
 import FPVideo from "./FPVideo";
 import FeaturedProject from "./FeaturedProject";
 import AuthRoute from "./AuthRoute";
+import ProjectCard from "./ProjectCard";
 
-export { Footer, Layout, MainNavbar, FPVideo, FeaturedProject, AuthRoute };
+export {
+  Footer,
+  Layout,
+  MainNavbar,
+  FPVideo,
+  FeaturedProject,
+  AuthRoute,
+  ProjectCard
+};

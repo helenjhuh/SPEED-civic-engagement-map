@@ -12,20 +12,7 @@ const GeoJSON = require("geojson");
 const passport = require("passport");
 const cors = require("cors");
 
-//const M_OV = require("method-override"); // TODO: not sure if this is needed.
-const mbxClient = require("@mapbox/mapbox-sdk");
-const mbxStyles = require("@mapbox/mapbox-sdk/services/styles");
-const mbxTilesets = require("@mapbox/mapbox-sdk/services/tilesets");
-const mbxDatasets = require("@mapbox/mapbox-sdk/services/datasets");
-const mbxGeocoding = require("@mapbox/mapbox-sdk/services/geocoding");
-
 const apiRoutes = require("./routes/api");
-
-const baseClient = mbxClient({ accessToken: config.mapbox.apiToken });
-const stylesService = mbxStyles(baseClient);
-const tilesetsService = mbxTilesets(baseClient);
-const datasetsService = mbxDatasets(baseClient);
-const geocodingService = mbxGeocoding(baseClient);
 
 /* Begin initialization for our app and set up stuff */
 const app = express();
@@ -63,6 +50,7 @@ app.use("/api/users", apiRoutes.userRoutes);
 app.use("/api/pins", apiRoutes.pinRoutes);
 app.use("/api/projects", apiRoutes.projectRoutes);
 app.use("/api/roles", apiRoutes.roleRoutes);
+app.use("/api/mapbox", apiRoutes.mapboxRoutes);
 
 //app.use((req, res, next) => {
 //  res.locals.currentUser = req.user;

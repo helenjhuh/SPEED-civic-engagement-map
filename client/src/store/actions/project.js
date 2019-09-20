@@ -3,6 +3,24 @@ import { PROJECT } from "../types";
 
 export const actions = { add };
 
+// This should return any projects owned by a given user
+export function ownedBy(payload) {
+  const { id } = payload;
+
+  return {
+    [RSAA]: {
+      endpoint: `/api/projects/by-user/${id}`,
+      headers: { "Content-Type": "application/json" },
+      method: "GET",
+      types: [
+        PROJECT.BY_USER_REQUEST,
+        PROJECT.BY_USER_SUCCESS,
+        PROJECT.BY_USER_FAILURE
+      ]
+    }
+  };
+}
+
 export function add(payload) {
   const {
     name,
@@ -14,7 +32,8 @@ export function add(payload) {
     city,
     region,
     zip,
-    country
+    country,
+    owner
   } = payload;
   return {
     [RSAA]: {
@@ -32,7 +51,8 @@ export function add(payload) {
         city,
         region,
         zip,
-        country
+        country,
+        owner
       })
     }
   };

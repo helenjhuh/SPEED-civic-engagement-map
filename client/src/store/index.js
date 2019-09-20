@@ -13,7 +13,8 @@ const initialState = {
     loggedInAs: JSON.parse(user),
     isLoggedIn: token && user ? true : false
   },
-  project: {}
+  project: {},
+  pin: {}
 };
 
 const store = createStore(

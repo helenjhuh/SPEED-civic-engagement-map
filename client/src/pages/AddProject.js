@@ -29,17 +29,44 @@ class AddProject extends Component {
       city: "",
       region: "",
       zip: "",
-      country: ""
+      country: "",
+      lat: "",
+      lng: "",
+      error: ""
     };
     this.onFormChange = this.onFormChange.bind(this);
     this.addProject = this.addProject.bind(this);
+    this.geocode = this.geocode.bind(this);
   }
 
   componentDidMount() {
     this.setState({ owner: this.props.loggedInAs._id });
   }
 
+  geocode() {
+    // construct the geocode payload from the address form
+    const { street1, city, region, country } = this.state;
+    const payload = `${street1} ${city} ${region} ${country}`;
+
+    if (payload.length > 2) {
+      fetch(`/api/mapbox/geocode/${payload}`)
+        .then(res => res.json())
+        .then(res => {
+          const { features } = this.state.results;
+
+          this.setState({
+            lat: features[0].center[0],
+            lng: features[0].center[1]
+          });
+        })
+        .catch(error => {
+          this.setState({ error });
+        });
+    }
+  }
+
   onFormChange(e) {
+    e.preventDefault();
     const { name, value } = e.target;
     this.setState({
       [name]: value
@@ -71,7 +98,8 @@ class AddProject extends Component {
       city,
       region,
       zip,
-      country
+      country,
+      owner: this.props.loggedInAs._id
     };
     // dispatch action to add project
     this.props.add(payload);
