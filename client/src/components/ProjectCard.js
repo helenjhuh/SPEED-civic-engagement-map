@@ -9,7 +9,8 @@ const ProjectCard = ({
   type = "",
   website = "",
   editOnClick,
-  delOnClick
+  delOnClick,
+  addPinOnClick
 }) => {
   return (
     <div className="card">
@@ -24,8 +25,21 @@ const ProjectCard = ({
         )}
 
         <div>
-          {editOnClick && <Button onClick={editOnClick}>Edit</Button>}
-          {delOnClick && <Button onClick={delOnClick}>Delete</Button>}
+          {editOnClick && (
+            <Button className="mr-2" onClick={editOnClick}>
+              Edit
+            </Button>
+          )}
+          {delOnClick && (
+            <Button className="mr-2" onClick={delOnClick}>
+              Delete
+            </Button>
+          )}
+          {addPinOnClick && (
+            <Button className="mr-2" onClick={addPinOnClick}>
+              Add pin
+            </Button>
+          )}
         </div>
       </div>
     </div>
@@ -39,7 +53,8 @@ ProjectCard.propTypes = {
   type: PropTypes.string,
   website: PropTypes.string,
   editOnClick: PropTypes.func,
-  delOnClick: PropTypes.func
+  delOnClick: PropTypes.func,
+  addPinOnClick: PropTypes.func
 };
 
 export default ProjectCard;

@@ -6,6 +6,6 @@ const { mapboxController } = require("../../controllers");
  * @description Sends a geocode request to mapbox
  * @returns MapBox geocode response
  */
-router.post("/geocode/:place", mapboxController.geocode);
+router.get("/geocode/:place", mapboxController.geocode);
 
 module.exports = router;

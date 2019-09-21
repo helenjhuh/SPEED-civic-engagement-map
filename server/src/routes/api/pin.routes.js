@@ -18,9 +18,17 @@ router.get("/:id", pinController.read);
 router.put("/:id/edit", pinController.edit);
 
 /**
- * @description Add a pin
+ * @description Add a pin with a given address ObjectId
  */
 router.post("/add", pinController.add);
+
+/**
+ * @description Add a pin with a given address
+ */
+router.post(
+  "/add-with-address-to-project",
+  pinController.addWithAddressToProject
+);
 
 /**
  * @description Delete a pin
