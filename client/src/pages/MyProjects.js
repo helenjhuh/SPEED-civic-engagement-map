@@ -23,7 +23,8 @@ class MyProjects extends Component {
     this.state = {
       addPinModal: false,
       location: "", // this is the location search box in the add pin modal
-      geocodeResults: ""
+      geocodeResults: "",
+      projectid: "" // this is used when adding a pin
     };
     this.projectEditClick = this.projectEditClick.bind(this);
     this.projectDeleteClick = this.projectDeleteClick.bind(this);
@@ -43,9 +44,9 @@ class MyProjects extends Component {
   closeAddPinModal() {
     this.setState({ addPinModal: false });
   }
-  submitPin(projectid) {
+  submitPin() {
     // construct the payload
-    const endpoint = `/api/pins/add-with-address-to-project?id=${projectid}`;
+    const endpoint = `/api/pins/add-with-address-to-project?id=${this.state.projectid}`;
     const payload = {
       lat: this.state.geocodeResults[0].center[0],
       lng: this.state.geocodeResults[0].center[1]
@@ -93,6 +94,7 @@ class MyProjects extends Component {
       });
   }
   addPinOnClick(id) {
+    this.setState({ projectid: id });
     this.openAddPinModal();
   }
   render() {
@@ -150,6 +152,7 @@ class MyProjects extends Component {
               description={p.description}
               type={p.type}
               website={p.website}
+              pins={p.pins}
               editOnClick={() => this.projectEditClick(p._id)}
               delOnClick={() => this.projectDeleteClick(p._id)}
               addPinOnClick={() => this.addPinOnClick(p._id)}

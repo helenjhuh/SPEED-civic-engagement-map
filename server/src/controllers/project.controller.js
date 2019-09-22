@@ -125,10 +125,15 @@ exports.byUser = (req, res) => {
   if (!Types.ObjectId.isValid(id) || !id)
     return SendFailure(res, 400, en_US.BAD_REQUEST);
 
-  Project.find({ owner: id }, (error, projects) => {
-    if (error) return SendError(res, 500, error);
-    return SendSuccess(res, 200, { projects });
-  });
+  Project.find({ owner: id })
+    .populate({
+      path: "pins",
+      populate: { path: "address" }
+    })
+    .exec((error, projects) => {
+      if (error) return SendError(res, 500, error);
+      return SendSuccess(res, 200, { projects });
+    });
 };
 
 exports.delete = (req, res) => {

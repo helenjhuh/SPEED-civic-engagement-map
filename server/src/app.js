@@ -51,6 +51,7 @@ app.use("/api/pins", apiRoutes.pinRoutes);
 app.use("/api/projects", apiRoutes.projectRoutes);
 app.use("/api/roles", apiRoutes.roleRoutes);
 app.use("/api/mapbox", apiRoutes.mapboxRoutes);
+app.use("/api/addresses", apiRoutes.addressRoutes);
 
 //app.use((req, res, next) => {
 //  res.locals.currentUser = req.user;

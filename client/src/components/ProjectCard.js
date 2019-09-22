@@ -8,6 +8,7 @@ const ProjectCard = ({
   description,
   type = "",
   website = "",
+  pins = [],
   editOnClick,
   delOnClick,
   addPinOnClick
@@ -23,6 +24,16 @@ const ProjectCard = ({
             <a href={website}>{website}</a>
           </p>
         )}
+
+        {pins &&
+          pins.map((p, i) => {
+            return (
+              <div>
+                <p>Pins for this project:</p>
+                <p key={i}>{p}</p>
+              </div>
+            );
+          })}
 
         <div>
           {editOnClick && (
@@ -52,6 +63,7 @@ ProjectCard.propTypes = {
   description: PropTypes.string.isRequired,
   type: PropTypes.string,
   website: PropTypes.string,
+  pins: PropTypes.array,
   editOnClick: PropTypes.func,
   delOnClick: PropTypes.func,
   addPinOnClick: PropTypes.func
