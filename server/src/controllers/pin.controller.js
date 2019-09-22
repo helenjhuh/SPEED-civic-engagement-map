@@ -59,7 +59,7 @@ exports.addWithAddressToProject = (req, res) => {
     return SendFailure(res, 400, en_US.BAD_REQUEST);
 
   // grab the address content from the request
-  const { street1, street2, city, region, zip, country } = req.body;
+  const { street1, street2, city, region, zip, country, lat, lng } = req.body;
   Address.create(
     {
       street1,
@@ -67,7 +67,9 @@ exports.addWithAddressToProject = (req, res) => {
       city,
       region,
       zip,
-      country
+      country,
+      lat,
+      lng
     },
     (error, address) => {
       if (error) return SendFailure(res, 400, en_US.BAD_REQUEST);

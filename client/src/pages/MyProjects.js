@@ -48,10 +48,14 @@ class MyProjects extends Component {
     // construct the payload
     const endpoint = `/api/pins/add-with-address-to-project?id=${this.state.projectid}`;
     const payload = {
-      lat: this.state.geocodeResults[0].center[0],
-      lng: this.state.geocodeResults[0].center[1]
+      lat: `${this.state.geocodeResults[0].center[0]}`,
+      lng: `${this.state.geocodeResults[0].center[1]}`
     };
-    fetch(endpoint, { method: "POST", body: JSON.stringify(payload) });
+    fetch(endpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
   }
   onAddPinFormChange(e) {
     const { name, value } = e.target;

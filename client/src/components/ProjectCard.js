@@ -30,7 +30,7 @@ const ProjectCard = ({
             return (
               <div>
                 <p>Pins for this project:</p>
-                <p key={i}>{p}</p>
+                <p key={i}>{JSON.stringify(p)}</p>
               </div>
             );
           })}
