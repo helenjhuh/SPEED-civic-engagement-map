@@ -2,17 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import Button from "react-bootstrap/Button";
 
-const ProjectCard = ({
-  id,
-  name,
-  description,
-  type = "",
-  website = "",
-  pins = [],
-  editOnClick,
-  delOnClick,
-  addPinOnClick
-}) => {
+const ProjectCard = ({ project, editOnClick, delOnClick, addPinOnClick }) => {
+  const { name, description, type, website, pins } = project;
+
   return (
     <div className="card">
       <div className="card-body">
@@ -57,12 +49,14 @@ const ProjectCard = ({
 };
 
 ProjectCard.propTypes = {
-  id: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  type: PropTypes.string,
-  website: PropTypes.string,
-  pins: PropTypes.array,
+  project: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    type: PropTypes.string,
+    website: PropTypes.string,
+    pins: PropTypes.array
+  }).isRequired,
   editOnClick: PropTypes.func,
   delOnClick: PropTypes.func,
   addPinOnClick: PropTypes.func

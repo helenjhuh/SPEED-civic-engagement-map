@@ -163,12 +163,7 @@ class MyProjects extends Component {
           this.props.userProjects.map((p, i) => (
             <ProjectCard
               key={i}
-              id={p._id}
-              name={p.name}
-              description={p.description}
-              type={p.type}
-              website={p.website}
-              pins={p.pins}
+              project={p}
               editOnClick={() => this.projectEditClick(p._id)}
               delOnClick={() => this.projectDeleteClick(p._id)}
               addPinOnClick={() => this.addPinOnClick(p._id)}
