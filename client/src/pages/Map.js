@@ -7,21 +7,43 @@ const MapView = ReactMapboxGl({
     "pk.eyJ1IjoiYXdlZWQxIiwiYSI6ImNrMGZxa2ZldTAyNHMzb3M4YTZyM3QxNzMifQ.qZtFXEGeC-VE3IwTKHIk_g"
 });
 
-const mapStateToProps = state => ({});
+const mapStateToProps = state => ({
+  projects: state.project.browsing,
+  isLoading: state.project.isLoading,
+  error: state.project.error
+});
+
 const mapDispatchToProps = dispatch => ({});
 
 class Map extends Component {
-  state = {
-    map: {
-      viewport: {
-        width: 400,
-        height: 400,
-        latitude: 37.7577,
-        longitude: -122.4376,
-        zoom: 8
-      }
-    }
-  };
+  constructor() {
+    super();
+    this.state = {
+      map: {
+        viewport: {
+          width: 400,
+          height: 400,
+          latitude: 37.7577,
+          longitude: -122.4376,
+          zoom: 8
+        }
+      },
+      filter: ""
+    };
+    this.onFilterChange = this.onFilterChange.bind(this);
+    this.onViewportChange = this.onViewportChange.bind(this);
+  }
+
+  onFilterChange(e) {
+    const { name, value } = e.target;
+    this.setState({
+      [name]: value
+    });
+
+    // When the filter text is changed, it should filter the list of projects containing
+    // only text with whatever the text string is. We will need to figure out what fields
+    // on the project itself should allow filtering against.
+  }
 
   onViewportChange() {}
 
@@ -31,7 +53,30 @@ class Map extends Component {
         {/* The map filter section */}
         <div className="col-sm-4">
           <h2>Civic Engagement Projects</h2>
-          <input name="searchInput" type="text" />
+          <input
+            id="feature-filter"
+            name="filter"
+            value={this.state.filter}
+            type="text"
+            onChange={this.onFilterChange}
+          />
+
+          {/* If the projects are loading, display it to the user */}
+          {this.props.isLoading && <p className="text-muted">Loading...</p>}
+
+          {/* If there is an error loading the projects, display it to the user */}
+          {this.props.error && (
+            <p className="text-danger">{this.props.error}</p>
+          )}
+
+          {/* If the projects are loaded, display them to the user in a list */}
+          {this.props.projects && (
+            <div>
+              {this.props.projects.map((project, i) => (
+                <div key={i}>{JSON.stringify(project)}</div>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* The map */}

@@ -5,3 +5,7 @@ export const ADD_FAILURE = "ADD_FAILURE";
 export const BY_USER_REQUEST = "BY_USER_REQUEST";
 export const BY_USER_SUCCESS = "BY_USER_SUCCESS";
 export const BY_USER_FAILURE = "BY_USER_FAILURE";
+
+export const BROWSE_REQUEST = "BROWSE_REQUEST";
+export const BROWSE_SUCCESS = "BROWSE_SUCCESS";
+export const BROWSE_FAILURE = "BROWSE_FAILURE";

@@ -1,7 +1,7 @@
 import { RSAA } from "redux-api-middleware";
 import { PROJECT } from "../types";
 
-export const actions = { add, byUser };
+export const actions = { add, byUser, browse };
 
 // This should return any projects owned by a given user
 export function byUser(payload) {
@@ -10,7 +10,6 @@ export function byUser(payload) {
   return {
     [RSAA]: {
       endpoint: `/api/projects/by-user/${id}`,
-      headers: { "Content-Type": "application/json" },
       method: "GET",
       types: [
         PROJECT.BY_USER_REQUEST,
@@ -58,6 +57,20 @@ export function add(payload) {
         country,
         owner
       })
+    }
+  };
+}
+
+export function browse(payload) {
+  return {
+    [RSAA]: {
+      endpoint: `/api/projects`,
+      method: "GET",
+      types: [
+        PROJECT.BROWSE_REQUEST,
+        PROJECT.BROWSE_SUCCESS,
+        PROJECT.BROWSE_FAILURE
+      ]
     }
   };
 }
