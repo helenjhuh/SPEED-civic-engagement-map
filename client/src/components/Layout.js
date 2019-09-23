@@ -4,7 +4,16 @@ import { MainNavbar, Footer } from "./";
 const Layout = props => (
   <>
     <MainNavbar />
-    <div className="container my-3">{props.children}</div>
+    <div
+      className="container-fluid my-3"
+      style={{
+        minHeight: "100%",
+        position: "relative",
+        paddingBottom: "128px"
+      }}
+    >
+      {props.children}
+    </div>
     <Footer />
   </>
 );

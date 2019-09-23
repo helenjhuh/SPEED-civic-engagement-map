@@ -30,12 +30,13 @@ class Map extends Component {
       <div className="row">
         {/* The map filter section */}
         <div className="col-sm-4">
-          <p>The filters</p>
+          <h2>Civic Engagement Projects</h2>
+          <input name="searchInput" type="text" />
         </div>
 
         {/* The map */}
         <div
-          className="col-sm"
+          className="col-sm-8"
           style={{
             minHeight: "800px",
             minWidth: "400px"
