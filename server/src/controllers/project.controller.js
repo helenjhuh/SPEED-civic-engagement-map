@@ -130,6 +130,7 @@ exports.byUser = (req, res) => {
     return SendFailure(res, 400, en_US.BAD_REQUEST);
 
   Project.find({ owner: id })
+    .populate("address")
     .populate({
       path: "pins",
       populate: { path: "address" }
