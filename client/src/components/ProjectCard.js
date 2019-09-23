@@ -29,7 +29,6 @@ const ProjectCard = ({
           pins.map((p, i) => {
             return (
               <div>
-                <p>Pins for this project:</p>
                 <p key={i}>{JSON.stringify(p)}</p>
               </div>
             );

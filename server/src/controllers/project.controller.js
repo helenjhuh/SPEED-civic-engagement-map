@@ -74,6 +74,8 @@ exports.addWithAddress = (req, res) => {
     city,
     region,
     zip,
+    lat,
+    lng,
     country,
     owner
   } = req.body;
@@ -85,7 +87,9 @@ exports.addWithAddress = (req, res) => {
       city,
       region,
       zip,
-      country
+      country,
+      lat,
+      lng
     },
     (error, address) => {
       if (error) return SendError(res, 500, error);

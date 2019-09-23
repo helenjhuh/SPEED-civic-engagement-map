@@ -32,6 +32,8 @@ export function add(payload) {
     city,
     region,
     zip,
+    lat,
+    lng,
     country,
     owner
   } = payload;
@@ -51,6 +53,8 @@ export function add(payload) {
         city,
         region,
         zip,
+        lat,
+        lng,
         country,
         owner
       })
