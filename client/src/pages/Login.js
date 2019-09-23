@@ -45,7 +45,8 @@ class Login extends Component {
 
   render() {
     return (
-      <div>
+      <div className="container">
+        <h1 className="display-4 mb-4">Login</h1>
         {/* if there's an error, display it to the user */}
         {this.props.error && <p className="error">{this.props.error}</p>}
 

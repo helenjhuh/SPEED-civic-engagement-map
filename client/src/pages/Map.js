@@ -4,6 +4,7 @@ import ReactMapboxGl, { Layer, Feature } from "react-mapbox-gl";
 import { actions } from "../store/actions";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 
 const MapView = ReactMapboxGl({
   accessToken:
@@ -31,13 +32,16 @@ class Map extends Component {
       map: {
         viewport: {
           center: [-75.3499, 39.9021]
-        }
+        },
+        zoom: [11],
+        fitBounds: undefined
       },
       filter: ""
     };
     this.onFilterChange = this.onFilterChange.bind(this);
     this.onViewportChange = this.onViewportChange.bind(this);
     this.projectBtnOnClick = this.projectBtnOnClick.bind(this);
+    this.featureOnClick = this.featureOnClick.bind(this);
   }
 
   componentDidMount() {
@@ -61,6 +65,26 @@ class Map extends Component {
 
   projectBtnOnClick(project) {
     console.log({ project });
+    // when the project btn is clicked, the map should zoom and recenter to the location of the project
+    this.setState({
+      map: {
+        viewport: {
+          center: [project.address.lat, project.address.lng]
+        },
+        zoom: [14]
+      }
+    });
+  }
+
+  featureOnClick(mapboxObj) {
+    this.setState({
+      map: {
+        viewport: {
+          center: mapboxObj.feature.geometry.coordinates,
+          zoom: [14]
+        }
+      }
+    });
   }
 
   render() {
@@ -68,15 +92,18 @@ class Map extends Component {
       <div className="row">
         {/* The map filter section */}
         <div className="col-sm-4">
-          <h2>Civic Engagement Projects</h2>
-          <input
-            id="feature-filter"
-            className="mt-3"
-            name="filter"
-            value={this.state.filter}
-            type="text"
-            onChange={this.onFilterChange}
-          />
+          <h1 className="display-4 mb-4">Civic Engagement Projects</h1>
+          <Form.Group>
+            <Form.Label>Filter projects</Form.Label>
+            <Form.Control
+              id="feature-filter"
+              type="text"
+              placeholder="Search for a project to filter"
+              name="filter"
+              onChange={this.onFilterChange}
+              value={this.state.filter}
+            />
+          </Form.Group>
 
           {/* If the projects are loading, display it to the user */}
           {this.props.isLoading && <p className="text-muted">Loading...</p>}
@@ -120,17 +147,26 @@ class Map extends Component {
               width: "100%"
             }}
             center={this.state.map.viewport.center}
+            zoom={this.state.map.zoom}
+            fitBounds={this.state.map.fitBounds}
+            flyToOptions={{
+              speed: 0.8
+            }}
           >
             {/* for each project, generate a feature */}
             <Layer
               type="symbol"
               id="marker"
-              layout={{ "icon-image": "marker-15" }}
+              layout={{
+                "icon-image": "castle-15"
+              }}
             >
               {this.props.projects &&
                 this.props.projects.map((project, i) => (
                   <Feature
+                    key={i}
                     coordinates={[project.address.lat, project.address.lng]}
+                    onClick={this.featureOnClick}
                   />
                 ))}
             </Layer>

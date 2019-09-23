@@ -13,6 +13,7 @@ import {
 } from "./pages";
 import { connect } from "react-redux";
 import { Layout, AuthRoute } from "./components";
+import Account from "./pages/Account";
 
 const mapStateToProps = state => ({
   isLoggedIn: state.auth.isLoggedIn,
@@ -32,6 +33,7 @@ const App = ({ isLoggedIn, loggedInAs }) => {
           <Route exact path="/signup" component={Signup} />
           <AuthRoute exact path="/projects/add" component={AddProject} />
           <AuthRoute exact path="/my/projects" component={MyProjects} />
+          <AuthRoute exact path="/my/account" component={Account} />
         </Switch>
       </Layout>
     </HashRouter>

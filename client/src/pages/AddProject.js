@@ -123,7 +123,9 @@ class AddProject extends Component {
 
   render() {
     return (
-      <div>
+      <div className="container">
+        <h1 className="display-4 mb-4">Add a Project</h1>
+
         {/* if there's an error, display it to the user */}
         {this.props.error && <p className="error">{this.props.error}</p>}
 

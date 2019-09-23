@@ -104,7 +104,9 @@ class MyProjects extends Component {
   }
   render() {
     return (
-      <>
+      <div className="container">
+        <h1 className="display-4 mb-4">My Projects</h1>
+
         {/* If there is an error, display it to the user */}
         {this.props.error && <p className="text-danger">{this.props.error}</p>}
 
@@ -169,7 +171,7 @@ class MyProjects extends Component {
               addPinOnClick={() => this.addPinOnClick(p._id)}
             />
           ))}
-      </>
+      </div>
     );
   }
 }
