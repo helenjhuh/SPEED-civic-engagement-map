@@ -5,6 +5,7 @@ import { actions } from "../store/actions";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
+import { LinkContainer } from "react-router-bootstrap";
 
 const mapStateToProps = state => ({
   loggedInAs: state.auth.loggedInAs,
@@ -125,7 +126,7 @@ class MyProjects extends Component {
               )}
               {this.state.geocodeResults && (
                 <p className="text-muted">
-                  Coordinates: {this.state.geocodeResults[0].center[0]},{" "}
+                  Coordinates: {this.state.geocodeResults[0].center[0]},
                   {this.state.geocodeResults[0].center[1]}
                 </p>
               )}
@@ -145,6 +146,17 @@ class MyProjects extends Component {
           </Modal.Body>
         </Modal>
 
+        {/* If there aren't any projects, display the add a project link to the user */}
+        {this.props.userProjects && this.props.userProjects.length == 0 && (
+          <div>
+            <p>It doesn't look like you have any projects yet!</p>
+            <LinkContainer to="/projects/add">
+              <Button variant="primary" size="lg">
+                Add a project
+              </Button>
+            </LinkContainer>
+          </div>
+        )}
         {/* If there are projects, display them to the user */}
         {this.props.userProjects &&
           this.props.userProjects.length > 0 &&

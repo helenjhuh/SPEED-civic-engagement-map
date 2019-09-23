@@ -45,29 +45,12 @@ class AddProject extends Component {
 
   geocode() {
     // construct the geocode payload from the address form
-    const { street1, city, region, country } = this.state;
-    const payload = `${street1} ${city} ${region} ${country}`;
-    return fetch(`/api/mapbox/geocode/${payload}`);
-  }
-
-  onFormChange(e) {
-    const { name, value } = e.target;
-    this.setState({
-      [name]: value
-    });
-  }
-
-  addProject(e) {
-    // First, we need to geocode the supplied address
-
-    // Then, use that response to construct the add project request
-    // This will ensure that the address supplied for the project will include a lat/lng
-    // Which we need to view on the map
-    this.geocode()
-      .then(res => res.json)
+    const { street1, city, region, country, street2 } = this.state;
+    const payload = `${street1} ${street2} ${city} ${region} ${country}`;
+    fetch(`/api/mapbox/geocode/${payload}`)
+      .then(res => res.json())
       .then(res => {
         const { results } = res.data;
-
         if (!results) {
           this.setState({
             error:
@@ -75,47 +58,67 @@ class AddProject extends Component {
           });
           return;
         }
-
         const { features } = results;
         const lat = features[0].center[0];
         const lng = features[0].center[1];
 
-        // construct the payload
-        const {
-          name,
-          description,
-          type,
-          website,
-          street1,
-          street2,
-          city,
-          region,
-          zip,
-          country
-        } = this.state;
-        const payload = {
-          name,
-          description,
-          type,
-          website,
-          street1,
-          street2,
-          city,
-          region,
-          zip,
-          lat,
-          lng,
-          country,
-          owner: this.props.loggedInAs._id
-        };
-        // dispatch action to add project
-        this.props.add(payload);
-      })
-      .catch(error => {
-        // If there's an error, pass it to the app state
-        // so that we can handle it there
-        this.setState({ error });
+        this.setState({ lat, lng });
       });
+  }
+
+  onFormChange(e) {
+    const { name, value } = e.target;
+
+    // if the address fields are being changed, geocode the address
+    if (
+      name === "street1" ||
+      name === "street2" ||
+      name === "city" ||
+      name === "region" ||
+      name === "zip" ||
+      name === "country"
+    ) {
+      this.geocode();
+    }
+
+    this.setState({
+      [name]: value
+    });
+  }
+
+  addProject(e) {
+    // construct the payload
+    const {
+      name,
+      description,
+      type,
+      website,
+      street1,
+      street2,
+      city,
+      region,
+      zip,
+      lat,
+      lng,
+      country
+    } = this.state;
+    const payload = {
+      name,
+      description,
+      type,
+      website,
+      street1,
+      street2,
+      city,
+      region,
+      zip,
+      lat,
+      lng,
+      country,
+      owner: this.props.loggedInAs._id
+    };
+    // dispatch action to add project
+    this.props.add(payload);
   }
 
   render() {
