@@ -1,10 +1,15 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import ReactMapboxGl, { Layer, Feature } from "react-mapbox-gl";
+import { actions } from "../store/actions";
+import ListGroup from "react-bootstrap/ListGroup";
+import Button from "react-bootstrap/Button";
 
 const MapView = ReactMapboxGl({
   accessToken:
-    "pk.eyJ1IjoiYXdlZWQxIiwiYSI6ImNrMGZxa2ZldTAyNHMzb3M4YTZyM3QxNzMifQ.qZtFXEGeC-VE3IwTKHIk_g"
+    "pk.eyJ1IjoiYXdlZWQxIiwiYSI6ImNrMGZxa2ZldTAyNHMzb3M4YTZyM3QxNzMifQ.qZtFXEGeC-VE3IwTKHIk_g",
+  minZoom: 8,
+  maxZoom: 15
 });
 
 const mapStateToProps = state => ({
@@ -13,7 +18,11 @@ const mapStateToProps = state => ({
   error: state.project.error
 });
 
-const mapDispatchToProps = dispatch => ({});
+// TODO: Browse projects should eventually accept a payload, that will tell the server
+// to limit the amount of projects returned, as well the offset to start at in the databse
+const mapDispatchToProps = dispatch => ({
+  browse: () => dispatch(actions.project.browse())
+});
 
 class Map extends Component {
   constructor() {
@@ -21,17 +30,18 @@ class Map extends Component {
     this.state = {
       map: {
         viewport: {
-          width: 400,
-          height: 400,
-          latitude: 37.7577,
-          longitude: -122.4376,
-          zoom: 8
+          center: [-75.3499, 39.9021]
         }
       },
       filter: ""
     };
     this.onFilterChange = this.onFilterChange.bind(this);
     this.onViewportChange = this.onViewportChange.bind(this);
+    this.projectBtnOnClick = this.projectBtnOnClick.bind(this);
+  }
+
+  componentDidMount() {
+    this.props.browse();
   }
 
   onFilterChange(e) {
@@ -45,7 +55,13 @@ class Map extends Component {
     // on the project itself should allow filtering against.
   }
 
-  onViewportChange() {}
+  onViewportChange() {
+    console.log("Changing map view....");
+  }
+
+  projectBtnOnClick(project) {
+    console.log({ project });
+  }
 
   render() {
     return (
@@ -55,6 +71,7 @@ class Map extends Component {
           <h2>Civic Engagement Projects</h2>
           <input
             id="feature-filter"
+            className="mt-3"
             name="filter"
             value={this.state.filter}
             type="text"
@@ -71,11 +88,20 @@ class Map extends Component {
 
           {/* If the projects are loaded, display them to the user in a list */}
           {this.props.projects && (
-            <div>
+            <ListGroup className="mt-3">
               {this.props.projects.map((project, i) => (
-                <div key={i}>{JSON.stringify(project)}</div>
+                <ListGroup.Item key={i}>
+                  <h3>{project.name}</h3>
+                  <p className="font-weight-bold">
+                    Managed by {project.owner.first} - {project.owner.email}
+                  </p>
+                  <p className="text-muted">{project.description}</p>
+                  <Button onClick={() => this.projectBtnOnClick(project)}>
+                    Click me
+                  </Button>
+                </ListGroup.Item>
               ))}
-            </div>
+            </ListGroup>
           )}
         </div>
 
@@ -93,13 +119,20 @@ class Map extends Component {
               height: "100%",
               width: "100%"
             }}
+            center={this.state.map.viewport.center}
           >
+            {/* for each project, generate a feature */}
             <Layer
               type="symbol"
               id="marker"
               layout={{ "icon-image": "marker-15" }}
             >
-              <Feature coordinates={[-0.48174, 51.3233]} />
+              {this.props.projects &&
+                this.props.projects.map((project, i) => (
+                  <Feature
+                    coordinates={[project.address.lat, project.address.lng]}
+                  />
+                ))}
             </Layer>
           </MapView>
         </div>
@@ -108,4 +141,7 @@ class Map extends Component {
   }
 }
 
-export default Map;
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Map);

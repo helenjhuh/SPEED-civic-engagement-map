@@ -6,10 +6,13 @@ const { projectValidator } = require("../middleware/validators");
 const Joi = require("@hapi/joi");
 
 exports.browse = (req, res) => {
-  Project.find({}, (error, projects) => {
-    if (error) return SendError(res, 500, error);
-    return SendSuccess(res, 200, { projects });
-  });
+  Project.find({})
+    .populate("address")
+    .populate("owner")
+    .exec((error, projects) => {
+      if (error) return SendError(res, 500, error);
+      return SendSuccess(res, 200, { projects });
+    });
 };
 
 exports.read = (req, res) => {

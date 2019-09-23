@@ -106,7 +106,7 @@ class MyProjects extends Component {
     return (
       <>
         {/* If there is an error, display it to the user */}
-        {this.props.error && <p className="text-danger">{this.state.error}</p>}
+        {this.props.error && <p className="text-danger">{this.props.error}</p>}
 
         {this.props.isLoading && (
           <p className="text-muted">Loading your projects...</p>
