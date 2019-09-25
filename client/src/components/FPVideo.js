@@ -10,9 +10,9 @@ const FPVideo = props => {
       allowFullScreen
       style={{
         display: "block",
-        width: "80%",
-        height: "70vh",
-        margin: "32px auto"
+        width: "100%",
+        height: "90vh",
+        margin: "16px auto"
       }}
     ></iframe>
   );

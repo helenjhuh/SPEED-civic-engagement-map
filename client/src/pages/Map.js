@@ -10,8 +10,12 @@ const MapView = ReactMapboxGl({
   accessToken:
     "pk.eyJ1IjoiYXdlZWQxIiwiYSI6ImNrMGZxa2ZldTAyNHMzb3M4YTZyM3QxNzMifQ.qZtFXEGeC-VE3IwTKHIk_g",
   minZoom: 8,
-  maxZoom: 15
+  maxZoom: 20
 });
+
+const defaultCenter = [-75.3499, 39.9021];
+const onClickZoomLevel = [18];
+const defaultZoomLevel = [11];
 
 const mapStateToProps = state => ({
   projects: state.project.browsing,
@@ -31,10 +35,10 @@ class Map extends Component {
     this.state = {
       map: {
         viewport: {
-          center: [-75.3499, 39.9021]
-        },
-        zoom: [11],
-        fitBounds: undefined
+          center: defaultCenter,
+          zoom: defaultZoomLevel,
+          fitBounds: undefined
+        }
       },
       filter: ""
     };
@@ -64,24 +68,26 @@ class Map extends Component {
   }
 
   projectBtnOnClick(project) {
-    console.log({ project });
     // when the project btn is clicked, the map should zoom and recenter to the location of the project
     this.setState({
       map: {
         viewport: {
-          center: [project.address.lat, project.address.lng]
-        },
-        zoom: [14]
+          center: [project.address.lat, project.address.lng],
+          zoom: onClickZoomLevel
+        }
       }
     });
   }
 
   featureOnClick(mapboxObj) {
+    // When a feature (the actual marker on the map) is clicked, a pop
+    // of the project description should show up, and the map should
+    // recenter / zoom to where that feature is located
     this.setState({
       map: {
         viewport: {
           center: mapboxObj.feature.geometry.coordinates,
-          zoom: [14]
+          zoom: onClickZoomLevel
         }
       }
     });
@@ -94,7 +100,6 @@ class Map extends Component {
         <div className="col-sm-4">
           <h1 className="display-4 mb-4">Civic Engagement Projects</h1>
           <Form.Group>
-            <Form.Label>Filter projects</Form.Label>
             <Form.Control
               id="feature-filter"
               type="text"
@@ -147,8 +152,8 @@ class Map extends Component {
               width: "100%"
             }}
             center={this.state.map.viewport.center}
-            zoom={this.state.map.zoom}
-            fitBounds={this.state.map.fitBounds}
+            zoom={this.state.map.viewport.zoom}
+            fitBounds={this.state.map.viewport.fitBounds}
             flyToOptions={{
               speed: 0.8
             }}

@@ -4,7 +4,6 @@ import { SWAT_RED_RGB } from "../defs";
 const rootStyles = {
   backgroundColor: SWAT_RED_RGB,
   width: "100%",
-  marginTop: "3em",
   color: "white",
   minheight: "128px",
   paddingTop: "3em",
