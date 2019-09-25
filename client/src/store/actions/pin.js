@@ -4,18 +4,7 @@ import { PIN } from "../types";
 export const actions = { add };
 
 export function add(payload) {
-  const {
-    name,
-    description,
-    type,
-    website,
-    street1,
-    street2,
-    city,
-    region,
-    zip,
-    country
-  } = payload;
+  const { street1, street2, city, region, zip, country } = payload;
   return {
     [RSAA]: {
       endpoint: `/api/pins/add`,

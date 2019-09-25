@@ -6,7 +6,6 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import { connect } from "react-redux";
 import { actions } from "../store/actions/auth";
 import Button from "react-bootstrap/Button";
-import { SWAT_RED_RGB } from "../defs";
 
 const mapStateToProps = state => ({
   isLoggedIn: state.auth.isLoggedIn,

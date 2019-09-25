@@ -3,6 +3,11 @@
 # v0.x
 * Display a project's pins on the map when it is selected
 * Provide user feedback when they delete a project
+* Reimplement single project page
+* Reimplement form validations
+* Continue to split up react components / pages
+* Projects on the home page should be pulled from verified projects list
+* Projects on the home page should link to single project page
 
 # v1.0.0
 

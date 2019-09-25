@@ -25,7 +25,8 @@ const FeaturedProject = ({
     backgroundSize: "cover",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
+    margin: "0px 1em"
   };
   const descriptionHalf = {
     display: "flex",

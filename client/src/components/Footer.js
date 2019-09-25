@@ -14,7 +14,8 @@ const Footer = () => (
   <div style={rootStyles}>
     <div className="container">
       <p className="text-center">
-        Designed by Swarthmore College, Steven Fernandez. All Rights Reserved.
+        {/* Not sure if this text needs to change or not */}
+        Designed by Swarthmore College. All Rights Reserved.
       </p>
     </div>
   </div>

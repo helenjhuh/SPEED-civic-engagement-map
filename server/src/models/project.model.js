@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const projectSchema = mongoose.Schema({
+  isVerified: {
+    type: Boolean,
+    default: true // set the default to true as long as project verification does not exist
+  },
   name: {
     type: String,
     required: true
@@ -23,10 +27,12 @@ const projectSchema = mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Address"
   },
-  pins: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Pin"
-  }]
+  pins: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Pin"
+    }
+  ]
 });
 
 module.exports = mongoose.model("Project", projectSchema);

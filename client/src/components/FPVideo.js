@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 const FPVideo = props => {
   return (
     <iframe
+      title="Home page video"
       src={props.url}
       frameBorder="0"
       allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
