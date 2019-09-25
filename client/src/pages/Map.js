@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import ReactMapboxGl, { Layer, Feature } from "react-mapbox-gl";
+import ReactMapboxGl, { Layer, Feature, Popup } from "react-mapbox-gl";
 import { actions } from "../store/actions";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
+import { LinkContainer } from "react-router-bootstrap";
 
 const MapView = ReactMapboxGl({
   accessToken:
@@ -29,6 +30,11 @@ const mapDispatchToProps = dispatch => ({
   browse: () => dispatch(actions.project.browse())
 });
 
+const popupStyles = {
+  backgroundColor: "white",
+  borderRadius: "8px 8px 0px 0px"
+};
+
 class Map extends Component {
   constructor() {
     super();
@@ -40,7 +46,8 @@ class Map extends Component {
           fitBounds: undefined
         }
       },
-      filter: ""
+      filter: "",
+      viewing: "" // this is the project the user is currently interacting with
     };
     this.onFilterChange = this.onFilterChange.bind(this);
     this.onViewportChange = this.onViewportChange.bind(this);
@@ -75,21 +82,27 @@ class Map extends Component {
           center: [project.address.lat, project.address.lng],
           zoom: onClickZoomLevel
         }
-      }
+      },
+      viewing: project
     });
   }
 
-  featureOnClick(mapboxObj) {
+  featureOnClick(project, mapbox) {
     // When a feature (the actual marker on the map) is clicked, a pop
     // of the project description should show up, and the map should
     // recenter / zoom to where that feature is located
+
+    // This takes care of the popover
+
+    // This takes care of recentering the map
     this.setState({
       map: {
         viewport: {
-          center: mapboxObj.feature.geometry.coordinates,
+          center: mapbox.feature.geometry.coordinates,
           zoom: onClickZoomLevel
         }
-      }
+      },
+      viewing: project
     });
   }
 
@@ -171,10 +184,35 @@ class Map extends Component {
                   <Feature
                     key={i}
                     coordinates={[project.address.lat, project.address.lng]}
-                    onClick={this.featureOnClick}
+                    onClick={this.featureOnClick.bind(
+                      this,
+                      this.props.projects[i]
+                    )}
                   />
                 ))}
             </Layer>
+
+            {this.state.viewing && (
+              <Popup
+                key={this.state.viewing._id}
+                coordinates={[
+                  this.state.viewing.address.lat,
+                  this.state.viewing.address.lng
+                ]}
+              >
+                <div style={popupStyles}>
+                  <p className="lead">{this.state.viewing.name}</p>
+                  <p className="text-muted">{this.state.viewing.description}</p>
+                  <p>
+                    <LinkContainer to="#">
+                      <Button size="sm" variant="info" block>
+                        See more
+                      </Button>
+                    </LinkContainer>
+                  </p>
+                </div>
+              </Popup>
+            )}
           </MapView>
         </div>
       </div>
