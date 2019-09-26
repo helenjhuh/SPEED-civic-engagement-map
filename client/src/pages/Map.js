@@ -204,7 +204,7 @@ class Map extends Component {
                   <p className="lead">{this.state.viewing.name}</p>
                   <p className="text-muted">{this.state.viewing.description}</p>
                   <p>
-                    <LinkContainer to="#">
+                    <LinkContainer to={`/projects/${this.state.viewing._id}`}>
                       <Button size="sm" variant="info" block>
                         See more
                       </Button>
