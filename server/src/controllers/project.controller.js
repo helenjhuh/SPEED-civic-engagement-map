@@ -20,10 +20,13 @@ exports.read = (req, res) => {
   if (!Types.ObjectId.isValid(id) || !id)
     return SendFailure(res, 400, en_US.BAD_REQUEST);
 
-  Project.findById(id, (error, project) => {
-    if (error) return SendError(res, 500, error);
-    return SendSuccess(res, 200, { project });
-  });
+  Project.findById(id)
+    .populate("owner")
+    .populate("address")
+    .exec((error, project) => {
+      if (error) return SendError(res, 500, error);
+      return SendSuccess(res, 200, { project });
+    });
 };
 
 exports.edit = (req, res) => {

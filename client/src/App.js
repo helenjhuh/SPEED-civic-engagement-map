@@ -9,11 +9,12 @@ import {
   Signup,
   Login,
   AddProject,
-  MyProjects
+  MyProjects,
+  SingleProject,
+  Account
 } from "./pages";
 import { connect } from "react-redux";
 import { Layout, AuthRoute } from "./components";
-import Account from "./pages/Account";
 
 const mapStateToProps = state => ({
   isLoggedIn: state.auth.isLoggedIn,
@@ -26,14 +27,17 @@ const App = ({ isLoggedIn, loggedInAs }) => {
       <Layout>
         <Switch>
           <Route exact path="/" component={Home} />
-          <Route exact path="/map" component={IMap} />
-          <Route exact path="/about" component={About} />
-          <Route exact path="/faq" component={Faq} />
-          <Route exact path="/login" component={Login} />
-          <Route exact path="/signup" component={Signup} />
-          <AuthRoute exact path="/projects/add" component={AddProject} />
-          <AuthRoute exact path="/my/projects" component={MyProjects} />
-          <AuthRoute exact path="/my/account" component={Account} />
+          <Route path="/map" component={IMap} />
+          <Route path="/about" component={About} />
+          <Route path="/faq" component={Faq} />
+          <Route path="/login" component={Login} />
+          <Route path="/signup" component={Signup} />
+          <AuthRoute path="/projects/add" component={AddProject} />
+          <AuthRoute path="/my/projects" component={MyProjects} />
+          <AuthRoute path="/my/account" component={Account} />
+          // This should go last on the list because the param :id will conflict
+          // with the /projects/add route otherwise
+          <Route path="/projects/:id" component={SingleProject} />
         </Switch>
       </Layout>
     </HashRouter>

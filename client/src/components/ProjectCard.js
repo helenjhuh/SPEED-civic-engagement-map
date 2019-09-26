@@ -1,9 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Button from "react-bootstrap/Button";
+import { LinkContainer } from "react-router-bootstrap";
 
 const ProjectCard = ({ project, editOnClick, delOnClick, addPinOnClick }) => {
-  const { name, description, type, website, pins } = project;
+  const { _id, name, description, type, website, pins } = project;
 
   return (
     <div className="card">
@@ -42,6 +43,9 @@ const ProjectCard = ({ project, editOnClick, delOnClick, addPinOnClick }) => {
               Add pin
             </Button>
           )}
+          <LinkContainer to={`/projects/${_id}`}>
+            <Button className="mr-2">Go to project</Button>
+          </LinkContainer>
         </div>
       </div>
     </div>

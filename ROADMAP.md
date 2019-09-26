@@ -8,6 +8,8 @@
 * Continue to split up react components / pages
 * Projects on the home page should be pulled from verified projects list
 * Projects on the home page should link to single project page
+* Projects should be categorized -- We currently do not have categories for a drop down list
+  while creating a project. Can we come up with a list of categories for this?
 
 # v1.0.0
 * User management for administrators

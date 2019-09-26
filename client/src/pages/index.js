@@ -6,5 +6,18 @@ import Login from "./Login";
 import Signup from "./Signup";
 import AddProject from "./AddProject";
 import MyProjects from "./MyProjects";
+import Account from "./Account";
+import SingleProject from "./SingleProject";
 
-export { About, Faq, Home, IMap, Login, Signup, AddProject, MyProjects };
+export {
+  Account,
+  SingleProject,
+  About,
+  Faq,
+  Home,
+  IMap,
+  Login,
+  Signup,
+  AddProject,
+  MyProjects
+};
