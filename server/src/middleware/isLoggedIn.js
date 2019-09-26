@@ -3,6 +3,5 @@
  * an authentication for the user.
  */
 exports.isLoggedIn = (req, res, next) => {
-  if(req.isAuthenticated()) return next();
-  res.render("pages/auth/login");
+  if (req.isAuthenticated()) return next();
 };

@@ -1,14 +1,10 @@
 require("dotenv").config();
-
 const config = require("./config");
-
 const express = require("express");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const sanitizer = require("express-sanitizer");
 const session = require("express-session");
 const logger = require("morgan");
-const GeoJSON = require("geojson");
 const passport = require("passport");
 const cors = require("cors");
 
@@ -28,6 +24,7 @@ app.use(
   })
 );
 
+// Set up body-parser
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -40,9 +37,6 @@ app.use(passport.session());
 // Use logger
 app.use(logger("dev"));
 
-/* Point to stylesheets in ./public */
-//app.use(express.static("public"));
-
 app.use(cors());
 
 app.use("/api/auth", apiRoutes.authRoutes);
@@ -53,22 +47,7 @@ app.use("/api/roles", apiRoutes.roleRoutes);
 app.use("/api/mapbox", apiRoutes.mapboxRoutes);
 app.use("/api/addresses", apiRoutes.addressRoutes);
 
-//app.use((req, res, next) => {
-//  res.locals.currentUser = req.user;
-//  next();
-//});
-
-// configure ejs as the view engine and set the views directory
-// app.set("view engine", "ejs");
-// app.set("views", path.join(__dirname, "views"));
-
-/* We'll use sanitizer for our inputs before we add them to our database */
-//app.use(sanitizer());
-
-// /* We'll use method override for DELETE, PUT, EDIT requests ! */
-// app.use(M_OV("_method"));
-
-/* Start mongoose and make sure database is connected */
+// Start mongoose and make sure database is connected before starting the server
 mongoose
   .connect(
     `mongodb+srv://${config.db.user}:${config.db.pass}@${config.db.host}/${config.db.name}`,
@@ -79,19 +58,15 @@ mongoose
       useUnifiedTopology: true
     }
   )
-  .then(() => console.log(`Connected to ${config.db.host}/${config.db.name}`))
+  .then(() => {
+    console.log(`Connected to ${config.db.host}/${config.db.name}`);
+
+    app.listen(config.app.port, () =>
+      console.log(
+        `App is listening on port http://localhost:${config.app.port} \nRunning in ${config.app.env} mode.`
+      )
+    );
+  })
   .catch(err => console.error(err));
-
-//app.use("/",      routes.indexRoutes);
-//app.use("/auth",  routes.authRoutes);
-//app.use("/map",   routes.mapRoutes)
-
-//app.get("*", (req, res) => res.render("pages/error"));
-
-app.listen(config.app.port, () =>
-  console.log(
-    `App is listening on port http://localhost:${config.app.port} \nRunning in ${config.app.env} mode.`
-  )
-);
 
 module.exports = app;

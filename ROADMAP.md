@@ -10,7 +10,7 @@
 * Projects on the home page should link to single project page
 
 # v1.0.0
-
+* User management for administrators
 * Role management for administrators
 * Project verification by administrators
 * Image upload for projects
