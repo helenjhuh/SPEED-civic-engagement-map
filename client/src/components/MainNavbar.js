@@ -81,6 +81,18 @@ const MainNavbar = ({ isLoggedIn, loggedInAs, logout }) => {
               <Nav.Link>Manage account</Nav.Link>
             </LinkContainer>
 
+            <NavDropdown title="Admin" id="admin-dropdown">
+              <LinkContainer to="/manage/users">
+                <NavDropdown.Item>Manage Users</NavDropdown.Item>
+              </LinkContainer>
+              <LinkContainer to="/manage/projects">
+                <NavDropdown.Item>Manage Projects</NavDropdown.Item>
+              </LinkContainer>
+              <LinkContainer to="/manage/roles">
+                <NavDropdown.Item>Manage Roles</NavDropdown.Item>
+              </LinkContainer>
+            </NavDropdown>
+
             <Nav.Link onClick={logout}>Logout</Nav.Link>
           </>
         )}

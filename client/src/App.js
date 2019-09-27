@@ -11,7 +11,10 @@ import {
   AddProject,
   MyProjects,
   SingleProject,
-  Account
+  Account,
+  ManageUsers,
+  ManageRoles,
+  ManageProjects
 } from "./pages";
 import { connect } from "react-redux";
 import { Layout, AuthRoute } from "./components";
@@ -35,6 +38,9 @@ const App = ({ isLoggedIn, loggedInAs }) => {
           <AuthRoute path="/projects/add" component={AddProject} />
           <AuthRoute path="/my/projects" component={MyProjects} />
           <AuthRoute path="/my/account" component={Account} />
+          <AuthRoute path="/manage/users" component={ManageUsers} />
+          <AuthRoute path="/manage/projects" component={ManageProjects} />
+          <AuthRoute path="/manage/roles" component={ManageRoles} />
           // This should go last on the list because the param :id will conflict
           // with the /projects/add route otherwise
           <Route path="/projects/:id" component={SingleProject} />

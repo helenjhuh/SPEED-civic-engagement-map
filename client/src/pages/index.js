@@ -8,6 +8,9 @@ import AddProject from "./AddProject";
 import MyProjects from "./MyProjects";
 import Account from "./Account";
 import SingleProject from "./SingleProject";
+import ManageUsers from "./ManageUsers";
+import ManageProjects from "./ManageProjects";
+import ManageRoles from "./ManageRoles";
 
 export {
   Account,
@@ -19,5 +22,8 @@ export {
   Login,
   Signup,
   AddProject,
-  MyProjects
+  MyProjects,
+  ManageUsers,
+  ManageProjects,
+  ManageRoles
 };
