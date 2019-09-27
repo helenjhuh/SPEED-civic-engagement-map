@@ -12,6 +12,7 @@
   while creating a project. Can we come up with a list of categories for this?
 * When the application is run for the first time, and there are no users or roles in the system, the server
   needs to generate an admin role and an admin user.
+* Come up with a plan as to what API requests should be handled with redux, and which ones should not
 
 # v1.0.0
 * User management for administrators
