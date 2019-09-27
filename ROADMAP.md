@@ -10,6 +10,8 @@
 * Projects on the home page should link to single project page
 * Projects should be categorized -- We currently do not have categories for a drop down list
   while creating a project. Can we come up with a list of categories for this?
+* When the application is run for the first time, and there are no users or roles in the system, the server
+  needs to generate an admin role and an admin user.
 
 # v1.0.0
 * User management for administrators

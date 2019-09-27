@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import Table from "react-bootstrap/Table";
+import Button from "react-bootstrap/Button";
 
 class ManageProjects extends Component {
   constructor() {
@@ -37,7 +39,50 @@ class ManageProjects extends Component {
         {/* If the content is loading, diplay it to the user  */}
         {isLoading && <p className="text-muted">{isLoading}</p>}
         {/* If the projects are loaded, display them */}
-        {projects && <p>{JSON.stringify(projects)}</p>}
+        {projects && projects.length > 0 && (
+          <Table striped>
+            <thead>
+              <tr>
+                <th>Verified</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>URL</th>
+                <th>Location</th>
+                <th>Manager</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {projects.map((project, i) => (
+                <tr key={`project-${i}`}>
+                  <td>{project.isVerified ? "x" : " "}</td>
+                  <td>{project.name}</td>
+                  <td>{project.description}</td>
+                  <td>{project.type}</td>
+                  <td>{project.website}</td>
+                  <td>
+                    {project.address.city || ""} {project.address.region || ""}
+                  </td>
+                  <td>{project.owner.email}</td>
+                  <td>
+                    <Button>Edit</Button>
+                    <br />
+                    <Button className="mt-1">Delete</Button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+        )}
+
+        {/* If there aren't any roles, display a message letting the user know */}
+        {projects && !projects.length && (
+          <p className="lead">
+            It doesn't look like there are any projects in your system yet
+          </p>
+        )}
       </div>
     );
   }
