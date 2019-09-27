@@ -41,15 +41,11 @@ exports.edit = (req, res) => {
 };
 
 exports.add = (req, res) => {
-  Joi.validate(req.body, roleValidator, (error, isValid) => {
-    if (error) return SendFailure(res, 400, error.toString());
+  const { name, description } = req.body;
 
-    const { name, description } = req.body;
-
-    Role.create({ name, description }, (error, role) => {
-      if (error) return SendError(res, 500, error);
-      return SendSuccess(res, 200, { role });
-    });
+  Role.create({ name, description }, (error, role) => {
+    if (error) return SendError(res, 500, error);
+    return SendSuccess(res, 200, { role });
   });
 };
 

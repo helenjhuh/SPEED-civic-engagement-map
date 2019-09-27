@@ -131,7 +131,11 @@ class AddProject extends Component {
 
         {/* if the user project has been added, display it to the user for now */}
         {this.props.addedProject && (
-          <p>Your project: {JSON.stringify(this.props.addedProject)}</p>
+          <p>
+            Your project is saved but may not be viewable to the public until a
+            moderator approves it. You can view your project on your My Projects
+            page.
+          </p>
         )}
 
         <Form>
