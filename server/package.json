@@ -1,0 +1,49 @@
+{
+  "name": "v1",
+  "version": "1.0.0",
+  "description": "Civic Engagement map project for Swarthmore College",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "cross-env NODE_ENV=development node src/app.js",
+    "start:dev": "cross-env NODE_ENV=development nodemon src/app.js",
+    "test": "cross-env NODE_ENV=test mocha test/**/*.test.js --timeout 10000 --exit",
+    "test:dev": "cross-env NODE_ENV=test nodemon --watch . --ext js --exec \"yarn test\""
+  },
+  "author": "Swarthmore College, Steven Fernandez",
+  "license": "ISC",
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged --pattern \"**/*.js\""
+    }
+  },
+  "dependencies": {
+    "@hapi/joi": "^16.0.0",
+    "@mapbox/mapbox-sdk": "^0.7.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "cross-env": "^5.2.1",
+    "dotenv": "^8.0.0",
+    "ejs": "^2.6.2",
+    "express": "^4.17.1",
+    "express-sanitizer": "^1.0.5",
+    "express-session": "^1.16.2",
+    "geojson": "^0.5.0",
+    "mongodb": "^3.2.7",
+    "mongoose": "^5.6.0",
+    "morgan": "^1.9.1",
+    "nodemon": "^1.19.1",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0",
+    "pug": "^2.0.4"
+  },
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "faker": "^4.1.0",
+    "husky": "^3.0.5",
+    "mocha": "^6.2.0",
+    "prettier": "^1.18.2",
+    "pretty-quick": "^1.11.1"
+  }
+}
