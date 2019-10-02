@@ -61,7 +61,7 @@ class Home extends Component {
               imageURL={`https://loremflickr.com/640/480?random=${Math.round(
                 Math.random() * 10
               )}`}
-              projectURL="#"
+              projectURL={`/projects/${project._id}`}
               flip={i % 2 != 0}
             />
           ))}
