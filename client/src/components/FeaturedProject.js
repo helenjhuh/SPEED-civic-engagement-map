@@ -30,8 +30,9 @@ const FeaturedProject = ({
   };
   const descriptionHalf = {
     display: "flex",
-    justifyContent: "center",
-    alignItems: "center"
+    justifyContent: "left",
+    alignItems: "left",
+    padding: "1em"
   };
   const titleStyles = {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -43,7 +44,8 @@ const FeaturedProject = ({
       <div className="row" style={rootStyles}>
         <div className="col-sm" style={flip ? descriptionHalf : titleHalf}>
           {flip ? (
-            <p className="lead">
+            // <p className="lead">
+            <p className="d-inline-block">
               {description}
               <br />
               <br />
@@ -63,7 +65,8 @@ const FeaturedProject = ({
               {title}
             </h2>
           ) : (
-            <p className="lead">
+            // <p className="lead">
+            <p className="d-inline-block">
               {description}
               <br />
               <br />

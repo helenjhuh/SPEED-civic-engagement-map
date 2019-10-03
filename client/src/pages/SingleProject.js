@@ -67,6 +67,7 @@ class SingleProject extends Component {
                 </p>
               </Col>
               <Col sm={4}>
+                {/* Eventually check for user phrofile picutre upload */}
                 <Image
                   src="https://loremflickr.com/640/480?random=85"
                   thumbnail
