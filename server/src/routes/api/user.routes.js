@@ -27,4 +27,11 @@ router.post("/add", userController.add);
  */
 router.delete("/:id/delete", userController.delete);
 
+/**
+ * @description Add a role to user
+ * @param user {string} User id
+ * @param role {string} Role id
+ */
+router.post("/:user/add-role/:role", userController.addRole);
+
 module.exports = router;
