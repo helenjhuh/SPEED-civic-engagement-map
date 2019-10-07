@@ -2,18 +2,6 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
-import { connect } from "react-redux";
-import { actions } from "../../store/actions";
-
-const mapStateToProps = state => ({
-  isLoading: state.pin.isLoading,
-  error: state.pin.error,
-  added: state.pin.added
-});
-
-const mapDispatchToProps = dispatch => ({
-  add: payload => dispatch(actions.pin.add(payload))
-});
 
 class AddPinToProjectForm extends Component {
   constructor() {
@@ -39,6 +27,8 @@ class AddPinToProjectForm extends Component {
   // make sure to debounce this..
   geocode(place) {
     if (place.length > 1) {
+      this.setState({ isLoading: true });
+
       fetch(`/api/mapbox/geocode/${place}`)
         .then(res => res.json())
         .then(res => {
@@ -47,7 +37,8 @@ class AddPinToProjectForm extends Component {
         })
         .catch(error => {
           this.setState({ error });
-        });
+        })
+        .finally(() => this.setState({ isLoading: false }));
     }
   }
 
@@ -62,7 +53,13 @@ class AddPinToProjectForm extends Component {
       lng: features[0].center[1]
     };
 
-    this.props.add(payload);
+    this.setState({ isLoading: true });
+
+    fetch("/api/pins/add", { method: "POST", body: JSON.stringify(payload) })
+      .then(res => res.json())
+      .then(results => this.setState({ pin: results.data }))
+      .catch(error => this.setState({ error }))
+      .finally(() => this.setState({ isLoading: false }));
   }
 
   render() {
@@ -72,7 +69,7 @@ class AddPinToProjectForm extends Component {
         {this.state.error && <p>{this.state.error}</p>}
 
         {/* If there's an added pin, display it to the user (for testing) */}
-        {this.state.added && <p>{this.state.added}</p>}
+        {this.state.results && <p>{JSON.stringify(this.state.results)}</p>}
 
         <Form>
           <Form.Group controlId="formProjectName">
@@ -99,7 +96,4 @@ AddPinToProjectForm.propTypes = {
   projectId: PropTypes.string.isRequired
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(AddPinToProjectForm);
+export default AddPinToProjectForm;

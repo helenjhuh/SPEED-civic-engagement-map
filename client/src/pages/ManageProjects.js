@@ -19,11 +19,7 @@ class ManageProjects extends Component {
 
     fetch(`/api/projects`)
       .then(res => res.json())
-      .then(res => {
-        this.setState({
-          projects: res.data.projects
-        });
-      })
+      .then(res => this.setState({ projects: res.data.projects }))
       .catch(error => this.setState({ error }))
       .finally(() => this.setState({ isLoading: false }));
   }

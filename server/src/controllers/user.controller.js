@@ -6,10 +6,12 @@ const { userValidator } = require("../middleware/validators");
 const Joi = require("@hapi/joi");
 
 exports.browse = (req, res) => {
-  User.find({}, (error, users) => {
-    if (error) return SendError(res, 500, error);
-    return SendSuccess(res, 200, { users });
-  });
+  User.find({})
+    .populate("roles")
+    .exec((error, users) => {
+      if (error) return SendError(res, 500, error);
+      return SendSuccess(res, 200, { users });
+    });
 };
 
 exports.read = (req, res) => {
@@ -76,7 +78,35 @@ exports.delete = (req, res) => {
 
 exports.addProject = (req, res) => {};
 exports.addAddress = (req, res) => {};
-exports.addRole = (req, res) => {};
+
+exports.addRole = (req, res) => {
+  const { user, role } = req.params;
+
+  if (
+    !Types.ObjectId.isValid(user) ||
+    !user ||
+    !Types.ObjectId.isValid(role) ||
+    !role
+  )
+    return SendFailure(res, 400, en_US.BAD_REQUEST);
+
+  // Get the user
+  User.findById(user, (error, user) => {
+    if (error) return SendError(res, 500, error);
+
+    // no user was found
+    if (!user) {
+      return SendFailure(res, 400, en_US.BAD_REQUEST);
+    }
+
+    user.roles.push(role);
+
+    user.save(error => {
+      if (error) return SendError(res, 500, error);
+      return SendSuccess(res, 200, { user });
+    });
+  });
+};
 
 exports.deleteProject = (req, res) => {};
 exports.deleteAddress = (req, res) => {};
