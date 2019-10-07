@@ -1,21 +1,13 @@
 import React, { Component } from "react";
 import { ProjectCard } from "../components";
 import { connect } from "react-redux";
-import { actions } from "../store/actions";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { LinkContainer } from "react-router-bootstrap";
 
 const mapStateToProps = state => ({
-  loggedInAs: state.auth.loggedInAs,
-  userProjects: state.project.byUser,
-  isLoading: state.project.isLoading,
-  error: state.project.error
-});
-
-const mapDispatchToProps = dispatch => ({
-  getUserProjects: payload => dispatch(actions.project.byUser(payload))
+  loggedInAs: state.auth.loggedInAs
 });
 
 class MyProjects extends Component {
@@ -34,7 +26,10 @@ class MyProjects extends Component {
         description: "",
         type: "",
         website: ""
-      }
+      },
+      projects: "",
+      isLoading: "",
+      error: ""
     };
 
     // This can probably be seriously cleaned up
@@ -49,27 +44,46 @@ class MyProjects extends Component {
     this.closeEditProjectModal = this.closeEditProjectModal.bind(this);
     this.saveProjectEdits = this.saveProjectEdits.bind(this);
     this.onEditFormChange = this.onEditFormChange.bind(this);
+    this.getProjectsByUser = this.getProjectsByUser.bind(this);
   }
+
   componentDidMount() {
-    this.props.getUserProjects({ id: this.props.loggedInAs._id });
+    this.getProjectsByUser();
   }
+
+  getProjectsByUser() {
+    this.setState({ isLoading: true });
+    fetch(`/api/projects/by-user/${this.props.loggedInAs._id}`)
+      .then(res => res.json())
+      .then(results => this.setState({ projects: results.data.projects }))
+      .catch(error => this.setState({ error }))
+      .finally(() => this.setState({ isLoading: false }));
+  }
+
   openAddPinModal() {
     this.setState({ addPinModal: true });
   }
+
   closeAddPinModal() {
     this.setState({ addPinModal: false });
   }
+
   submitPin() {
     // construct the payload
-    const endpoint = `/api/pins/add-with-address-to-project?id=${this.state.projectid}`;
     const payload = {
       lat: `${this.state.geocodeResults[0].center[0]}`,
       lng: `${this.state.geocodeResults[0].center[1]}`
     };
-    fetch(endpoint, {
+    fetch(`/api/pins/add-with-address-to-project?id=${this.state.projectid}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
+    }).finally(() => {
+      // close the modal
+      this.closeAddPinModal();
+      // get the projects again, which will force a re-render. The newly created pin
+      // should be attached to the new data
+      this.getProjectsByUser();
     });
   }
   onAddPinFormChange(e) {
@@ -122,6 +136,10 @@ class MyProjects extends Component {
         } else if (res.status === "error") {
           this.setState({ error: res.error });
         }
+      })
+      .finally(() => {
+        // fetch the projects again
+        this.getProjectsByUser();
       });
   }
   addPinOnClick(id) {
@@ -155,9 +173,9 @@ class MyProjects extends Component {
         <h1 className="display-4 mb-4">My Projects</h1>
 
         {/* If there is an error, display it to the user */}
-        {this.props.error && <p className="text-danger">{this.props.error}</p>}
+        {this.state.error && <p className="text-danger">{this.state.error}</p>}
 
-        {this.props.isLoading && (
+        {this.state.isLoading && (
           <p className="text-muted">Loading your projects...</p>
         )}
 
@@ -249,7 +267,7 @@ class MyProjects extends Component {
         </Modal>
 
         {/* If there aren't any projects, display the add a project link to the user */}
-        {this.props.userProjects && this.props.userProjects.length === 0 && (
+        {this.state.projects && this.state.projects.length === 0 && (
           <div>
             <p>It doesn't look like you have any projects yet!</p>
             <LinkContainer to="/projects/add">
@@ -260,9 +278,9 @@ class MyProjects extends Component {
           </div>
         )}
         {/* If there are projects, display them to the user */}
-        {this.props.userProjects &&
-          this.props.userProjects.length > 0 &&
-          this.props.userProjects.map((p, i) => (
+        {this.state.projects &&
+          this.state.projects.length > 0 &&
+          this.state.projects.map((p, i) => (
             <ProjectCard
               key={i}
               project={p}
@@ -277,5 +295,5 @@ class MyProjects extends Component {
 }
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(MyProjects);

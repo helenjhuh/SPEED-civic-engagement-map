@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import { connect } from "react-redux";
 import ReactMapboxGl, { Layer, Feature, Popup } from "react-mapbox-gl";
-import { actions } from "../store/actions";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -17,18 +15,6 @@ const MapView = ReactMapboxGl({
 const defaultCenter = [-75.3499, 39.9021];
 const onClickZoomLevel = [18];
 const defaultZoomLevel = [11];
-
-const mapStateToProps = state => ({
-  projects: state.project.browsing,
-  isLoading: state.project.isLoading,
-  error: state.project.error
-});
-
-// TODO: Browse projects should eventually accept a payload, that will tell the server
-// to limit the amount of projects returned, as well the offset to start at in the databse
-const mapDispatchToProps = dispatch => ({
-  browse: () => dispatch(actions.project.browse())
-});
 
 const popupStyles = {
   backgroundColor: "white",
@@ -47,7 +33,10 @@ class Map extends Component {
         }
       },
       filter: "",
-      viewing: "" // this is the project the user is currently interacting with
+      viewing: "", // this is the project the user is currently interacting with
+      isLoading: false,
+      projects: "",
+      error: ""
     };
     this.onFilterChange = this.onFilterChange.bind(this);
     this.onViewportChange = this.onViewportChange.bind(this);
@@ -56,7 +45,13 @@ class Map extends Component {
   }
 
   componentDidMount() {
-    this.props.browse();
+    this.setState({ isLoading: true });
+
+    fetch("/api/projects")
+      .then(res => res.json())
+      .then(results => this.setState({ projects: results.data.projects }))
+      .catch(error => this.setState({ error }))
+      .finally(() => this.setState({ isLoading: false }));
   }
 
   onFilterChange(e) {
@@ -124,17 +119,17 @@ class Map extends Component {
           </Form.Group>
 
           {/* If the projects are loading, display it to the user */}
-          {this.props.isLoading && <p className="text-muted">Loading...</p>}
+          {this.state.isLoading && <p className="text-muted">Loading...</p>}
 
           {/* If there is an error loading the projects, display it to the user */}
-          {this.props.error && (
-            <p className="text-danger">{this.props.error}</p>
+          {this.state.error && (
+            <p className="text-danger">{this.state.error}</p>
           )}
 
           {/* If the projects are loaded, display them to the user in a list */}
-          {this.props.projects && (
+          {this.state.projects && (
             <ListGroup className="mt-3">
-              {this.props.projects.map((project, i) => (
+              {this.state.projects.map((project, i) => (
                 <ListGroup.Item key={i}>
                   <h3>{project.name}</h3>
                   <p className="font-weight-bold">
@@ -220,7 +215,4 @@ class Map extends Component {
   }
 }
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Map);
+export default Map;

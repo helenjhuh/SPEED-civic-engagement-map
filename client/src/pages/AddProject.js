@@ -2,17 +2,9 @@ import React, { Component } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { connect } from "react-redux";
-import { actions } from "../store/actions";
 
 const mapStateToProps = state => ({
-  loggedInAs: state.auth.loggedInAs,
-  addedProject: state.project.added,
-  isLoading: state.project.isLoading,
-  error: state.project.error
-});
-
-const mapDispatchToProps = dispatch => ({
-  add: payload => dispatch(actions.project.add(payload))
+  loggedInAs: state.auth.loggedInAs
 });
 
 class AddProject extends Component {
@@ -32,7 +24,8 @@ class AddProject extends Component {
       country: "",
       lat: "",
       lng: "",
-      error: ""
+      error: "",
+      addedProjects: ""
     };
     this.onFormChange = this.onFormChange.bind(this);
     this.addProject = this.addProject.bind(this);
@@ -47,6 +40,7 @@ class AddProject extends Component {
     // construct the geocode payload from the address form
     const { street1, city, region, country, street2 } = this.state;
     const payload = `${street1} ${street2} ${city} ${region} ${country}`;
+
     fetch(`/api/mapbox/geocode/${payload}`)
       .then(res => res.json())
       .then(res => {
@@ -117,8 +111,19 @@ class AddProject extends Component {
       country,
       owner: this.props.loggedInAs._id
     };
-    // dispatch action to add project
-    this.props.add(payload);
+
+    // Make the request
+
+    this.setState({ isLoading: true });
+
+    fetch("/api/projects/add", {
+      method: "POST",
+      body: JSON.stringify(payload)
+    })
+      .then(res => res.json())
+      .then(results => this.setState({ addedProject: results }))
+      .catch(error => this.setState({ error }))
+      .finally(() => this.setState({ isLoading: false }));
   }
 
   render() {
@@ -127,10 +132,10 @@ class AddProject extends Component {
         <h1 className="display-4 mb-4">Add a Project</h1>
 
         {/* if there's an error, display it to the user */}
-        {this.props.error && <p className="error">{this.props.error}</p>}
+        {this.state.error && <p className="error">{this.state.error}</p>}
 
         {/* if the user project has been added, display it to the user for now */}
-        {this.props.addedProject && (
+        {this.state.addedProject && (
           <p>
             Your project is saved but may not be viewable to the public until a
             moderator approves it. You can view your project on your My Projects
@@ -250,5 +255,5 @@ class AddProject extends Component {
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(AddProject);
