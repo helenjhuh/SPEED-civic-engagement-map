@@ -86,7 +86,7 @@ class ManageUsers extends Component {
     const { isLoading, users, error } = this.state;
 
     return (
-      <div className="container">
+      <div className="container-fluid">
         <h1 className="display-4 mb-4">Manage Users</h1>
         {/* If he we have error, display it */}
         {error && <p className="text-danger">{error}</p>}
@@ -103,6 +103,11 @@ class ManageUsers extends Component {
           </Modal.Header>
           <Modal.Body>
             <ListGroup>
+              {this.state.roles.length === 0 && (
+                <p>
+                  It doesn't look like there are any roles in the system yet!
+                </p>
+              )}
               {this.state.roles &&
                 this.state.roles.map((role, i) => (
                   <ListGroup.Item key={i}>

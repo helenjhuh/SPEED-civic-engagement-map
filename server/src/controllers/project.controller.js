@@ -34,23 +34,19 @@ exports.edit = (req, res) => {
   if (!Types.ObjectId.isValid(id) || !id)
     return SendFailure(res, 400, en_US.BAD_REQUEST);
 
-  const { name, description, type, website, owner, address, pins } = req.body;
-
-  // Construct the update object that will get passed into
-  // The model update func
-  const update = {};
-  name && Object.assign({ name }, update);
-  description && Object.assign({ description }, update);
-  type && Object.assign({ type }, update);
-  website && Object.assign({ website }, update);
-  owner && Object.assign({ owner }, update);
-  address && Object.assign({ address }, update);
-  pins && Object.assign({ pins }, update);
-
-  Project.updateOne({ id }, update, (error, project) => {
-    if (error) return SendError(res, 500, error);
-    return SendSuccess(res, 200, { project });
-  });
+  Project.updateOne(
+    { _id: id },
+    {
+      name: req.body.name,
+      description: req.body.description,
+      type: req.body.type,
+      website: req.body.website
+    },
+    (error, project) => {
+      if (error) return SendError(res, 500, error);
+      return SendSuccess(res, 200, { project });
+    }
+  );
 };
 
 exports.add = (req, res) => {
