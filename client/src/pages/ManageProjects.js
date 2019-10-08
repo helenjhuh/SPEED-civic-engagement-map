@@ -28,7 +28,7 @@ class ManageProjects extends Component {
     const { error, isLoading, projects } = this.state;
 
     return (
-      <div className="container">
+      <div className="container-fluid">
         <h1 className="display-4 mb-4">Manage Projects</h1>
         {/* If there's an error, display it to the user */}
         {error && <p className="text-danger">{error}</p>}
@@ -63,9 +63,12 @@ class ManageProjects extends Component {
                   </td>
                   <td>{project.owner.email}</td>
                   <td>
-                    <Button>Edit</Button>
-                    <br />
-                    <Button className="mt-1">Delete</Button>
+                    <Button size="sm" variant="text">
+                      Edit
+                    </Button>
+                    <Button size="sm" variant="text">
+                      Delete
+                    </Button>
                   </td>
                 </tr>
               ))}

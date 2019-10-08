@@ -26,18 +26,17 @@ exports.edit = (req, res) => {
   const { id } = req.params;
   if (!Types.ObjectId.isValid(id) || !id)
     return SendFailure(res, 400, en_US.BAD_REQUEST);
-  const { name, description } = req.body;
-
-  // Construct the update object that will get passed into
-  // The model update func
-  const update = {};
-  name && Object.assign({ name }, update);
-  description && Object.assign({ description }, update);
-
-  Role.updateOne({ id }, update, (error, role) => {
-    if (error) return SendError(res, 500, error);
-    return SendSuccess(res, 200, { role });
-  });
+  Role.updateOne(
+    { _id: id },
+    {
+      name: req.body.name,
+      description: req.body.description
+    },
+    (error, role) => {
+      if (error) return SendError(res, 500, error);
+      return SendSuccess(res, 200, { role });
+    }
+  );
 };
 
 exports.add = (req, res) => {
