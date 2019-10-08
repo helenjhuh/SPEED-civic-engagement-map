@@ -5,6 +5,10 @@ const projectSchema = mongoose.Schema({
     type: Boolean,
     default: true // set the default to true as long as project verification does not exist
   },
+  isFeatured: {
+    type: Boolean,
+    default: true
+  },
   name: {
     type: String,
     required: true

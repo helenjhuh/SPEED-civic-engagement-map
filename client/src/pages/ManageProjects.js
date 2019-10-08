@@ -111,6 +111,7 @@ class ManageProjects extends Component {
             <thead>
               <tr>
                 <th>Verified</th>
+                <th>Featured</th>
                 <th>Name</th>
                 <th>Description</th>
                 <th>Type</th>
@@ -125,6 +126,7 @@ class ManageProjects extends Component {
               {projects.map((project, i) => (
                 <tr key={`project-${i}`}>
                   <td>{project.isVerified ? "x" : " "}</td>
+                  <td>{project.isFeatured ? "x" : " "}</td>
                   <td>{project.name}</td>
                   <td>{project.description}</td>
                   <td>{project.type}</td>
