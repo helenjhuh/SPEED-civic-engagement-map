@@ -2,36 +2,44 @@ import React, { Component } from "react";
 
 // import React from "react";
 import { FPVideo, FeaturedProject } from "../components";
-import { actions } from "../store/actions";
-import { connect } from "react-redux";
-
-import faker from "faker";
-
-const mapStateToProps = state => ({
-  projects: state.project.browsing,
-  isLoading: state.project.isLoading,
-  error: state.project.error
-});
-
-// TODO: Browse projects should eventually accept a payload, that will tell the server
-// to limit the amount of projects returned, as well the offset to start at in the databse
-const mapDispatchToProps = dispatch => ({
-  browse: () => dispatch(actions.project.browse())
-});
-
-// const Home = props => {
-//   return (
 
 class Home extends Component {
   constructor() {
     super();
+    this.state = {
+      error: "",
+      isLoading: "",
+      projects: ""
+    };
+
+    this.getProjects = this.getProjects.bind(this);
   }
 
   componentDidMount() {
-    this.props.browse();
+    this.getProjects();
+  }
+
+  getProjects() {
+    this.setState({ isLoading: true });
+
+    fetch("/api/projects")
+      .then(res => res.json())
+      .then(res => {
+        if (res.status == "error") {
+          console.log(res.message);
+        } else if (res.status == "fail") {
+          console.log(res.data.messsage);
+        } else {
+          this.setState({ projects: res.data.projects });
+        }
+      })
+      .catch(error => this.setState({ error }))
+      .finally(() => this.setState({ isLoading: false }));
   }
 
   render() {
+    const { isLoading, projects, error } = this.state;
+
     return (
       <>
         <FPVideo url="https://www.youtube.com/embed/_4B6e8mFqUI?controls=0" />
@@ -50,11 +58,11 @@ class Home extends Component {
         </h2>
 
         {/* If there is an error loading the projects, display it to the user */}
-        {this.props.error && <p className="text-danger">{this.props.error}</p>}
+        {error && <p className="text-danger">{error}</p>}
 
         {/* If the projects are loaded, display them to the user in a list */}
-        {this.props.projects &&
-          this.props.projects.map((project, i) => (
+        {projects &&
+          projects.map((project, i) => (
             <FeaturedProject
               title={project.name}
               description={project.description}
@@ -69,10 +77,5 @@ class Home extends Component {
     );
   }
 }
-// };
 
-// export default Home;
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Home);
+export default Home;

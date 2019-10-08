@@ -4,6 +4,8 @@ import { SWAT_RED_RGB } from "../defs";
 import Button from "react-bootstrap/Button";
 import { LinkContainer } from "react-router-bootstrap";
 
+const MAX_HEIGHT = 500;
+
 const FeaturedProject = ({
   title,
   description,
@@ -16,7 +18,8 @@ const FeaturedProject = ({
 
   const rootStyles = {
     width: "100%",
-    minHeight: "480px"
+    minHeight: "480px",
+    maxHeight: { MAX_HEIGHT }
   };
   const titleHalf = {
     color: "white",
@@ -26,13 +29,17 @@ const FeaturedProject = ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    margin: "0px 1em"
+    margin: "0px 1em",
+    maxHeight: "inherit"
   };
   const descriptionHalf = {
     display: "flex",
     justifyContent: "left",
     alignItems: "left",
-    padding: "1em"
+    padding: "1em",
+    // overflow: "hidden",
+    // textOverflow: "ellipsis",
+    maxHeight: "inherit"
   };
   const titleStyles = {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -44,15 +51,34 @@ const FeaturedProject = ({
       <div className="row" style={rootStyles}>
         <div className="col-sm" style={flip ? descriptionHalf : titleHalf}>
           {flip ? (
-            // <p className="lead">
-            <p className="d-inline-block">
-              {description}
+            <>
+              {/* DESCRIPTION */}
+              <div
+                className="row"
+                style={{
+                  display: "flex",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis"
+                }}
+              >
+                <p className="d-inline-block">{description}</p>
+              </div>
+
               <br />
               <br />
-              <LinkContainer to={projectURL}>
-                <Button>See more</Button>
-              </LinkContainer>
-            </p>
+
+              {/* BUTTON */}
+              <div
+                className="row"
+                style={{
+                  display: "flex"
+                }}
+              >
+                <LinkContainer to={projectURL}>
+                  <Button>See more</Button>
+                </LinkContainer>
+              </div>
+            </>
           ) : (
             <h2 className="display-5" style={titleStyles}>
               {title}
@@ -65,15 +91,34 @@ const FeaturedProject = ({
               {title}
             </h2>
           ) : (
-            // <p className="lead">
-            <p className="d-inline-block">
-              {description}
+            <>
+              {/* DESCRIPTION */}
+              <div
+                className="row"
+                style={{
+                  display: "flex",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis"
+                }}
+              >
+                <p className="d-inline-block">{description}</p>
+              </div>
+
               <br />
               <br />
-              <LinkContainer to={projectURL}>
-                <Button>See more</Button>
-              </LinkContainer>
-            </p>
+
+              {/* BUTTON */}
+              <div
+                className="row"
+                style={{
+                  display: "flex"
+                }}
+              >
+                <LinkContainer to={projectURL}>
+                  <Button>See more</Button>
+                </LinkContainer>
+              </div>
+            </>
           )}
         </div>
       </div>
