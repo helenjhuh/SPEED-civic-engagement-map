@@ -62,17 +62,20 @@ class Home extends Component {
 
         {/* If the projects are loaded, display them to the user in a list */}
         {projects &&
-          projects.map((project, i) => (
-            <FeaturedProject
-              title={project.name}
-              description={project.description}
-              imageURL={`https://loremflickr.com/640/480?random=${Math.round(
-                Math.random() * 10
-              )}`}
-              projectURL={`/projects/${project._id}`}
-              flip={i % 2 != 0}
-            />
-          ))}
+          projects.map(
+            (project, i) =>
+              project.isFeatured && (
+                <FeaturedProject
+                  title={project.name}
+                  description={project.description}
+                  imageURL={`https://loremflickr.com/640/480?random=${Math.round(
+                    Math.random() * 10
+                  )}`}
+                  projectURL={`/projects/${project._id}`}
+                  flip={i % 2 != 0}
+                />
+              )
+          )}
       </>
     );
   }
