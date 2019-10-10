@@ -4,7 +4,7 @@ import { SWAT_RED_RGB } from "../defs";
 import Button from "react-bootstrap/Button";
 import { LinkContainer } from "react-router-bootstrap";
 
-const MAX_HEIGHT = 500;
+const MAX_HEIGHT = 5;
 
 const FeaturedProject = ({
   title,
@@ -19,7 +19,7 @@ const FeaturedProject = ({
   const rootStyles = {
     width: "100%",
     minHeight: "480px",
-    maxHeight: { MAX_HEIGHT }
+    maxHeight: `${MAX_HEIGHT}em`
   };
   const titleHalf = {
     color: "white",
@@ -29,17 +29,13 @@ const FeaturedProject = ({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    margin: "0px 1em",
-    maxHeight: "inherit"
+    margin: "0px 1em"
   };
   const descriptionHalf = {
     display: "flex",
     justifyContent: "left",
     alignItems: "left",
-    padding: "1em",
-    // overflow: "hidden",
-    // textOverflow: "ellipsis",
-    maxHeight: "inherit"
+    padding: "1em"
   };
   const titleStyles = {
     backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -53,30 +49,25 @@ const FeaturedProject = ({
           {flip ? (
             <>
               {/* DESCRIPTION */}
-              <div
-                className="row"
-                style={{
-                  display: "flex",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis"
-                }}
-              >
-                <p className="d-inline-block">{description}</p>
-              </div>
+              <div className="container">
+                <div className="row">
+                  <p
+                    style={{
+                      overflow: "hidden",
+                      textOverflow: "ellipses",
+                      maxHeight: "24em"
+                    }}
+                  >
+                    {description}
+                  </p>
+                </div>
 
-              <br />
-              <br />
-
-              {/* BUTTON */}
-              <div
-                className="row"
-                style={{
-                  display: "flex"
-                }}
-              >
-                <LinkContainer to={projectURL}>
-                  <Button>See more</Button>
-                </LinkContainer>
+                {/* BUTTON */}
+                <div className="row">
+                  <LinkContainer to={projectURL}>
+                    <Button>See more</Button>
+                  </LinkContainer>
+                </div>
               </div>
             </>
           ) : (
@@ -93,30 +84,25 @@ const FeaturedProject = ({
           ) : (
             <>
               {/* DESCRIPTION */}
-              <div
-                className="row"
-                style={{
-                  display: "flex",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis"
-                }}
-              >
-                <p className="d-inline-block">{description}</p>
-              </div>
+              <div className="container">
+                <div className="row">
+                  <p
+                    style={{
+                      overflow: "hidden",
+                      textOverflow: "ellipses",
+                      maxHeight: "24em"
+                    }}
+                  >
+                    {description}
+                  </p>
+                </div>
 
-              <br />
-              <br />
-
-              {/* BUTTON */}
-              <div
-                className="row"
-                style={{
-                  display: "flex"
-                }}
-              >
-                <LinkContainer to={projectURL}>
-                  <Button>See more</Button>
-                </LinkContainer>
+                {/* BUTTON */}
+                <div className="row">
+                  <LinkContainer to={projectURL}>
+                    <Button>See more</Button>
+                  </LinkContainer>
+                </div>
               </div>
             </>
           )}
