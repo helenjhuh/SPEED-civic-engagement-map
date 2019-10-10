@@ -40,7 +40,9 @@ exports.edit = (req, res) => {
       name: req.body.name,
       description: req.body.description,
       type: req.body.type,
-      website: req.body.website
+      website: req.body.website,
+      isVerified: req.body.isVerified,
+      isFeatured: req.body.isFeatured
     },
     (error, project) => {
       if (error) return SendError(res, 500, error);

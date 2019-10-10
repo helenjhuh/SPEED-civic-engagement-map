@@ -54,12 +54,15 @@ class ManageProjects extends Component {
       name: project.name,
       description: project.description,
       type: project.type,
-      website: project.website
+      website: project.website,
+      isVerified: project.isVerified,
+      isFeatured: project.isFeatured
     });
   }
 
   // Send the request to update the project, then fetch the new projects list
   updateProject() {
+    console.log(this.state);
     fetch(`/api/projects/${this.state.projectId}/edit`, {
       method: "PUT",
       headers: {
@@ -69,7 +72,9 @@ class ManageProjects extends Component {
         name: this.state.name,
         description: this.state.description,
         type: this.state.type,
-        website: this.state.website
+        website: this.state.website,
+        isVerified: this.state.isVerified,
+        isFeatured: this.state.isFeatured
       })
     })
       .catch(error => this.setState({ error }))
@@ -90,10 +95,14 @@ class ManageProjects extends Component {
 
   // Set the state based on the edit form
   onEditFormChange(e) {
-    const { name, value } = e.target;
-    this.setState({
-      [name]: value
-    });
+    const { name, value, checked } = e.target;
+    const toggleCheck = name === "isVerified" || name === "isFeatured";
+
+    // If toggling check-box
+    toggleCheck && this.setState({ [name]: checked });
+
+    //If editing value
+    !toggleCheck && this.setState({ [name]: value });
   }
   render() {
     const { error, isLoading, projects } = this.state;
@@ -191,11 +200,31 @@ class ManageProjects extends Component {
                 />
               </Form.Group>
 
-              <Form.Group>
+              <Form.Group controlId="website">
                 <Form.Control
                   type="text"
                   name="website"
                   value={this.state.website}
+                  onChange={this.onEditFormChange}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="verify">
+                <Form.Check
+                  name="isVerified"
+                  type="checkbox"
+                  label="Verify Project"
+                  defaultChecked={this.state.isVerified}
+                  onChange={this.onEditFormChange}
+                />
+              </Form.Group>
+
+              <Form.Group controlId="feature">
+                <Form.Check
+                  name="isFeatured"
+                  type="checkbox"
+                  label="Feature Project"
+                  defaultChecked={this.state.isFeatured}
                   onChange={this.onEditFormChange}
                 />
               </Form.Group>
@@ -207,7 +236,7 @@ class ManageProjects extends Component {
           </Modal.Body>
         </Modal>
 
-        {/* If there aren't any roles, display a message letting the user know */}
+        {/* If there aren't any projects, display a message letting the user know */}
         {projects && !projects.length && (
           <p className="lead">
             It doesn't look like there are any projects in your system yet
