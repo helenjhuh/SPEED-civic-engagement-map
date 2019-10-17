@@ -9,7 +9,8 @@ class Home extends Component {
     this.state = {
       error: "",
       isLoading: "",
-      projects: ""
+      projects: "",
+      counter: 0
     };
 
     this.getProjects = this.getProjects.bind(this);
@@ -39,7 +40,8 @@ class Home extends Component {
 
   render() {
     const { isLoading, projects, error } = this.state;
-
+    let { counter } = this.state;
+    // var FeaturedProjects = { p: []};
     return (
       <>
         <FPVideo url="https://www.youtube.com/embed/_4B6e8mFqUI?controls=0" />
@@ -61,10 +63,22 @@ class Home extends Component {
         {error && <p className="text-danger">{error}</p>}
 
         {/* If the projects are loaded, display them to the user in a list */}
-        {projects &&
+
+        {/* {projects &&
           projects.map(
             (project, i) =>
               project.isFeatured && (
+                FeaturedProjects.p[i] = project 
+              )
+          )
+        } */}
+
+        {projects &&
+          projects.map(
+            (project, i) =>
+              project.isFeatured &&
+              (counter++,
+              (
                 <FeaturedProject
                   title={project.name}
                   description={project.description}
@@ -72,9 +86,10 @@ class Home extends Component {
                     Math.random() * 10
                   )}`}
                   projectURL={`/projects/${project._id}`}
-                  flip={i % 2 != 0}
+                  // flip={i % 2 != 0}
+                  flip={counter % 2 != 0}
                 />
-              )
+              ))
           )}
       </>
     );
