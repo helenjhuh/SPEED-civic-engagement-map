@@ -135,7 +135,16 @@ class Map extends Component {
                   <p className="font-weight-bold">
                     Managed by {project.owner.first} - {project.owner.email}
                   </p>
-                  <p className="text-muted">{project.description}</p>
+                  <p
+                    className="text-muted"
+                    style={{
+                      overflow: "hidden",
+                      textOverflow: "ellipses",
+                      maxHeight: "24em"
+                    }}
+                  >
+                    {project.description}
+                  </p>
                   <Button onClick={() => this.projectBtnOnClick(project)}>
                     Click me
                   </Button>
@@ -197,7 +206,16 @@ class Map extends Component {
               >
                 <div style={popupStyles}>
                   <p className="lead">{this.state.viewing.name}</p>
-                  <p className="text-muted">{this.state.viewing.description}</p>
+                  <p
+                    className="text-muted"
+                    style={{
+                      overflow: "hidden",
+                      textOverflow: "ellipses",
+                      maxHeight: "24em"
+                    }}
+                  >
+                    {this.state.viewing.description}
+                  </p>
                   <p>
                     <LinkContainer to={`/projects/${this.state.viewing._id}`}>
                       <Button size="sm" variant="info" block>
