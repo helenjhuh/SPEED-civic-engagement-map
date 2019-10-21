@@ -137,7 +137,16 @@ class ManageProjects extends Component {
                   <td>{project.isVerified ? "x" : " "}</td>
                   <td>{project.isFeatured ? "x" : " "}</td>
                   <td>{project.name}</td>
-                  <td>{project.description}</td>
+                  <td>
+                    <div
+                      style={{
+                        height: "9em",
+                        overflow: "auto"
+                      }}
+                    >
+                      {project.description}
+                    </div>
+                  </td>
                   <td>{project.type}</td>
                   <td>{project.website}</td>
                   <td>
