@@ -70,7 +70,9 @@ class Map extends Component {
         // compare value to project.name
         project.name.toLowerCase().includes(value) ||
         project.description.toLowerCase().includes(value) ||
-        project.type.toLowerCase().includes(value)
+        project.type.toLowerCase().includes(value) ||
+        project.owner.first.toLowerCase().includes(value) ||
+        project.owner.last.toLowerCase().includes(value)
           ? (listItems[i].style.display = "block")
           : (listItems[i].style.display = "none")
 
@@ -129,7 +131,7 @@ class Map extends Component {
             <Form.Control
               id="feature-filter"
               type="text"
-              placeholder="Search for a project to filter"
+              placeholder="Search to filter"
               name="filter"
               onChange={this.onFilterChange}
               value={this.state.filter}
@@ -152,7 +154,6 @@ class Map extends Component {
                 maxHeight: "500px",
                 marginBottom: "10px",
                 overflow: "scroll"
-                // -webkit-overflow-scrolling: touch;
               }}
             >
               {this.state.projects.map((project, i) => (
