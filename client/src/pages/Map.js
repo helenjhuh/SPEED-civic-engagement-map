@@ -65,13 +65,14 @@ class Map extends Component {
     });
 
     value.toLowerCase();
-    projects.forEach((project, i) =>
-      // compare value to project.name
-      project.name.toLowerCase().includes(value) ||
-      project.description.toLowerCase().includes(value) ||
-      project.type.toLowerCase().includes(value)
-        ? (listItems[i].style.display = "block")
-        : (listItems[i].style.display = "none")
+    projects.forEach(
+      (project, i) =>
+        // compare value to project.name
+        project.name.toLowerCase().includes(value) ||
+        project.description.toLowerCase().includes(value) ||
+        project.type.toLowerCase().includes(value)
+          ? (listItems[i].style.display = "block")
+          : (listItems[i].style.display = "none")
 
       // compare value to project.description
       // compare value to project.category
@@ -145,7 +146,15 @@ class Map extends Component {
 
           {/* If the projects are loaded, display them to the user in a list */}
           {this.state.projects && (
-            <ListGroup className="mt-3">
+            <ListGroup
+              className="mt-3"
+              style={{
+                maxHeight: "500px",
+                marginBottom: "10px",
+                overflow: "scroll"
+                // -webkit-overflow-scrolling: touch;
+              }}
+            >
               {this.state.projects.map((project, i) => (
                 <ListGroup.Item key={i} className="project-list">
                   <h3>{project.name}</h3>
