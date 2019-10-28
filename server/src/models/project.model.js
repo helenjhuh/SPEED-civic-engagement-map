@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const projectSchema = mongoose.Schema({
   isVerified: {
     type: Boolean,
-    default: true // set the default to true as long as project verification does not exist
+    default: false
   },
   isFeatured: {
     type: Boolean,
