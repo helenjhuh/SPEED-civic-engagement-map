@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import ReactMapboxGl, { Layer, Feature, Popup } from "react-mapbox-gl";
+import ReactMapboxGl, {
+  Layer,
+  Feature,
+  Popup,
+  MapContext
+} from "react-mapbox-gl";
+import mapboxgl from "mapbox-gl";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -191,6 +197,15 @@ class Map extends Component {
         >
           <MapView
             style="mapbox://styles/mapbox/streets-v9"
+            // Use of Mapbox-GL-js functionality not covered by react-mapbox-gl package
+            // Allow for use popup with close button
+            // onStyleLoad= { (MapView) => {
+            //   const testPopup = new mapboxgl.Popup()
+            //     .setLngLat([-75.3543701, 39.905256])
+            //     .setHTML('TEST')
+            //     .addTo(MapView)
+            // }}
+
             containerStyle={{
               height: "100%",
               width: "100%"
@@ -202,7 +217,7 @@ class Map extends Component {
               speed: 0.8
             }}
           >
-            {/* for each project, generate a feature */}
+            {/* Create symbol layer to store project pins */}
             <Layer
               type="symbol"
               id="marker"
@@ -210,48 +225,94 @@ class Map extends Component {
                 "icon-image": "castle-15"
               }}
             >
-              {this.props.projects &&
-                this.props.projects.map((project, i) => (
+              {/* for each project, generate a feature */}
+              {this.state.projects &&
+                this.state.projects.map((project, i) => (
                   <Feature
                     key={i}
                     coordinates={[project.address.lat, project.address.lng]}
                     onClick={this.featureOnClick.bind(
                       this,
-                      this.props.projects[i]
+                      this.state.projects[i]
                     )}
                   />
                 ))}
             </Layer>
 
+            {/* Adding city boundries */}
+            {/* Need to fnid regional GeoJSON data and create GeoJSONLayer with filled polygons ...? */}
+            {/* <Layer
+              type="fill"
+              id="regions-of-interest"
+            >
+            </Layer> */}
+
             {this.state.viewing && (
-              <Popup
-                key={this.state.viewing._id}
-                coordinates={[
-                  this.state.viewing.address.lat,
-                  this.state.viewing.address.lng
-                ]}
-              >
-                <div style={popupStyles}>
-                  <p className="lead">{this.state.viewing.name}</p>
-                  <p
-                    className="text-muted"
-                    style={{
-                      overflow: "hidden",
-                      textOverflow: "ellipses",
-                      maxHeight: "3.5rem"
-                    }}
-                  >
-                    {this.state.viewing.description}
-                  </p>
-                  <p>
-                    <LinkContainer to={`/projects/${this.state.viewing._id}`}>
-                      <Button size="sm" variant="info" block>
-                        See more
-                      </Button>
-                    </LinkContainer>
-                  </p>
-                </div>
-              </Popup>
+              // Allow for use of Mapbox-GL-js functionality not covered by react-mapbox-gl package
+              // Use popup with close button
+              <MapContext.Consumer>
+                {map => {
+                  var popup = new mapboxgl.Popup({ closeOnClick: false })
+                    .setLngLat([
+                      this.state.viewing.address.lat,
+                      this.state.viewing.address.lng
+                    ])
+                    .setHTML(
+                      `<div style="${popupStyles}">
+                              <p class-name="lead">${
+                                this.state.viewing.name
+                              }</p>
+                              <p
+                                class-name="text-muted"
+                                style="
+                                  overflow: "hidden",
+                                  textOverflow: "ellipses",
+                                  maxHeight: "3.5rem"
+                                "
+                              >
+                                ${this.state.viewing.description}
+                              </p>
+                              <p>
+                                <LinkContainer to=${`/projects/${this.state.viewing._id}`}>
+                                  <Button size="sm" variant="info" block>
+                                    See more
+                                  </Button>
+                                </LinkContainer>
+                              </p>
+                            </div>`
+                    )
+                    .addTo(map);
+                }}
+              </MapContext.Consumer>
+
+              // <Popup
+              //   key={this.state.viewing._id}
+              //   coordinates={[
+              //     this.state.viewing.address.lat,
+              //     this.state.viewing.address.lng
+              //   ]}
+              // >
+              //   <div style={popupStyles}>
+              //     <p className="lead">{this.state.viewing.name}</p>
+              //     <p
+              //       className="text-muted"
+              //       style={{
+              //         overflow: "hidden",
+              //         textOverflow: "ellipses",
+              //         maxHeight: "3.5rem"
+              //       }}
+              //     >
+              //       {this.state.viewing.description}
+              //     </p>
+              //     <p>
+              //       <LinkContainer to={`/projects/${this.state.viewing._id}`}>
+              //         <Button size="sm" variant="info" block>
+              //           See more
+              //         </Button>
+              //       </LinkContainer>
+              //     </p>
+              //   </div>
+              // </Popup>
             )}
           </MapView>
         </div>
