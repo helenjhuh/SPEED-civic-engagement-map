@@ -197,15 +197,6 @@ class Map extends Component {
         >
           <MapView
             style="mapbox://styles/mapbox/streets-v9"
-            // Use of Mapbox-GL-js functionality not covered by react-mapbox-gl package
-            // Allow for use popup with close button
-            // onStyleLoad= { (MapView) => {
-            //   const testPopup = new mapboxgl.Popup()
-            //     .setLngLat([-75.3543701, 39.905256])
-            //     .setHTML('TEST')
-            //     .addTo(MapView)
-            // }}
-
             containerStyle={{
               height: "100%",
               width: "100%"
@@ -252,67 +243,34 @@ class Map extends Component {
               // Use popup with close button
               <MapContext.Consumer>
                 {map => {
-                  var popup = new mapboxgl.Popup({ closeOnClick: false })
+                  var popup = new mapboxgl.Popup() //{ closeOnClick: false }
                     .setLngLat([
                       this.state.viewing.address.lat,
                       this.state.viewing.address.lng
                     ])
                     .setHTML(
                       `<div style="${popupStyles}">
-                              <p class-name="lead">${
-                                this.state.viewing.name
-                              }</p>
+                              <p class="lead">${this.state.viewing.name}</p>
                               <p
-                                class-name="text-muted"
+                                class="text-muted"
                                 style="
-                                  overflow: "hidden",
-                                  textOverflow: "ellipses",
-                                  maxHeight: "3.5rem"
+                                  overflow: hidden;
+                                  text-overflow: ellipsis;
+                                  max-height: 3.5rem
                                 "
                               >
                                 ${this.state.viewing.description}
                               </p>
                               <p>
-                                <LinkContainer to=${`/projects/${this.state.viewing._id}`}>
-                                  <Button size="sm" variant="info" block>
-                                    See more
-                                  </Button>
-                                </LinkContainer>
+                                <a href='#/projects/${this.state.viewing._id}' type="button" class="btn btn-info btn-sm btn-block">
+                                  See more
+                                </a>
                               </p>
                             </div>`
                     )
                     .addTo(map);
                 }}
               </MapContext.Consumer>
-
-              // <Popup
-              //   key={this.state.viewing._id}
-              //   coordinates={[
-              //     this.state.viewing.address.lat,
-              //     this.state.viewing.address.lng
-              //   ]}
-              // >
-              //   <div style={popupStyles}>
-              //     <p className="lead">{this.state.viewing.name}</p>
-              //     <p
-              //       className="text-muted"
-              //       style={{
-              //         overflow: "hidden",
-              //         textOverflow: "ellipses",
-              //         maxHeight: "3.5rem"
-              //       }}
-              //     >
-              //       {this.state.viewing.description}
-              //     </p>
-              //     <p>
-              //       <LinkContainer to={`/projects/${this.state.viewing._id}`}>
-              //         <Button size="sm" variant="info" block>
-              //           See more
-              //         </Button>
-              //       </LinkContainer>
-              //     </p>
-              //   </div>
-              // </Popup>
             )}
           </MapView>
         </div>
