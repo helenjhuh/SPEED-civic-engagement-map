@@ -96,7 +96,14 @@ class Map extends Component {
   }
 
   projectBtnOnClick(project) {
-    // when the project btn is clicked, the map should zoom and recenter to the location of the project
+    //Close any existing popups
+    const popups = document.getElementsByClassName("popup");
+    const l = popups.length;
+    for (let i = 0; i < l; i++) {
+      console.log(popups[i]);
+      popups[i].remove();
+    }
+
     this.setState({
       map: {
         viewport: {
@@ -243,7 +250,7 @@ class Map extends Component {
               // Use popup with close button
               <MapContext.Consumer>
                 {map => {
-                  var popup = new mapboxgl.Popup() //{ closeOnClick: false }
+                  var popup = new mapboxgl.Popup({ className: "popup" }) //{ closeOnClick: false }
                     .setLngLat([
                       this.state.viewing.address.lat,
                       this.state.viewing.address.lng
