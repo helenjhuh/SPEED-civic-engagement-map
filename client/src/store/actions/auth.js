@@ -30,6 +30,7 @@ export function signup(payload) {
 }
 
 export function logout() {
+  localStorage.removeItem("user");
   return {
     type: AUTH.LOGOUT
   };

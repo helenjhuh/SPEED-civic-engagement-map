@@ -9,9 +9,12 @@ passport.serializeUser((user, done) => {
 });
 
 passport.deserializeUser((id, done) => {
-  User.findById(id, (err, user) => {
-    done(err, user);
-  });
+  User.findById(id)
+    .populate("roles")
+    .populate("projects")
+    .exec((err, user) => {
+      done(err, user);
+    });
 });
 
 module.exports = passport => {
