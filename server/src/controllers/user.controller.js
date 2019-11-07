@@ -99,12 +99,16 @@ exports.addRole = (req, res) => {
       return SendFailure(res, 400, en_US.BAD_REQUEST);
     }
 
-    user.roles.push(role);
-
-    user.save(error => {
-      if (error) return SendError(res, 500, error);
+    // only add the role if it does not already exist in the user's roles
+    if (!user.roles.includes(role)) {
+      user.roles.push(role);
+      user.save(error => {
+        if (error) return SendError(res, 500, error);
+        return SendSuccess(res, 200, { user });
+      });
+    } else {
       return SendSuccess(res, 200, { user });
-    });
+    }
   });
 };
 
