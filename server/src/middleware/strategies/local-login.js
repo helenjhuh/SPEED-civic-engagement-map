@@ -11,8 +11,6 @@ const LocalLoginStrategy = new LocalStrategy(
       .populate("roles")
       .populate("projects")
       .exec((error, user) => {
-        console.log(user);
-
         if (error) return done(error);
 
         // could not find the user!
