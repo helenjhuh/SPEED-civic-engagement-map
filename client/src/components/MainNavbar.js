@@ -82,7 +82,8 @@ const MainNavbar = ({ isLoggedIn, loggedInAs, logout }) => {
             </LinkContainer>
 
             {/* Only show this if the user has an admin role */}
-            {loggedInAs.roles.filter(role => role.name === "Administrator") && (
+            {loggedInAs.roles.filter(role => role.name === "Administrator")
+              .length > 0 && (
               <NavDropdown title="Admin" id="admin-dropdown">
                 <LinkContainer to="/manage/users">
                   <NavDropdown.Item>Manage Users</NavDropdown.Item>
