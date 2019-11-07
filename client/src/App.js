@@ -14,7 +14,8 @@ import {
   Account,
   ManageUsers,
   ManageRoles,
-  ManageProjects
+  ManageProjects,
+  FileUploadTest
 } from "./pages";
 import { connect } from "react-redux";
 import { Layout, AuthRoute } from "./components";

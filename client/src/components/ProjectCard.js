@@ -3,8 +3,14 @@ import PropTypes from "prop-types";
 import Button from "react-bootstrap/Button";
 import { LinkContainer } from "react-router-bootstrap";
 
-const ProjectCard = ({ project, editOnClick, delOnClick, addPinOnClick }) => {
-  const { _id, name, description, type, website, pins } = project;
+const ProjectCard = ({
+  project,
+  editOnClick,
+  delOnClick,
+  addPinOnClick,
+  addPhotoOnClick
+}) => {
+  const { _id, name, description, type, website, pins, photos } = project;
 
   return (
     <div className="card">
@@ -43,6 +49,13 @@ const ProjectCard = ({ project, editOnClick, delOnClick, addPinOnClick }) => {
               Add pin
             </Button>
           )}
+          {addPhotoOnClick && (
+            <Button className="mr-2" onClick={addPhotoOnClick}>
+              Add Photo
+            </Button>
+          )}
+
+          {photos && <div>photos go here</div>}
           <LinkContainer to={`/projects/${_id}`}>
             <Button className="mr-2">Go to project</Button>
           </LinkContainer>
@@ -59,11 +72,13 @@ ProjectCard.propTypes = {
     description: PropTypes.string.isRequired,
     type: PropTypes.string,
     website: PropTypes.string,
-    pins: PropTypes.array
+    pins: PropTypes.array,
+    photos: PropTypes.array
   }).isRequired,
   editOnClick: PropTypes.func,
   delOnClick: PropTypes.func,
-  addPinOnClick: PropTypes.func
+  addPinOnClick: PropTypes.func,
+  addPhotoOnClick: PropTypes.func
 };
 
 export default ProjectCard;

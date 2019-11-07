@@ -1,14 +1,16 @@
 require("dotenv").config();
+
 const config = require("./config");
 const express = require("express");
-const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const session = require("express-session");
 const logger = require("morgan");
 const passport = require("passport");
 const cors = require("cors");
-
 const apiRoutes = require("./routes/api");
+
+// Require the db
+require("./mongoose");
 
 /* Begin initialization for our app and set up stuff */
 const app = express();
@@ -30,7 +32,6 @@ app.use(bodyParser.json());
 
 // Set up passport
 require("./middleware/passport")(passport);
-
 app.use(passport.initialize(null));
 app.use(passport.session());
 
@@ -47,26 +48,10 @@ app.use("/api/roles", apiRoutes.roleRoutes);
 app.use("/api/mapbox", apiRoutes.mapboxRoutes);
 app.use("/api/addresses", apiRoutes.addressRoutes);
 
-// Start mongoose and make sure database is connected before starting the server
-mongoose
-  .connect(
-    `mongodb+srv://${config.db.user}:${config.db.pass}@${config.db.host}/${config.db.name}`,
-    {
-      useNewUrlParser: true,
-      useFindAndModify: false,
-      useCreateIndex: true,
-      useUnifiedTopology: true
-    }
+app.listen(config.app.port, () =>
+  console.log(
+    `App is listening on port http://localhost:${config.app.port} \nRunning in ${config.app.env} mode.`
   )
-  .then(() => {
-    console.log(`Connected to ${config.db.host}/${config.db.name}`);
-
-    app.listen(config.app.port, () =>
-      console.log(
-        `App is listening on port http://localhost:${config.app.port} \nRunning in ${config.app.env} mode.`
-      )
-    );
-  })
-  .catch(err => console.error(err));
+);
 
 module.exports = app;

@@ -1,6 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const { projectController } = require("../../controllers");
+const { upload } = require("../../mongoose");
+const { Project } = require("../../models");
+const { Types } = require("mongoose");
+const {
+  SendSuccess,
+  SendFailure,
+  SendError
+} = require("../../helpers/responses");
 
 /**
  * @description Browse projects
@@ -37,5 +45,25 @@ router.get("/by-user/:id", projectController.byUser);
  * @description Delete a project
  */
 router.delete("/:id/delete", projectController.delete);
+
+/**
+ * @description Adds a photo to a project
+ * @param :id The project id to upload the photo to
+ */
+router.post("/:id/upload", upload.single("photo"), (req, res) => {
+  const { id } = req.params;
+
+  // If the project has an invalid id, don't bother to proceed
+  if (!Types.ObjectId.isValid(id) || !id)
+    return SendFailure(res, 400, en_US.BAD_REQUEST);
+
+  // Retrieve the project, and save the photo's id to it
+  Project.update({ _id: id }, { $push: { photos: req.file.id } }, err => {
+    if (err) {
+      SendError(res, 400, error);
+    }
+    SendSuccess(res, 200, { message: "Upload success" });
+  });
+});
 
 module.exports = router;
