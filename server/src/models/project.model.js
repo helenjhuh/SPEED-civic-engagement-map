@@ -36,7 +36,8 @@ const projectSchema = mongoose.Schema({
       type: mongoose.Schema.Types.ObjectId,
       ref: "Pin"
     }
-  ]
+  ],
+  photos: [{ type: mongoose.Schema.Types.String }]
 });
 
 module.exports = mongoose.model("Project", projectSchema);

@@ -5,6 +5,7 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { LinkContainer } from "react-router-bootstrap";
+import { PhotoUpload } from "../components";
 
 const mapStateToProps = state => ({
   loggedInAs: state.auth.loggedInAs
@@ -29,7 +30,8 @@ class MyProjects extends Component {
       },
       projects: "",
       isLoading: "",
-      error: ""
+      error: "",
+      addPhotoModal: false
     };
 
     // This can probably be seriously cleaned up
@@ -45,6 +47,8 @@ class MyProjects extends Component {
     this.saveProjectEdits = this.saveProjectEdits.bind(this);
     this.onEditFormChange = this.onEditFormChange.bind(this);
     this.getProjectsByUser = this.getProjectsByUser.bind(this);
+    this.closeAddPhotoModal = this.closeAddPhotoModal.bind(this);
+    this.addPhotoOnClick = this.addPhotoOnClick.bind(this);
   }
 
   componentDidMount() {
@@ -166,6 +170,18 @@ class MyProjects extends Component {
       }
     });
   }
+  closeAddPhotoModal() {
+    this.setState({
+      addPhotoModal: false,
+      projectId: ""
+    });
+  }
+  addPhotoOnClick(project) {
+    this.setState({
+      addPhotoModal: true,
+      projectId: project._id
+    });
+  }
 
   render() {
     return (
@@ -177,6 +193,21 @@ class MyProjects extends Component {
 
         {this.state.isLoading && (
           <p className="text-muted">Loading your projects...</p>
+        )}
+
+        {/* If the add photo modal is active, show it */}
+        {this.state.projectId && (
+          <Modal
+            show={this.state.addPhotoModal}
+            onHide={this.closeAddPhotoModal}
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Add a photo to your project</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <PhotoUpload projectId={this.state.projectId} />
+            </Modal.Body>
+          </Modal>
         )}
 
         {/* If the edit project modal is active, shot it */}
@@ -287,6 +318,7 @@ class MyProjects extends Component {
               editOnClick={() => this.projectEditClick(p)}
               delOnClick={() => this.projectDeleteClick(p._id)}
               addPinOnClick={() => this.addPinOnClick(p._id)}
+              addPhotoOnClick={() => this.addPhotoOnClick(p)}
             />
           ))}
       </div>
