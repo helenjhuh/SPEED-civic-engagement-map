@@ -26,9 +26,9 @@ class Home extends Component {
     fetch("/api/projects")
       .then(res => res.json())
       .then(res => {
-        if (res.status == "error") {
+        if (res.status === "error") {
           console.log(res.message);
-        } else if (res.status == "fail") {
+        } else if (res.status === "fail") {
           console.log(res.data.messsage);
         } else {
           this.setState({ projects: res.data.projects });
@@ -39,7 +39,7 @@ class Home extends Component {
   }
 
   render() {
-    const { isLoading, projects, error } = this.state;
+    const { projects, error } = this.state;
     let { counter } = this.state;
     // var FeaturedProjects = { p: []};
     return (
@@ -87,7 +87,7 @@ class Home extends Component {
                   )}`}
                   projectURL={`/projects/${project._id}`}
                   // flip={i % 2 != 0}
-                  flip={counter % 2 != 0}
+                  flip={counter % 2 !== 0}
                 />
               ))
           )}

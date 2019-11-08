@@ -14,8 +14,7 @@ import {
   Account,
   ManageUsers,
   ManageRoles,
-  ManageProjects,
-  FileUploadTest
+  ManageProjects
 } from "./pages";
 import { connect } from "react-redux";
 import { Layout, AuthRoute } from "./components";
@@ -42,8 +41,6 @@ const App = ({ isLoggedIn, loggedInAs }) => {
           <AuthRoute path="/manage/users" component={ManageUsers} />
           <AuthRoute path="/manage/projects" component={ManageProjects} />
           <AuthRoute path="/manage/roles" component={ManageRoles} />
-          // This should go last on the list because the param :id will conflict
-          // with the /projects/add route otherwise
           <Route path="/projects/:id" component={SingleProject} />
         </Switch>
       </Layout>

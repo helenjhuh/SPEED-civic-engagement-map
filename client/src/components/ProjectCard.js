@@ -88,6 +88,7 @@ class ProjectCard extends Component {
                       <a
                         href={`http://localhost:8000/api/files/${photo}`}
                         target="_blank"
+                        rel="noopener noreferrer"
                       >
                         <Image
                           className="my-3 mx-2"
