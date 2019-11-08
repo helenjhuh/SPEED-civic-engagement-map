@@ -4,7 +4,6 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Image from "react-bootstrap/Image";
 import { LinkContainer } from "react-router-bootstrap";
 
 class ProjectCard extends Component {
@@ -20,7 +19,8 @@ class ProjectCard extends Component {
     })
       .then(res => res.json())
       .then(res => {
-        console.log(res);
+        // when we get the response refresh the page
+        document.location.reload();
       })
       .catch(err => this.setState({ error: err }))
       .finally(() => this.setState({ isLoading: false }));
@@ -85,23 +85,45 @@ class ProjectCard extends Component {
                 <Row>
                   {photos.map(photo => (
                     <Col key={photo} xs={12} md={6}>
-                      <a
-                        href={`http://localhost:8000/api/files/${photo}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <div
+                        className="my-3"
+                        style={{
+                          position: "relative",
+                          width: 400,
+                          height: 300,
+                          backgroundImage: `url(/api/files/${photo})`,
+                          backgroundSize: "cover"
+                        }}
                       >
-                        <Image
-                          className="my-3 mx-2"
-                          src={`/api/files/${photo}`}
-                          rounded
-                          width={400}
-                          height={300}
-                        />
-                      </a>
-                      {/* Each image also needs a delete button */}
-                      <Button onClick={() => this.handleDelete(_id, photo)}>
-                        Delete
-                      </Button>
+                        <Button
+                          onClick={() => this.handleDelete(_id, photo)}
+                          className="btn-danger btn-sm"
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            right: 0
+                          }}
+                        >
+                          Delete
+                        </Button>
+                        <p>
+                          <a
+                            href={`http://localhost:8000/api/files/${photo}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                              backgroundColor: "rgba(0, 0, 0)",
+                              color: "white",
+                              position: "absolute",
+                              bottom: 0,
+                              width: "100%",
+                              textAlign: "center"
+                            }}
+                          >
+                            View full-size
+                          </a>
+                        </p>
+                      </div>
                     </Col>
                   ))}
                 </Row>
