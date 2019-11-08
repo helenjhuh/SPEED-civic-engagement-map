@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { projectController } = require("../../controllers");
-const { upload } = require("../../mongoose");
+const { storage } = require("../../app");
 const { Project } = require("../../models");
 const { Types } = require("mongoose");
 const {
@@ -9,6 +9,8 @@ const {
   SendFailure,
   SendError
 } = require("../../helpers/responses");
+const multer = require("multer");
+const upload = multer({ storage });
 
 /**
  * @description Browse projects
@@ -50,7 +52,7 @@ router.delete("/:id/delete", projectController.delete);
  * @description Adds a photo to a project
  * @param :id The project id to upload the photo to
  */
-router.post("/:id/upload", upload.single("photo"), (req, res) => {
+router.post("/:id/upload", upload.array("photos", 12), (req, res) => {
   const { id } = req.params;
 
   // If the project has an invalid id, don't bother to proceed
