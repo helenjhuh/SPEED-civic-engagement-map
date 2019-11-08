@@ -38,7 +38,7 @@ class PhotoUpload extends Component {
       .then(res => res.json())
       .then(res => {
         // handle res
-        console.log(res);
+        document.location.reload();
       })
       .catch(err => console.error(err))
       .finally(() => this.setState({ isUploading: false }));
