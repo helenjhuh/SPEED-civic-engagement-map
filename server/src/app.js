@@ -14,9 +14,10 @@ const path = require("path");
 const mongoose = require("mongoose");
 const grid = require("gridfs-stream");
 const multer = require("multer");
-const { SendSuccess, SendError } = require("./helpers/responses");
+const { SendSuccess, SendError, SendFailure } = require("./helpers/responses");
 const { Types } = require("mongoose");
 const { Project } = require("./models");
+const methodOverride = require("method-override");
 
 // Initialize some of the variables we will need
 let app;
@@ -71,6 +72,8 @@ conn.once("open", () => {
   app.use(bodyParser.urlencoded({ extended: true }));
   app.use(bodyParser.json());
 
+  app.use(methodOverride("_method"));
+
   // Set up passport
   require("./middleware/passport")(passport);
   app.use(passport.initialize(null));
@@ -114,7 +117,7 @@ conn.once("open", () => {
       if (!Types.ObjectId.isValid(id) || !id)
         return SendFailure(res, 400, en_US.BAD_REQUEST);
 
-      const mapped = req.files.map(file => file.md5);
+      const mapped = req.files.map(file => file.filename);
 
       // Retrieve the project, and save the photo's id to it
       Project.update({ _id: id }, { $push: { photos: [...mapped] } }, err => {
@@ -131,8 +134,8 @@ conn.once("open", () => {
    * @description Get a photo by hash
    * @param hash
    */
-  app.get("/api/files/:hash", (req, res) => {
-    gfs.files.findOne({ md5: req.params.hash }, (err, file) => {
+  app.get("/api/files/:filename", (req, res) => {
+    gfs.files.findOne({ filename: req.params.filename }, (err, file) => {
       if (!file || file.length === 0) {
         return SendFailure(res, 404, "File does not exist");
       }
@@ -154,21 +157,23 @@ conn.once("open", () => {
    * @param projectid
    * @param photohash
    */
-  app.delete("/api/projects/:projectid/:photohash/delete", (req, res) => {
+  app.delete("/api/projects/:projectid/:filename/delete", (req, res) => {
     // first lets find the project
     Project.findOne({ _id: req.params.projectid }, (err, project) => {
       if (err) {
         return SendError(res, 500, err);
       }
       // once we have the project, we need to remove the photohash from it's photos array
-      project.photos = project.photos.filter(photo => photo != req.params.hash);
+      project.photos = project.photos.filter(
+        photo => photo != req.params.filename
+      );
 
       project.save(err => {
         if (err) {
           return SendError(res, 500, err);
         }
         // before we save the project, let's remove the photo from the storage as well
-        gfs.files.remove({ md5: req.params.hash }, (err, gridStore) => {
+        gfs.remove({ filename: req.params.filename }, (err, gridStore) => {
           if (err) {
             return SendError(res, 500, err);
           }
