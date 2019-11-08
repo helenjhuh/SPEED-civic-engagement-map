@@ -90,7 +90,7 @@ conn.once("open", () => {
   app.use("/api/addresses", apiRoutes.addressRoutes);
 
   // Set up the file routes here until we can figure out how to pass around the gfs instance
-  app.use("/api/files", (req, res) => {
+  app.get("/api/files", (req, res) => {
     gfs.files.find().toArray((err, files) => {
       if (err) {
         SendError(res, 500, err);
@@ -100,6 +100,7 @@ conn.once("open", () => {
   });
 
   /**
+   * @route /api/projects/:id/upload
    * @description Adds a photo to a project
    * @param :id The project id to upload the photo to
    */
@@ -113,17 +114,69 @@ conn.once("open", () => {
       if (!Types.ObjectId.isValid(id) || !id)
         return SendFailure(res, 400, en_US.BAD_REQUEST);
 
-      const mapped = req.files.map(file => file.id);
+      const mapped = req.files.map(file => file.md5);
 
       // Retrieve the project, and save the photo's id to it
       Project.update({ _id: id }, { $push: { photos: [...mapped] } }, err => {
         if (err) {
-          SendError(res, 400, error);
+          SendError(res, 500, error);
         }
         SendSuccess(res, 200, { message: "Upload success" });
       });
     }
   );
+
+  /**
+   * @route /api/files/:hash
+   * @description Get a photo by hash
+   * @param hash
+   */
+  app.get("/api/files/:hash", (req, res) => {
+    gfs.files.findOne({ md5: req.params.hash }, (err, file) => {
+      if (!file || file.length === 0) {
+        return SendFailure(res, 404, "File does not exist");
+      }
+      if (
+        file.contentType === "image/jpeg" ||
+        file.contentType === "image/png"
+      ) {
+        const readstream = gfs.createReadStream(file.filename);
+        readstream.pipe(res);
+      } else {
+        return SendFailure(res, 404, "Not an image!");
+      }
+    });
+  });
+
+  /**
+   * @route /api/projects/:projectid/:photohash/delete
+   * @description Delete a photo by it's hash
+   * @param projectid
+   * @param photohash
+   */
+  app.delete("/api/projects/:projectid/:photohash/delete", (req, res) => {
+    // first lets find the project
+    Project.findOne({ _id: req.params.projectid }, (err, project) => {
+      if (err) {
+        return SendError(res, 500, err);
+      }
+      // once we have the project, we need to remove the photohash from it's photos array
+      project.photos = project.photos.filter(photo => photo != req.params.hash);
+
+      project.save(err => {
+        if (err) {
+          return SendError(res, 500, err);
+        }
+        // before we save the project, let's remove the photo from the storage as well
+        gfs.files.remove({ md5: req.params.hash }, (err, gridStore) => {
+          if (err) {
+            return SendError(res, 500, err);
+          }
+          return SendSuccess(res, 200, { message: "File deleted" });
+        });
+      });
+    });
+  });
 
   app.listen(config.app.port, () =>
     console.log(
