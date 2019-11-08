@@ -8,15 +8,18 @@ const logger = require("morgan");
 const passport = require("passport");
 const cors = require("cors");
 const apiRoutes = require("./routes/api");
-const multer = require("multer");
 const gridFsStorage = require("multer-gridfs-storage");
-const grid = require("gridfs-stream");
 const crypto = require("crypto");
 const path = require("path");
 const mongoose = require("mongoose");
+const grid = require("gridfs-stream");
+const multer = require("multer");
+const { SendSuccess, SendError } = require("./helpers/responses");
+const { Types } = require("mongoose");
+const { Project } = require("./models");
 
 // Initialize some of the variables we will need
-let app, gfs;
+let app;
 
 // Initialize mongoose and the db connection
 const dbURI = `mongodb+srv://${config.db.user}:${config.db.pass}@${config.db.host}/${config.db.name}`;
@@ -46,7 +49,7 @@ const storage = new gridFsStorage({
 const upload = multer({ storage });
 
 conn.once("open", () => {
-  // Set up GridFs
+  // Set up gfs
   gfs = grid(conn.db, mongoose.mongo);
   gfs.collection("uploads");
 
@@ -85,7 +88,42 @@ conn.once("open", () => {
   app.use("/api/roles", apiRoutes.roleRoutes);
   app.use("/api/mapbox", apiRoutes.mapboxRoutes);
   app.use("/api/addresses", apiRoutes.addressRoutes);
-  app.use("/api/files", apiRoutes.fileRoutes);
+
+  // Set up the file routes here until we can figure out how to pass around the gfs instance
+  app.use("/api/files", (req, res) => {
+    gfs.files.find().toArray((err, files) => {
+      if (err) {
+        SendError(res, 500, err);
+      }
+      res.json({ files });
+    });
+  });
+
+  /**
+   * @description Adds a photo to a project
+   * @param :id The project id to upload the photo to
+   */
+  app.post(
+    "/api/projects/:id/upload",
+    upload.array("photos", 12),
+    (req, res) => {
+      const { id } = req.params;
+
+      // If the project has an invalid id, don't bother to proceed
+      if (!Types.ObjectId.isValid(id) || !id)
+        return SendFailure(res, 400, en_US.BAD_REQUEST);
+
+      const mapped = req.files.map(file => file.id);
+
+      // Retrieve the project, and save the photo's id to it
+      Project.update({ _id: id }, { $push: { photos: [...mapped] } }, err => {
+        if (err) {
+          SendError(res, 400, error);
+        }
+        SendSuccess(res, 200, { message: "Upload success" });
+      });
+    }
+  );
 
   app.listen(config.app.port, () =>
     console.log(
@@ -98,4 +136,4 @@ conn.once("error", err => {
   console.log.bind(err);
 });
 
-module.exports = { app, gfs, upload };
+module.exports = { app, storage };

@@ -7,27 +7,33 @@ import PropTypes from "prop-types";
 
 class PhotoUpload extends Component {
   state = {
-    photo: null,
-    isUploading: false
+    photos: [],
+    isUploading: false,
+    error: ""
   };
 
   onFormChange = e => {
     e.preventDefault();
-    this.setState({ photo: e.target.files[0] });
+    this.setState({
+      photos: e.target.files
+    });
   };
 
   onFormSubmit = e => {
     e.preventDefault();
 
     const projectId = this.props.projectId;
-    const data = new FormData();
-    data.append("photo", this.state.photo);
+    const formData = new FormData();
+
+    Array.from(this.state.photos).forEach(file => {
+      formData.append("photos", file);
+    });
 
     this.setState({ isUploading: true });
 
     fetch(`/api/projects/${projectId}/upload`, {
       method: "POST",
-      body: data
+      body: formData
     })
       .then(res => res.json())
       .then(res => {
@@ -41,19 +47,23 @@ class PhotoUpload extends Component {
   render() {
     return (
       <>
+        {this.state.error && (
+          <p className="text-danger">{this.state.error.toString()}</p>
+        )}
         <Form>
           <Form.Group controlId="formFiles">
             <Form.Label>Upload photo for {this.props.projectId}</Form.Label>
             <Form.Control
               type="file"
-              name="photo"
+              name="photos[]"
+              multiple
               onChange={this.onFormChange}
             />
           </Form.Group>
           <Button
             variant="primary"
             onClick={this.onFormSubmit}
-            disabled={this.state.isUploading || !this.state.photo}
+            disabled={this.state.isUploading || this.state.photos.length === 0}
           >
             Submit
           </Button>

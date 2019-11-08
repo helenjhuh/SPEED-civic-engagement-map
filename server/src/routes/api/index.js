@@ -5,6 +5,5 @@ module.exports = {
   roleRoutes: require("./role.routes"),
   userRoutes: require("./user.routes"),
   authRoutes: require("./auth.routes"),
-  mapboxRoutes: require("./mapbox.routes"),
-  fileRoutes: require("./files.routes")
+  mapboxRoutes: require("./mapbox.routes")
 };
