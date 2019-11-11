@@ -1,5 +1,11 @@
 import React, { Component } from "react";
-import ReactMapboxGl, { Layer, Feature, Popup } from "react-mapbox-gl";
+import ReactMapboxGl, {
+  Layer,
+  Feature,
+  Popup,
+  MapContext
+} from "react-mapbox-gl";
+import mapboxgl from "mapbox-gl";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
@@ -90,7 +96,14 @@ class Map extends Component {
   }
 
   projectBtnOnClick(project) {
-    // when the project btn is clicked, the map should zoom and recenter to the location of the project
+    //Close any existing popups
+    const popups = document.getElementsByClassName("popup");
+    const l = popups.length;
+    for (let i = 0; i < l; i++) {
+      console.log(popups[i]);
+      popups[i].remove();
+    }
+
     this.setState({
       map: {
         viewport: {
@@ -202,7 +215,7 @@ class Map extends Component {
               speed: 0.8
             }}
           >
-            {/* for each project, generate a feature */}
+            {/* Create symbol layer to store project pins */}
             <Layer
               type="symbol"
               id="marker"
@@ -210,48 +223,165 @@ class Map extends Component {
                 "icon-image": "castle-15"
               }}
             >
-              {this.props.projects &&
-                this.props.projects.map((project, i) => (
+              {/* for each project, generate a feature */}
+              {this.state.projects &&
+                this.state.projects.map((project, i) => (
                   <Feature
                     key={i}
                     coordinates={[project.address.lat, project.address.lng]}
                     onClick={this.featureOnClick.bind(
                       this,
-                      this.props.projects[i]
+                      this.state.projects[i]
                     )}
                   />
                 ))}
             </Layer>
 
+            {/* Adding city boundries -- TODO: find way programmatic way to query city boundaries */}
+            {/* </Layer> */}
+            <MapContext.Consumer>
+              {map => {
+                map.addLayer({
+                  id: "Chester",
+                  type: "fill",
+                  source: {
+                    type: "geojson",
+                    data: {
+                      type: "Feature",
+                      geometry: {
+                        type: "MultiPolygon",
+                        coordinates: [
+                          [
+                            [
+                              [-75.409000000000006, 39.838000000000001],
+                              [-75.412000000000006, 39.841999999999999],
+                              [-75.412000000000006, 39.844999999999999],
+                              [-75.409000000000006, 39.847999999999999],
+                              [-75.400999999999996, 39.847000000000001],
+                              [-75.397000000000006, 39.849000000000004],
+                              [-75.391000000000005, 39.844999999999999],
+                              [-75.390000000000001, 39.852000000000004],
+                              [-75.388000000000005, 39.853999999999999],
+                              [-75.382999999999996, 39.855000000000004],
+                              [-75.379999999999995, 39.858000000000004],
+                              [-75.379000000000005, 39.866999999999997],
+                              [-75.379999999999995, 39.872],
+                              [-75.382000000000005, 39.872999999999998],
+                              [-75.382000000000005, 39.877000000000002],
+                              [-75.376999999999995, 39.880000000000003],
+                              [-75.373000000000005, 39.880000000000003],
+                              [-75.369, 39.877000000000002],
+                              [-75.361999999999995, 39.875999999999998],
+                              [-75.358999999999995, 39.878],
+                              [-75.353000000000009, 39.877000000000002],
+                              [-75.352000000000004, 39.872],
+                              [-75.349000000000004, 39.872],
+                              [-75.344999999999999, 39.866999999999997],
+                              [-75.343000000000004, 39.863],
+                              [-75.343000000000004, 39.855000000000004],
+                              [-75.338000000000008, 39.847000000000001],
+                              [-75.340000000000003, 39.841999999999999],
+                              [-75.355000000000004, 39.835000000000001],
+                              [-75.387, 39.813000000000002],
+                              [-75.388999999999996, 39.813000000000002],
+                              [-75.397999999999996, 39.820999999999998],
+                              [-75.400999999999996, 39.829000000000001],
+                              [-75.403999999999996, 39.829000000000001],
+                              [-75.406000000000006, 39.831000000000003],
+                              [-75.409000000000006, 39.838000000000001]
+                            ]
+                          ]
+                        ]
+                      }
+                    }
+                  },
+                  layout: {},
+                  paint: {
+                    "fill-color": "#088",
+                    "fill-opacity": 0.8
+                  }
+                });
+                map.addLayer({
+                  id: "Swarthmore",
+                  type: "fill",
+                  source: {
+                    type: "geojson",
+                    data: {
+                      type: "Feature",
+                      geometry: {
+                        type: "MultiPolygon",
+                        coordinates: [
+                          [
+                            [
+                              [-75.364000000000004, 39.907000000000004],
+                              [-75.361000000000004, 39.913000000000004],
+                              [-75.355000000000004, 39.914999999999999],
+                              [-75.353999999999999, 39.917000000000002],
+                              [-75.341999999999999, 39.917999999999999],
+                              [-75.340000000000003, 39.917000000000002],
+                              [-75.337000000000003, 39.910000000000004],
+                              [-75.334000000000003, 39.907000000000004],
+                              [-75.335000000000008, 39.899999999999999],
+                              [-75.334000000000003, 39.895000000000003],
+                              [-75.335000000000008, 39.893000000000001],
+                              [-75.347999999999999, 39.884999999999998],
+                              [-75.353000000000009, 39.887999999999998],
+                              [-75.358999999999995, 39.887999999999998],
+                              [-75.363, 39.890999999999998],
+                              [-75.363, 39.895000000000003],
+                              [-75.361000000000004, 39.896999999999998],
+                              [-75.364000000000004, 39.898000000000003],
+                              [-75.366, 39.901000000000003],
+                              [-75.366, 39.905000000000001],
+                              [-75.364000000000004, 39.907000000000004]
+                            ]
+                          ]
+                        ]
+                      }
+                    }
+                  },
+                  layout: {},
+                  paint: {
+                    "fill-color": "#088",
+                    "fill-opacity": 0.8
+                  }
+                });
+              }}
+            </MapContext.Consumer>
+
             {this.state.viewing && (
-              <Popup
-                key={this.state.viewing._id}
-                coordinates={[
-                  this.state.viewing.address.lat,
-                  this.state.viewing.address.lng
-                ]}
-              >
-                <div style={popupStyles}>
-                  <p className="lead">{this.state.viewing.name}</p>
-                  <p
-                    className="text-muted"
-                    style={{
-                      overflow: "hidden",
-                      textOverflow: "ellipses",
-                      maxHeight: "3.5rem"
-                    }}
-                  >
-                    {this.state.viewing.description}
-                  </p>
-                  <p>
-                    <LinkContainer to={`/projects/${this.state.viewing._id}`}>
-                      <Button size="sm" variant="info" block>
-                        See more
-                      </Button>
-                    </LinkContainer>
-                  </p>
-                </div>
-              </Popup>
+              // Allow for use of Mapbox-GL-js functionality not covered by react-mapbox-gl package
+              // Use popup with close button
+              <MapContext.Consumer>
+                {map => {
+                  var popup = new mapboxgl.Popup({ className: "popup" }) //{ closeOnClick: false }
+                    .setLngLat([
+                      this.state.viewing.address.lat,
+                      this.state.viewing.address.lng
+                    ])
+                    .setHTML(
+                      `<div style="${popupStyles}">
+                              <p class="lead">${this.state.viewing.name}</p>
+                              <p
+                                class="text-muted"
+                                style="
+                                  overflow: hidden;
+                                  text-overflow: ellipsis;
+                                  max-height: 3.5rem
+                                "
+                              >
+                                ${this.state.viewing.description}
+                              </p>
+                              <p>
+                                <a href='#/projects/${this.state.viewing._id}' type="button" class="btn btn-info btn-sm btn-block">
+                                  See more
+                                </a>
+                              </p>
+                            </div>`
+                    )
+                    .addTo(map);
+                }}
+              </MapContext.Consumer>
             )}
           </MapView>
         </div>

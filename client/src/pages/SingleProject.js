@@ -100,7 +100,18 @@ class SingleProject extends Component {
                 )}
                 {project.website && (
                   <p>
-                    <strong>Website:</strong> {project.website}
+                    <strong>Website: </strong>
+                    <a
+                      className="link link-primary"
+                      href={project.website}
+                      style={{
+                        color: "#007bff",
+                        textDecoration: "none",
+                        backgroundColor: "transparent"
+                      }}
+                    >
+                      {project.website}
+                    </a>
                   </p>
                 )}
               </Col>
