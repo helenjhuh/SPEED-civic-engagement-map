@@ -18,15 +18,25 @@ const { SendSuccess, SendError, SendFailure } = require("./helpers/responses");
 const { Types } = require("mongoose");
 const { Project } = require("./models");
 const methodOverride = require("method-override");
-const { User } = require("./models");
+const { User, Role } = require("./models");
 
 // Initialize some of the variables we will need
 let app;
 
 // Initialize mongoose and the db connection
-// uncomment this for a remote db connection
-// const dbURI = `mongodb+srv://${config.db.user}:${config.db.pass}@${config.db.host}/${config.db.name}`;
-const dbURI = `mongodb://${config.db.host}/${config.db.name}`;
+// Create the dbURI based on the db mode in .env
+// the mode should either be local or remote but will
+// default to a localhost connection if nothing is
+// provided
+let dbURI;
+
+if (dbURI === "local") {
+  dbURI = `mongodb://${config.db.host}/${config.db.name}`;
+} else if (dbURI === "remote") {
+  dbURI = `mongodb+srv://${config.db.user}:${config.db.pass}@${config.db.host}/${config.db.name}`;
+} else {
+  dbURI = "mongodb://localhost/civic_map";
+}
 
 mongoose.connect(dbURI, { useNewUrlParser: true });
 const conn = mongoose.connection;
@@ -187,32 +197,85 @@ conn.once("open", () => {
     });
   });
 
-  // Create an admin user with the credentials defined in .env
-  User.findOne({ email: config.admin.email }, (err, user) => {
-    //if there's an error, throw it
+  // check if the admin role exists, if it doesn't then create it, and assign it to
+  Role.findOne({ name: config.admin.role }, (err, role) => {
     if (err) {
       console.error(err);
     }
 
-    //if the user doesn't exist, create one
-    if (!user) {
-      User.create(
+    if (!role) {
+      Role.create(
         {
-          first: "Admin",
-          last: "Admin",
-          college: "Admin College",
-          email: config.admin.email,
-          password: config.admin.pass
+          name: config.admin.role,
+          description: "Can do anything!"
         },
-        (err, user) => {
+        (err, role) => {
           if (err) {
             console.error(err);
           }
-          console.log("Admin user created.");
+
+          const roleId = role._id;
         }
       );
     }
   });
+
+  function initDb() {
+    Role.findOne({ name: config.admin.role }, (err, role) => {
+      if (err) console.error(err);
+      if (!role) {
+        Role.create(
+          {
+            name: config.admin.role,
+            description: "Can do anything!"
+          },
+          (err, role) => {
+            if (err) console.error(err);
+            User.findOne({ email: config.admin.email }, (err, user) => {
+              if (err) console.error(err);
+              if (!user) {
+                User.create(
+                  {
+                    first: "Admin",
+                    last: "Admin",
+                    email: config.admin.email,
+                    password: config.admin.pass,
+                    roles: [role._id]
+                  },
+                  (err, user) => {
+                    if (err) console.error(err);
+                    console.log("Admin user created", user);
+                  }
+                );
+              }
+            });
+          }
+        );
+      } else {
+        // If the role already exists, grab the id and check the user
+        User.findOne({ email: config.admin.email }, (err, user) => {
+          if (err) console.error(err);
+          if (!user) {
+            User.create(
+              {
+                first: "Admin",
+                last: "Admin",
+                email: config.admin.email,
+                password: config.admin.pass,
+                roles: [role._id]
+              },
+              (err, user) => {
+                if (err) console.error(err);
+                console.log("Admin user created", user);
+              }
+            );
+          }
+        });
+      }
+    });
+  }
+
+  initDb();
 
   app.listen(config.app.port, () =>
     console.log(

@@ -9,13 +9,15 @@ module.exports = {
     host: process.env.DB_HOST,
     user: process.env.DB_USER,
     pass: process.env.DB_PASS,
-    name: process.env.DB_NAME
+    name: process.env.DB_NAME,
+    mode: process.env.DB_MODE
   },
   mapbox: {
     apiToken: process.env.MAPBOX_TOKEN
   },
   admin: {
     email: process.env.ADMIN_EMAIL,
-    pass: process.env.ADMIN_PASS
+    pass: process.env.ADMIN_PASS,
+    role: process.env.ADMIN_ROLE
   }
 };
