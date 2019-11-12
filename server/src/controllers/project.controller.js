@@ -52,9 +52,11 @@ exports.edit = (req, res) => {
 };
 
 exports.add = (req, res) => {
-  Joi.validate(req.body, projectValidator, (error, isValid) => {
-    if (error) return SendFailure(res, 400, en_US.BAD_REQUEST);
+  const { error } = projectValidator.validate(req.body);
 
+  if (error) return SendFailure(res, 400, { error });
+
+  if (!error) {
     const { name, description, type, website, owner, address, pins } = req.body;
 
     Project.create(
@@ -64,7 +66,7 @@ exports.add = (req, res) => {
         return SendSuccess(res, 200, { project });
       }
     );
-  });
+  }
 };
 
 exports.addWithAddress = (req, res) => {
