@@ -41,6 +41,8 @@ cp client/.env.example client/.env
 - Start the server by running `npm start` within the `server` directory.
 - Start the client by running `npm start` within the `client` directory.
 
+Note: `server.env` expects `DB_MODE` to either be `local` or `remote`
+
 5. You can login with the credentials provided in `server/.env`
 
 ## Acknowledgements

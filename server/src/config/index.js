@@ -10,7 +10,7 @@ module.exports = {
     user: process.env.DB_USER,
     pass: process.env.DB_PASS,
     name: process.env.DB_NAME,
-    mode: process.env.DB_MODE
+    mode: process.env.DB_MODE || "local"
   },
   mapbox: {
     apiToken: process.env.MAPBOX_TOKEN
@@ -18,6 +18,6 @@ module.exports = {
   admin: {
     email: process.env.ADMIN_EMAIL,
     pass: process.env.ADMIN_PASS,
-    role: process.env.ADMIN_ROLE
+    role: process.env.ADMIN_ROLE || "Administrator"
   }
 };
