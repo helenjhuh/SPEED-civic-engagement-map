@@ -4,7 +4,6 @@ const bcrypt = require("bcryptjs");
 const userSchema = new mongoose.Schema({
   first: String,
   last: String,
-  who_am_i: String,
   college: String,
   email: String,
   password: String,
@@ -24,8 +23,6 @@ const userSchema = new mongoose.Schema({
       ref: "Role"
     }
   ]
-  /* our User model has its usersPins field set to an array of ObjectIds that are geoJsons*/
-  //usersPins: [ {type: mongoose.Schema.Types.ObjectId, ref: "geoJson"} ]
 });
 
 // This hashes a new user's password
