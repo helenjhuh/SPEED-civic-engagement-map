@@ -9,7 +9,36 @@ import mapboxgl from "mapbox-gl";
 import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
-import { LinkContainer } from "react-router-bootstrap";
+import Badge from "react-bootstrap/Badge";
+
+/**
+ * @desc Transforms an array of strings into an array of objects
+ * where in each object contains the string and the number of
+ * occurances
+ * @param arr [String]
+ * @returns [{ city: String, count: Number }]
+ **/
+function count(arr) {
+  const output = [];
+  arr.forEach(city => {
+    const count = arr.filter(c => c === city).length;
+    // check that the city doesn't exist already
+    const exists = output.filter(c => c.city === city).length > 0;
+    if (!exists) {
+      output.push({ city, count });
+    }
+  });
+  return output;
+}
+
+/**
+ * @desc Returns a random item from an array
+ * @param arr [any]
+ * @returns any
+ **/
+function randomFromArray(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
 
 const MapView = ReactMapboxGl({
   accessToken:
@@ -56,9 +85,20 @@ class Map extends Component {
 
     fetch("/api/projects")
       .then(res => res.json())
-      .then(results => this.setState({ projects: results.data.projects }))
+      .then(results => {
+        this.setState({ projects: results.data.projects });
+        this.getCities(results.data.projects);
+      })
       .catch(error => this.setState({ error }))
       .finally(() => this.setState({ isLoading: false }));
+  }
+
+  getCities(projects) {
+    const cities = projects.map(project => project.address.city);
+    const cityFilters = count(cities);
+    // sort the city filters (desc)
+    const sorted = cityFilters.sort((a, b) => (a.count < b.count ? 1 : -1));
+    this.setState({ cityFilters: sorted });
   }
 
   onFilterChange(e) {
@@ -140,6 +180,21 @@ class Map extends Component {
         {/* The map filter section */}
         <div className="col-sm-4">
           <h1 className="display-4 mb-4">Civic Engagement Projects</h1>
+          {/* For the cities in the projects, create a badge with a number representing how many projects occur in city */}
+          {this.state.cityFilters && (
+            <div className="my-3">
+              {this.state.cityFilters.map((filter, i) => (
+                <Button
+                  variant="outline-dark"
+                  key={filter + i}
+                  className="mr-1"
+                  size="sm"
+                >
+                  {filter.city} <Badge variant="light">{filter.count}</Badge>
+                </Button>
+              ))}
+            </div>
+          )}
           <Form.Group>
             <Form.Control
               id="feature-filter"
