@@ -3,14 +3,16 @@
   "version": "1.0.0",
   "description": "Civic Engagement map project for Swarthmore College",
   "main": "src/app.js",
+  "repository": "https://github.swarthmore.edu/SPEED/civic-engagement-map",
+  "issues": "https://github.swarthmore.edu/SPEED/civic-engagement-map/issues",
   "scripts": {
     "start": "cross-env NODE_ENV=development node src/app.js",
     "start:dev": "cross-env NODE_ENV=development nodemon src/app.js",
     "test": "cross-env NODE_ENV=test mocha test/**/*.test.js --timeout 10000 --exit",
     "test:dev": "cross-env NODE_ENV=test nodemon --watch . --ext js --exec \"yarn test\""
   },
-  "author": "Swarthmore College, Steven Fernandez",
-  "license": "ISC",
+  "author": "Swarthmore College",
+  "license": "MIT",
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged --pattern \"**/*.js\""
