@@ -1,5 +1,5 @@
 {
-  "name": "v1",
+  "name": "civic-engagement-map-server",
   "version": "1.0.0",
   "description": "Civic Engagement map project for Swarthmore College",
   "main": "src/app.js",
