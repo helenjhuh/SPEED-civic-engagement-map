@@ -3,6 +3,12 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { connect } from "react-redux";
 
+const projectTypes = [
+  "Classes/courses (engaged)",
+  "Engaged research",
+  "Campus-community projects"
+];
+
 const mapStateToProps = state => ({
   loggedInAs: state.auth.loggedInAs
 });
@@ -13,7 +19,7 @@ class AddProject extends Component {
     this.state = {
       name: "",
       description: "",
-      type: "",
+      type: projectTypes[0],
       website: "",
       owner: "",
       street1: "",
@@ -116,8 +122,11 @@ class AddProject extends Component {
 
     this.setState({ isLoading: true });
 
-    fetch("/api/projects/add", {
+    fetch("/api/projects/add-with-address", {
       method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify(payload)
     })
       .then(res => res.json())
@@ -153,7 +162,6 @@ class AddProject extends Component {
               onChange={this.onFormChange}
             />
           </Form.Group>
-
           <Form.Group controlId="formProjectDescription">
             <Form.Label>Project description</Form.Label>
             <Form.Control
@@ -165,13 +173,12 @@ class AddProject extends Component {
           </Form.Group>
 
           <Form.Group controlId="formProjectType">
-            <Form.Label>Project type</Form.Label>
-            <Form.Control
-              type="text"
-              placeholder="Project type? Should this be a dropdown?"
-              name="type"
-              onChange={this.onFormChange}
-            />
+            <Form.Label>Project Type</Form.Label>
+            <Form.Control as="select" name="type" onChange={this.onFormChange}>
+              {projectTypes.map((type, i) => (
+                <option key={i}>{type}</option>
+              ))}
+            </Form.Control>
           </Form.Group>
 
           <Form.Group controlId="formProjectWebsite">
@@ -183,7 +190,6 @@ class AddProject extends Component {
               onChange={this.onFormChange}
             />
           </Form.Group>
-
           <Form.Group controlId="formAddressStreet1">
             <Form.Label>Street 1</Form.Label>
             <Form.Control
@@ -193,7 +199,6 @@ class AddProject extends Component {
               onChange={this.onFormChange}
             />
           </Form.Group>
-
           <Form.Group controlId="formAddressStreet2">
             <Form.Label>Street 2</Form.Label>
             <Form.Control
@@ -203,7 +208,6 @@ class AddProject extends Component {
               onChange={this.onFormChange}
             />
           </Form.Group>
-
           <Form.Group controlId="formAddressCity">
             <Form.Label>City</Form.Label>
             <Form.Control
@@ -213,7 +217,6 @@ class AddProject extends Component {
               onChange={this.onFormChange}
             />
           </Form.Group>
-
           <Form.Group controlId="formAddressRegion">
             <Form.Label>Region</Form.Label>
             <Form.Control
@@ -223,7 +226,6 @@ class AddProject extends Component {
               onChange={this.onFormChange}
             />
           </Form.Group>
-
           <Form.Group controlId="formAddressZip">
             <Form.Label>Zip</Form.Label>
             <Form.Control
@@ -233,7 +235,6 @@ class AddProject extends Component {
               onChange={this.onFormChange}
             />
           </Form.Group>
-
           <Form.Group controlId="formAddressCountry">
             <Form.Label>Country</Form.Label>
             <Form.Control
@@ -243,7 +244,6 @@ class AddProject extends Component {
               onChange={this.onFormChange}
             />
           </Form.Group>
-
           <Button variant="primary" onClick={this.addProject}>
             Submit
           </Button>
