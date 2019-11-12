@@ -15,7 +15,7 @@ import Badge from "react-bootstrap/Badge";
  * @desc Transforms an array of strings into an array of objects
  * where in each object contains the string and the number of
  * occurances
- * @param arr [String]
+ * @param [String] arr
  * @returns [{ city: String, count: Number }]
  **/
 function count(arr) {
@@ -33,7 +33,7 @@ function count(arr) {
 
 /**
  * @desc Returns a random item from an array
- * @param arr [any]
+ * @param [any] arr
  * @returns any
  **/
 function randomFromArray(arr) {
@@ -78,11 +78,17 @@ class Map extends Component {
     this.onViewportChange = this.onViewportChange.bind(this);
     this.projectBtnOnClick = this.projectBtnOnClick.bind(this);
     this.featureOnClick = this.featureOnClick.bind(this);
+    this.filterOnClick = this.filterOnClick.bind(this);
+    this.getProjects = this.getProjects.bind(this);
+    this.resetOnClick = this.resetOnClick.bind(this);
   }
 
   componentDidMount() {
-    this.setState({ isLoading: true });
+    this.getProjects();
+  }
 
+  getProjects() {
+    this.setState({ isLoading: true });
     fetch("/api/projects")
       .then(res => res.json())
       .then(results => {
@@ -174,6 +180,35 @@ class Map extends Component {
     });
   }
 
+  /**
+   * @desc Filters the projects list to include only projects
+   * containing the clicked city
+   * @param { city: String, count: Number } filter
+   */
+  filterOnClick(filter) {
+    // First we need to get a fresh list of projects
+    this.setState({ isLoading: true });
+    fetch("/api/projects")
+      .then(res => res.json())
+      .then(results => {
+        this.setState({
+          projects: results.data.projects.filter(
+            project => project.address.city === filter.city
+          )
+        });
+        this.getCities(results.data.projects);
+      })
+      .catch(error => this.setState({ error }))
+      .finally(() => this.setState({ isLoading: false }));
+  }
+
+  /**
+   * @desc Resets the projects list to it's original state
+   */
+  resetOnClick() {
+    this.getProjects();
+  }
+
   render() {
     return (
       <div className="row">
@@ -189,10 +224,19 @@ class Map extends Component {
                   key={filter + i}
                   className="mr-1"
                   size="sm"
+                  onClick={() => this.filterOnClick(filter)}
                 >
                   {filter.city} <Badge variant="light">{filter.count}</Badge>
                 </Button>
               ))}
+              <Button
+                variant="warning"
+                className="mr-1"
+                size="sm"
+                onClick={() => this.resetOnClick()}
+              >
+                Reset
+              </Button>
             </div>
           )}
           <Form.Group>
