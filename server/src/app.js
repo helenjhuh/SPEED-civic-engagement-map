@@ -18,12 +18,16 @@ const { SendSuccess, SendError, SendFailure } = require("./helpers/responses");
 const { Types } = require("mongoose");
 const { Project } = require("./models");
 const methodOverride = require("method-override");
+const { User } = require("./models");
 
 // Initialize some of the variables we will need
 let app;
 
 // Initialize mongoose and the db connection
-const dbURI = `mongodb+srv://${config.db.user}:${config.db.pass}@${config.db.host}/${config.db.name}`;
+// uncomment this for a remote db connection
+// const dbURI = `mongodb+srv://${config.db.user}:${config.db.pass}@${config.db.host}/${config.db.name}`;
+const dbURI = `mongodb://${config.db.host}/${config.db.name}`;
+
 mongoose.connect(dbURI, { useNewUrlParser: true });
 const conn = mongoose.connection;
 
@@ -181,6 +185,33 @@ conn.once("open", () => {
         });
       });
     });
+  });
+
+  // Create an admin user with the credentials defined in .env
+  User.findOne({ email: config.admin.email }, (err, user) => {
+    //if there's an error, throw it
+    if (err) {
+      console.error(err);
+    }
+
+    //if the user doesn't exist, create one
+    if (!user) {
+      User.create(
+        {
+          first: "Admin",
+          last: "Admin",
+          college: "Admin College",
+          email: config.admin.email,
+          password: config.admin.pass
+        },
+        (err, user) => {
+          if (err) {
+            console.error(err);
+          }
+          console.log("Admin user created.");
+        }
+      );
+    }
   });
 
   app.listen(config.app.port, () =>

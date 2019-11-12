@@ -13,5 +13,9 @@ module.exports = {
   },
   mapbox: {
     apiToken: process.env.MAPBOX_TOKEN
+  },
+  admin: {
+    email: process.env.ADMIN_EMAIL,
+    pass: process.env.ADMIN_PASS
   }
 };
