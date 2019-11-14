@@ -30,9 +30,9 @@ let app;
 // provided
 let dbURI;
 
-if (dbURI === "local") {
+if (config.db.mode === "local") {
   dbURI = `mongodb://${config.db.host}/${config.db.name}`;
-} else if (dbURI === "remote") {
+} else if (config.db.mode === "remote") {
   dbURI = `mongodb+srv://${config.db.user}:${config.db.pass}@${config.db.host}/${config.db.name}`;
 } else {
   dbURI = "mongodb://localhost/civic_map";
