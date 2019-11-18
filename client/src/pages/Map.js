@@ -280,10 +280,15 @@ class Map extends Component {
     // First we need to get a fresh list of projects
 
     this.setState({
-      isLoading: true
+      isLoading: true,
+      map: {
+        viewport: {
+          center: defaultCenter,
+          zoom: defaultZoomLevel,
+          fitBounds: boundSwarthmore
+        }
+      }
     });
-
-    this.state.map.fitBounds(boundSwarthmore, { padding: 20 });
 
     fetch("/api/projects")
       .then(res => res.json())
@@ -410,6 +415,7 @@ class Map extends Component {
             flyToOptions={{
               speed: 0.8
             }}
+            // ref={(ref) => this.map = ref}
           >
             {/* Create symbol layer to store project pins */}
             <Layer
@@ -471,6 +477,7 @@ class Map extends Component {
               // Use popup with close button
               <MapContext.Consumer>
                 {map => {
+                  // map.fitBounds(boundSwarthmore);
                   var popup = new mapboxgl.Popup({ className: "popup" }) //{ closeOnClick: false }
                     .setLngLat([
                       this.state.viewing.address.lat,
