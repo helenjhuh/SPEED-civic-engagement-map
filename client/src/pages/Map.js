@@ -3,6 +3,7 @@ import ReactMapboxGl, {
   Layer,
   Feature,
   Popup,
+  Image,
   MapContext
 } from "react-mapbox-gl";
 import mapboxgl from "mapbox-gl";
@@ -232,7 +233,6 @@ class Map extends Component {
   resetOnClick() {
     this.getProjects();
   }
-
   render() {
     return (
       <div className="row">
@@ -340,11 +340,20 @@ class Map extends Component {
             // ref={(ref) => this.map = ref}
           >
             {/* Create symbol layer to store project pins */}
+            <MapContext.Consumer>
+              {map => {
+                const marker = require("../map-marker-2-32.png");
+                map.loadImage(marker, (error, image) => {
+                  if (error) throw error;
+                  map.addImage("custom-marker", image);
+                });
+              }}
+            </MapContext.Consumer>
             <Layer
               type="symbol"
               id="marker"
               layout={{
-                "icon-image": "castle-15"
+                "icon-image": "custom-marker"
               }}
             >
               {/* for each project, generate a feature */}
