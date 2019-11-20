@@ -10,6 +10,7 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Badge from "react-bootstrap/Badge";
+import turf from "@turf/bbox";
 
 /**
  * @desc Transforms an array of strings into an array of objects
@@ -56,6 +57,10 @@ const popupStyles = {
   borderRadius: "8px 8px 0px 0px",
   maxWidth: "25em"
 };
+
+// Import bbox to enable map zooming to common areas
+var bbox = require("@turf/bbox");
+const commonAreaData = require("../CommonAreas.json");
 
 class Map extends Component {
   constructor() {
@@ -187,7 +192,26 @@ class Map extends Component {
    */
   filterOnClick(filter) {
     // First we need to get a fresh list of projects
-    this.setState({ isLoading: true });
+
+    const bound = commonAreaData.features
+      .map(
+        feature =>
+          filter.city.toUpperCase().trim() ==
+            feature.properties.name.toUpperCase().trim() && bbox(feature)
+      )
+      .filter(value => Object.keys(value).length !== 0);
+
+    this.setState({
+      isLoading: true,
+      map: {
+        viewport: {
+          center: defaultCenter,
+          zoom: defaultZoomLevel,
+          fitBounds: bound[0]
+        }
+      }
+    });
+
     fetch("/api/projects")
       .then(res => res.json())
       .then(results => {
@@ -313,6 +337,7 @@ class Map extends Component {
             flyToOptions={{
               speed: 0.8
             }}
+            // ref={(ref) => this.map = ref}
           >
             {/* Create symbol layer to store project pins */}
             <Layer
@@ -340,111 +365,21 @@ class Map extends Component {
             {/* </Layer> */}
             <MapContext.Consumer>
               {map => {
-                map.addLayer({
-                  id: "Chester",
-                  type: "fill",
-                  source: {
-                    type: "geojson",
-                    data: {
-                      type: "Feature",
-                      geometry: {
-                        type: "MultiPolygon",
-                        coordinates: [
-                          [
-                            [
-                              [-75.409000000000006, 39.838000000000001],
-                              [-75.412000000000006, 39.841999999999999],
-                              [-75.412000000000006, 39.844999999999999],
-                              [-75.409000000000006, 39.847999999999999],
-                              [-75.400999999999996, 39.847000000000001],
-                              [-75.397000000000006, 39.849000000000004],
-                              [-75.391000000000005, 39.844999999999999],
-                              [-75.390000000000001, 39.852000000000004],
-                              [-75.388000000000005, 39.853999999999999],
-                              [-75.382999999999996, 39.855000000000004],
-                              [-75.379999999999995, 39.858000000000004],
-                              [-75.379000000000005, 39.866999999999997],
-                              [-75.379999999999995, 39.872],
-                              [-75.382000000000005, 39.872999999999998],
-                              [-75.382000000000005, 39.877000000000002],
-                              [-75.376999999999995, 39.880000000000003],
-                              [-75.373000000000005, 39.880000000000003],
-                              [-75.369, 39.877000000000002],
-                              [-75.361999999999995, 39.875999999999998],
-                              [-75.358999999999995, 39.878],
-                              [-75.353000000000009, 39.877000000000002],
-                              [-75.352000000000004, 39.872],
-                              [-75.349000000000004, 39.872],
-                              [-75.344999999999999, 39.866999999999997],
-                              [-75.343000000000004, 39.863],
-                              [-75.343000000000004, 39.855000000000004],
-                              [-75.338000000000008, 39.847000000000001],
-                              [-75.340000000000003, 39.841999999999999],
-                              [-75.355000000000004, 39.835000000000001],
-                              [-75.387, 39.813000000000002],
-                              [-75.388999999999996, 39.813000000000002],
-                              [-75.397999999999996, 39.820999999999998],
-                              [-75.400999999999996, 39.829000000000001],
-                              [-75.403999999999996, 39.829000000000001],
-                              [-75.406000000000006, 39.831000000000003],
-                              [-75.409000000000006, 39.838000000000001]
-                            ]
-                          ]
-                        ]
-                      }
+                commonAreaData.features.map(feature =>
+                  map.addLayer({
+                    id: feature.properties.name,
+                    type: "fill",
+                    source: {
+                      type: "geojson",
+                      data: feature
+                    },
+                    layout: {},
+                    paint: {
+                      "fill-color": "#088",
+                      "fill-opacity": 0.5
                     }
-                  },
-                  layout: {},
-                  paint: {
-                    "fill-color": "#088",
-                    "fill-opacity": 0.8
-                  }
-                });
-                map.addLayer({
-                  id: "Swarthmore",
-                  type: "fill",
-                  source: {
-                    type: "geojson",
-                    data: {
-                      type: "Feature",
-                      geometry: {
-                        type: "MultiPolygon",
-                        coordinates: [
-                          [
-                            [
-                              [-75.364000000000004, 39.907000000000004],
-                              [-75.361000000000004, 39.913000000000004],
-                              [-75.355000000000004, 39.914999999999999],
-                              [-75.353999999999999, 39.917000000000002],
-                              [-75.341999999999999, 39.917999999999999],
-                              [-75.340000000000003, 39.917000000000002],
-                              [-75.337000000000003, 39.910000000000004],
-                              [-75.334000000000003, 39.907000000000004],
-                              [-75.335000000000008, 39.899999999999999],
-                              [-75.334000000000003, 39.895000000000003],
-                              [-75.335000000000008, 39.893000000000001],
-                              [-75.347999999999999, 39.884999999999998],
-                              [-75.353000000000009, 39.887999999999998],
-                              [-75.358999999999995, 39.887999999999998],
-                              [-75.363, 39.890999999999998],
-                              [-75.363, 39.895000000000003],
-                              [-75.361000000000004, 39.896999999999998],
-                              [-75.364000000000004, 39.898000000000003],
-                              [-75.366, 39.901000000000003],
-                              [-75.366, 39.905000000000001],
-                              [-75.364000000000004, 39.907000000000004]
-                            ]
-                          ]
-                        ]
-                      }
-                    }
-                  },
-                  layout: {},
-                  paint: {
-                    "fill-color": "#088",
-                    "fill-opacity": 0.8
-                  }
-                });
+                  })
+                );
               }}
             </MapContext.Consumer>
 
@@ -453,6 +388,7 @@ class Map extends Component {
               // Use popup with close button
               <MapContext.Consumer>
                 {map => {
+                  // map.fitBounds(boundSwarthmore);
                   var popup = new mapboxgl.Popup({ className: "popup" }) //{ closeOnClick: false }
                     .setLngLat([
                       this.state.viewing.address.lat,
