@@ -60,6 +60,10 @@ const popupStyles = {
 
 // Eventually move these sample cities to source file
 var bbox = require("@turf/bbox");
+
+const commonAreaData = require("../CommonAreas.json");
+commonAreaData.features.map(() => {});
+
 const Chester = {
   type: "Feature",
   geometry: {
@@ -279,13 +283,21 @@ class Map extends Component {
   filterOnClick(filter) {
     // First we need to get a fresh list of projects
 
+    const bound = commonAreaData.features
+      .map(
+        feature =>
+          filter.city.toUpperCase().trim() ==
+            feature.properties.name.toUpperCase().trim() && bbox(feature)
+      )
+      .filter(value => Object.keys(value).length !== 0);
+
     this.setState({
       isLoading: true,
       map: {
         viewport: {
           center: defaultCenter,
           zoom: defaultZoomLevel,
-          fitBounds: boundSwarthmore
+          fitBounds: bound[0]
         }
       }
     });
