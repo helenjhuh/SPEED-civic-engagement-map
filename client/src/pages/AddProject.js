@@ -165,6 +165,8 @@ class AddProject extends Component {
           <Form.Group controlId="formProjectDescription">
             <Form.Label>Project description</Form.Label>
             <Form.Control
+              as="textarea"
+              rows="5"
               type="text"
               placeholder="Tell us about your project"
               name="description"
