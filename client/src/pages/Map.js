@@ -274,6 +274,7 @@ class Map extends Component {
                   key={filter + i}
                   className="mr-1"
                   size="sm"
+                  style={{ margin: ".25em" }}
                   onClick={() => this.filterOnClick(filter)}
                 >
                   {filter.city} <Badge variant="light">{filter.count}</Badge>
