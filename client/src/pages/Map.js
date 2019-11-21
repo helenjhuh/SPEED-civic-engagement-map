@@ -194,24 +194,34 @@ class Map extends Component {
   filterOnClick(filter) {
     // First we need to get a fresh list of projects
 
-    const bound = commonAreaData.features
-      .map(
-        feature =>
-          filter.city.toUpperCase().trim() ==
-            feature.properties.name.toUpperCase().trim() && bbox(feature)
-      )
-      .filter(value => Object.keys(value).length !== 0);
+    // const bound = commonAreaData.features
+    //   .map(
+    //     feature =>
+    //       filter.city.toUpperCase().trim() ==
+    //         feature.properties.name.toUpperCase().trim() && bbox(feature)
+    //   )
+    //   .filter(value => Object.keys(value).length !== 0);
 
-    this.setState({
-      isLoading: true,
-      map: {
-        viewport: {
-          center: defaultCenter,
-          zoom: defaultZoomLevel,
-          fitBounds: bound[0]
+    const payload = `${filter.city}`;
+    fetch(`/api/mapbox/geocode/${payload}`)
+      .then(res => res.json())
+      .then(res => {
+        const { results } = res.data;
+        if (!results) {
+          console.log("geocoding error");
         }
-      }
-    });
+        const { features } = results;
+        this.setState({
+          isLoading: true,
+          map: {
+            viewport: {
+              center: defaultCenter,
+              zoom: defaultZoomLevel,
+              fitBounds: features[0].bbox
+            }
+          }
+        });
+      });
 
     fetch("/api/projects")
       .then(res => res.json())
