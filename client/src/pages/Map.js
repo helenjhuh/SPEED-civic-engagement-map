@@ -194,6 +194,7 @@ class Map extends Component {
   filterOnClick(filter) {
     // First we need to get a fresh list of projects
 
+    //first search for a common area bound
     const bound = commonAreaData.features
       .map(
         feature =>
@@ -202,16 +203,41 @@ class Map extends Component {
       )
       .filter(value => Object.keys(value).length !== 0);
 
-    this.setState({
-      isLoading: true,
-      map: {
-        viewport: {
-          center: defaultCenter,
-          zoom: defaultZoomLevel,
-          fitBounds: bound[0]
+    //If filter.city is in commonArea, change fitBounds
+    bound.length != 0 &&
+      this.setState({
+        isLoading: true,
+        map: {
+          viewport: {
+            center: defaultCenter,
+            zoom: defaultZoomLevel,
+            fitBounds: bound[0]
+          }
         }
-      }
-    });
+      });
+
+    //If filter.city not in commonAreas, request mapbox geocoding and change fitBounds
+    const payload = `${filter.city}`;
+    bound.length == 0 &&
+      fetch(`/api/mapbox/geocode/${payload}`)
+        .then(res => res.json())
+        .then(res => {
+          const { results } = res.data;
+          if (!results) {
+            console.log("geocoding error");
+          }
+          const { features } = results;
+          this.setState({
+            isLoading: true,
+            map: {
+              viewport: {
+                center: defaultCenter,
+                zoom: defaultZoomLevel,
+                fitBounds: features[0].bbox
+              }
+            }
+          });
+        });
 
     fetch("/api/projects")
       .then(res => res.json())
@@ -248,6 +274,7 @@ class Map extends Component {
                   key={filter + i}
                   className="mr-1"
                   size="sm"
+                  style={{ margin: ".25em" }}
                   onClick={() => this.filterOnClick(filter)}
                 >
                   {filter.city} <Badge variant="light">{filter.count}</Badge>
