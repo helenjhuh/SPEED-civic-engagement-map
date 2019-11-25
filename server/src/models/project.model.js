@@ -17,7 +17,35 @@ const projectSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  type: {
+  type: [
+    {
+      type: mongoose.Schema.Types.String,
+      required: true
+    }
+  ],
+  issue: [
+    {
+      type: mongoose.Schema.Types.String,
+      required: true
+    }
+  ],
+  langGrants: [
+    {
+      type: mongoose.Schema.Types.String
+    }
+  ],
+  communityPartners: [
+    {
+      type: mongoose.Schema.Types.String,
+      required: true
+    }
+  ],
+  funders: [
+    {
+      type: mongoose.Schema.Types.String
+    }
+  ],
+  beneficiaries: {
     type: String
   },
   website: {

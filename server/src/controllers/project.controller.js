@@ -40,6 +40,11 @@ exports.edit = (req, res) => {
       name: req.body.name,
       description: req.body.description,
       type: req.body.type,
+      issue: req.body.issue,
+      langGrants: req.body.langGrants,
+      communityPartners: req.body.communityPartners,
+      funders: req.body.funders,
+      beneficiaries: req.body.beneficiaries,
       website: req.body.website,
       isVerified: req.body.isVerified,
       isFeatured: req.body.isFeatured
@@ -57,10 +62,36 @@ exports.add = (req, res) => {
   if (error) return SendFailure(res, 400, { error });
 
   if (!error) {
-    const { name, description, type, website, owner, address, pins } = req.body;
+    const {
+      name,
+      description,
+      type,
+      issue,
+      langGrants,
+      communityPartners,
+      funders,
+      beneficiaries,
+      website,
+      owner,
+      address,
+      pins
+    } = req.body;
 
     Project.create(
-      { name, description, type, website, owner, address, pins },
+      {
+        name,
+        description,
+        type,
+        issue,
+        langGrants,
+        communityPartners,
+        funders,
+        beneficiaries,
+        website,
+        owner,
+        address,
+        pins
+      },
       (error, project) => {
         if (error) return SendError(res, 500, error);
         return SendSuccess(res, 200, { project });
@@ -74,6 +105,11 @@ exports.addWithAddress = (req, res) => {
     name,
     description,
     type,
+    issue,
+    langGrants,
+    communityPartners,
+    funders,
+    beneficiaries,
     website,
     street1,
     street2,
@@ -107,6 +143,11 @@ exports.addWithAddress = (req, res) => {
           name,
           description,
           type,
+          issue,
+          langGrants,
+          communityPartners,
+          funders,
+          beneficiaries,
           website,
           address: address._id,
           owner
