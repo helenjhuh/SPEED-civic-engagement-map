@@ -1,12 +1,37 @@
 import React, { Component } from "react";
+import Select from "react-select";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { connect } from "react-redux";
 
 const projectTypes = [
-  "Classes/courses (engaged)",
-  "Engaged research",
-  "Campus-community projects"
+  { value: "Engaged Teaching", label: "Engaged Teaching" },
+  { value: "Engaged Research", label: "Engaged Research" },
+  { value: "Engaged Teaching", label: "Engaged Teaching" },
+  { value: "Other", label: "Other" }
+];
+const projectIssues = [
+  { value: "Arts, Media, and Culture", label: "Arts, Media, and Culture" },
+  { value: "Economic Development", label: "Economic Development" },
+  { value: "Education and Access", label: "Education and Access" },
+  {
+    value: "Environment and Sustainability",
+    label: "Environment and Sustainability"
+  },
+  { value: "Ethics and Human Rights", label: "Ethics and Human Rights" },
+  { value: "Identities and Inequality", label: "Identities and Inequality" },
+  { value: "Public Health", label: "Public Health" },
+  { value: "Politics and Public Policy", label: "Politics and Public Policy" },
+  { value: "Refugees and Immigration", label: "Refugees and Immigration" },
+  { value: "Science and Society", label: "Science and Society" }
+];
+
+const projectGrants = [
+  "Chester Community Fellowship",
+  "Lang Opportunity Scholarship",
+  "Project Pericles Fund",
+  "Summer Grants ( projects, internships, research )",
+  "Faculty Award"
 ];
 
 const mapStateToProps = state => ({
@@ -19,7 +44,12 @@ class AddProject extends Component {
     this.state = {
       name: "",
       description: "",
-      type: projectTypes[0],
+      type: [],
+      issue: [],
+      langGrants: [],
+      communityPartners: [],
+      funders: [],
+      beneficiaries: 0,
       website: "",
       owner: "",
       street1: "",
@@ -92,6 +122,11 @@ class AddProject extends Component {
       name,
       description,
       type,
+      issue,
+      langGrants,
+      communityPartners,
+      funders,
+      beneficiaries,
       website,
       street1,
       street2,
@@ -106,6 +141,11 @@ class AddProject extends Component {
       name,
       description,
       type,
+      issue,
+      langGrants,
+      communityPartners,
+      funders,
+      beneficiaries,
       website,
       street1,
       street2,
@@ -174,11 +214,51 @@ class AddProject extends Component {
             />
           </Form.Group>
 
-          <Form.Group controlId="formProjectType">
+          {/* <Form.Group controlId="formProjectType">
             <Form.Label>Project Type</Form.Label>
             <Form.Control as="select" name="type" onChange={this.onFormChange}>
               {projectTypes.map((type, i) => (
                 <option key={i}>{type}</option>
+              ))}
+            </Form.Control>
+          </Form.Group> */}
+          <Form.Group id="formProjectTypes">
+            <Form.Label>Project Type (select all that apply)</Form.Label>
+            <Select
+              isMulti
+              name="type"
+              options={projectTypes}
+              className="basic-multi-select"
+              classNamePrefix="select"
+            />
+          </Form.Group>
+
+          {/* 
+          <Form.Group id="formProjectIssues">
+            <Form.Label>Project Issue (select all that apply)</Form.Label>
+            <Form.Control as="select" name="issue" onChange={this.onFormChange}>
+            {projectIssues.map(type => (
+              <Form.Check
+                type="checkbox"
+                id={type}
+                label={type}
+              />
+            ))}
+            </Form.Control>
+          </Form.Group> */}
+
+          <Form.Group id="formProjectGrants">
+            <Form.Label>
+              {" "}
+              Lang Center Grants and Awards (select all that apply)
+            </Form.Label>
+            <Form.Control
+              as="select"
+              name="grants"
+              onChange={this.onFormChange}
+            >
+              {projectGrants.map(type => (
+                <Form.Check type="checkbox" id={type} label={type} />
               ))}
             </Form.Control>
           </Form.Group>
