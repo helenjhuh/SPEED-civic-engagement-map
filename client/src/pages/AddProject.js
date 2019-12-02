@@ -1,37 +1,83 @@
 import React, { Component } from "react";
 import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { connect } from "react-redux";
 
 const projectTypes = [
-  { value: "Engaged Teaching", label: "Engaged Teaching" },
-  { value: "Engaged Research", label: "Engaged Research" },
-  { value: "Engaged Teaching", label: "Engaged Teaching" },
+  { value: "Engaged Teaching", label: "Engaged Teaching", name: "type" },
+  { value: "Engaged Research", label: "Engaged Research", name: "type" },
+  { value: "Engaged Projects", label: "Engaged Projects", name: "type" },
   { value: "Other", label: "Other" }
 ];
 const projectIssues = [
-  { value: "Arts, Media, and Culture", label: "Arts, Media, and Culture" },
-  { value: "Economic Development", label: "Economic Development" },
-  { value: "Education and Access", label: "Education and Access" },
+  {
+    value: "Arts, Media, and Culture",
+    label: "Arts, Media, and Culture",
+    name: "issue"
+  },
+  {
+    value: "Economic Development",
+    label: "Economic Development",
+    name: "issue"
+  },
+  {
+    value: "Education and Access",
+    label: "Education and Access",
+    name: "issue"
+  },
   {
     value: "Environment and Sustainability",
-    label: "Environment and Sustainability"
+    label: "Environment and Sustainability",
+    name: "issue"
   },
-  { value: "Ethics and Human Rights", label: "Ethics and Human Rights" },
-  { value: "Identities and Inequality", label: "Identities and Inequality" },
-  { value: "Public Health", label: "Public Health" },
-  { value: "Politics and Public Policy", label: "Politics and Public Policy" },
-  { value: "Refugees and Immigration", label: "Refugees and Immigration" },
-  { value: "Science and Society", label: "Science and Society" }
+  {
+    value: "Ethics and Human Rights",
+    label: "Ethics and Human Rights",
+    name: "issue"
+  },
+  {
+    value: "Identities and Inequality",
+    label: "Identities and Inequality",
+    name: "issue"
+  },
+  { value: "Public Health", label: "Public Health", name: "issue" },
+  {
+    value: "Politics and Public Policy",
+    label: "Politics and Public Policy",
+    name: "issue"
+  },
+  {
+    value: "Refugees and Immigration",
+    label: "Refugees and Immigration",
+    name: "issue"
+  },
+  { value: "Science and Society", label: "Science and Society", name: "issue" }
 ];
 
 const projectGrants = [
-  "Chester Community Fellowship",
-  "Lang Opportunity Scholarship",
-  "Project Pericles Fund",
-  "Summer Grants ( projects, internships, research )",
-  "Faculty Award"
+  {
+    value: "Chester Community Fellowship",
+    label: "Chester Community Fellowship",
+    name: "langGrants"
+  },
+  {
+    value: "Lang Opportunity Scholarship",
+    label: "Lang Opportunity Scholarship",
+    name: "langGrants"
+  },
+  {
+    value: "Project Pericles Fund",
+    label: "Project Pericles Fund",
+    name: "langGrants"
+  },
+  {
+    value: "Summer Grants ( projects, internships, research )",
+    label: "Summer Grants ( projects, internships, research )",
+    name: "langGrants"
+  },
+  { value: "Faculty Award", label: "Faculty Award", name: "langGrants" }
 ];
 
 const mapStateToProps = state => ({
@@ -64,6 +110,7 @@ class AddProject extends Component {
       addedProjects: ""
     };
     this.onFormChange = this.onFormChange.bind(this);
+    this.onFormSelectChange = this.onFormSelectChange.bind(this);
     this.addProject = this.addProject.bind(this);
     this.geocode = this.geocode.bind(this);
   }
@@ -97,6 +144,7 @@ class AddProject extends Component {
   }
 
   onFormChange(e) {
+    console.log(e.target);
     const { name, value } = e.target;
 
     // if the address fields are being changed, geocode the address
@@ -114,6 +162,20 @@ class AddProject extends Component {
     this.setState({
       [name]: value
     });
+  }
+
+  onFormSelectChange(array, actionMeta) {
+    console.log(actionMeta);
+    const valueArray = [];
+    array.forEach(item => {
+      valueArray.push(item.value);
+    });
+
+    this.setState({
+      [actionMeta.name]: valueArray
+    });
+
+    console.log(this.state);
   }
 
   addProject(e) {
@@ -230,37 +292,69 @@ class AddProject extends Component {
               options={projectTypes}
               className="basic-multi-select"
               classNamePrefix="select"
+              onChange={this.onFormSelectChange}
             />
           </Form.Group>
 
-          {/* 
           <Form.Group id="formProjectIssues">
             <Form.Label>Project Issue (select all that apply)</Form.Label>
-            <Form.Control as="select" name="issue" onChange={this.onFormChange}>
-            {projectIssues.map(type => (
-              <Form.Check
-                type="checkbox"
-                id={type}
-                label={type}
-              />
-            ))}
-            </Form.Control>
-          </Form.Group> */}
+            <Select
+              isMulti
+              name="issue"
+              options={projectIssues}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              onChange={this.onFormSelectChange}
+            />
+          </Form.Group>
 
           <Form.Group id="formProjectGrants">
             <Form.Label>
-              {" "}
               Lang Center Grants and Awards (select all that apply)
             </Form.Label>
+            <Select
+              isMulti
+              name="langGrants"
+              options={projectGrants}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              onChange={this.onFormSelectChange}
+            />
+          </Form.Group>
+
+          {/* Community Partners  */}
+          <Form.Group id="formCommunityPartners">
+            <Form.Label>
+              Community Partners (create as many as needed)
+            </Form.Label>
+            <CreatableSelect
+              isMulti
+              name="communityPartners"
+              onChange={this.onFormSelectChange}
+            />
+          </Form.Group>
+
+          {/* Funders */}
+          <Form.Group id="formFunders">
+            <Form.Label>Funders (create as many as needed)</Form.Label>
+            <CreatableSelect
+              isMulti
+              name="funders"
+              onChange={this.onFormSelectChange}
+            />
+          </Form.Group>
+
+          {/* Number of Beneficiaries  */}
+          <Form.Group id="formBeneficiaries">
+            <Form.Label>
+              Beneficiaries (please enter approximate number)
+            </Form.Label>
             <Form.Control
-              as="select"
-              name="grants"
+              type="text"
+              placeholder="50"
+              name="beneficiaries"
               onChange={this.onFormChange}
-            >
-              {projectGrants.map(type => (
-                <Form.Check type="checkbox" id={type} label={type} />
-              ))}
-            </Form.Control>
+            />
           </Form.Group>
 
           <Form.Group controlId="formProjectWebsite">
