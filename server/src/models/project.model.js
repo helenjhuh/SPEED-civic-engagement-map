@@ -19,30 +19,30 @@ const projectSchema = mongoose.Schema({
   },
   type: [
     {
-      type: mongoose.Schema.Types.String,
+      type: String,
       required: true
     }
   ],
   issue: [
     {
-      type: mongoose.Schema.Types.String,
+      type: String,
       required: true
     }
   ],
   langGrants: [
     {
-      type: mongoose.Schema.Types.String
+      type: String
     }
   ],
   communityPartners: [
     {
-      type: mongoose.Schema.Types.String,
+      type: String,
       required: true
     }
   ],
   funders: [
     {
-      type: mongoose.Schema.Types.String
+      type: String
     }
   ],
   beneficiaries: {

@@ -7,7 +7,7 @@ module.exports = Joi.object().keys({
   issue: Joi.array().items(Joi.string().required()),
   langGrants: Joi.array().items(Joi.string()),
   funders: Joi.array().items(Joi.string()),
-  beneficiaries: Joi.array().items(Joi.string()),
+  beneficiaries: Joi.string(),
   website: Joi.string(),
   owner: Joi.string().required(),
   address: Joi.string().required(),
