@@ -1,12 +1,83 @@
 import React, { Component } from "react";
+import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { connect } from "react-redux";
 
 const projectTypes = [
-  "Classes/courses (engaged)",
-  "Engaged research",
-  "Campus-community projects"
+  { value: "Engaged Teaching", label: "Engaged Teaching", name: "type" },
+  { value: "Engaged Research", label: "Engaged Research", name: "type" },
+  { value: "Engaged Projects", label: "Engaged Projects", name: "type" },
+  { value: "Other", label: "Other" }
+];
+const projectIssues = [
+  {
+    value: "Arts, Media, and Culture",
+    label: "Arts, Media, and Culture",
+    name: "issue"
+  },
+  {
+    value: "Economic Development",
+    label: "Economic Development",
+    name: "issue"
+  },
+  {
+    value: "Education and Access",
+    label: "Education and Access",
+    name: "issue"
+  },
+  {
+    value: "Environment and Sustainability",
+    label: "Environment and Sustainability",
+    name: "issue"
+  },
+  {
+    value: "Ethics and Human Rights",
+    label: "Ethics and Human Rights",
+    name: "issue"
+  },
+  {
+    value: "Identities and Inequality",
+    label: "Identities and Inequality",
+    name: "issue"
+  },
+  { value: "Public Health", label: "Public Health", name: "issue" },
+  {
+    value: "Politics and Public Policy",
+    label: "Politics and Public Policy",
+    name: "issue"
+  },
+  {
+    value: "Refugees and Immigration",
+    label: "Refugees and Immigration",
+    name: "issue"
+  },
+  { value: "Science and Society", label: "Science and Society", name: "issue" }
+];
+
+const projectGrants = [
+  {
+    value: "Chester Community Fellowship",
+    label: "Chester Community Fellowship",
+    name: "langGrants"
+  },
+  {
+    value: "Lang Opportunity Scholarship",
+    label: "Lang Opportunity Scholarship",
+    name: "langGrants"
+  },
+  {
+    value: "Project Pericles Fund",
+    label: "Project Pericles Fund",
+    name: "langGrants"
+  },
+  {
+    value: "Summer Grants ( projects, internships, research )",
+    label: "Summer Grants ( projects, internships, research )",
+    name: "langGrants"
+  },
+  { value: "Faculty Award", label: "Faculty Award", name: "langGrants" }
 ];
 
 const mapStateToProps = state => ({
@@ -19,7 +90,12 @@ class AddProject extends Component {
     this.state = {
       name: "",
       description: "",
-      type: projectTypes[0],
+      type: [],
+      issue: [],
+      langGrants: [],
+      communityPartners: [],
+      funders: [],
+      beneficiaries: 0,
       website: "",
       owner: "",
       street1: "",
@@ -34,6 +110,7 @@ class AddProject extends Component {
       addedProjects: ""
     };
     this.onFormChange = this.onFormChange.bind(this);
+    this.onFormSelectChange = this.onFormSelectChange.bind(this);
     this.addProject = this.addProject.bind(this);
     this.geocode = this.geocode.bind(this);
   }
@@ -67,6 +144,7 @@ class AddProject extends Component {
   }
 
   onFormChange(e) {
+    console.log(e.target);
     const { name, value } = e.target;
 
     // if the address fields are being changed, geocode the address
@@ -86,12 +164,31 @@ class AddProject extends Component {
     });
   }
 
+  onFormSelectChange(array, actionMeta) {
+    console.log(actionMeta);
+    const valueArray = [];
+    array.forEach(item => {
+      valueArray.push(item.value);
+    });
+
+    this.setState({
+      [actionMeta.name]: valueArray
+    });
+
+    console.log(this.state);
+  }
+
   addProject(e) {
     // construct the payload
     const {
       name,
       description,
       type,
+      issue,
+      langGrants,
+      communityPartners,
+      funders,
+      beneficiaries,
       website,
       street1,
       street2,
@@ -106,6 +203,11 @@ class AddProject extends Component {
       name,
       description,
       type,
+      issue,
+      langGrants,
+      communityPartners,
+      funders,
+      beneficiaries,
       website,
       street1,
       street2,
@@ -174,13 +276,85 @@ class AddProject extends Component {
             />
           </Form.Group>
 
-          <Form.Group controlId="formProjectType">
+          {/* <Form.Group controlId="formProjectType">
             <Form.Label>Project Type</Form.Label>
             <Form.Control as="select" name="type" onChange={this.onFormChange}>
               {projectTypes.map((type, i) => (
                 <option key={i}>{type}</option>
               ))}
             </Form.Control>
+          </Form.Group> */}
+          <Form.Group id="formProjectTypes">
+            <Form.Label>Project Type (select all that apply)</Form.Label>
+            <Select
+              isMulti
+              name="type"
+              options={projectTypes}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              onChange={this.onFormSelectChange}
+            />
+          </Form.Group>
+
+          <Form.Group id="formProjectIssues">
+            <Form.Label>Project Issue (select all that apply)</Form.Label>
+            <Select
+              isMulti
+              name="issue"
+              options={projectIssues}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              onChange={this.onFormSelectChange}
+            />
+          </Form.Group>
+
+          <Form.Group id="formProjectGrants">
+            <Form.Label>
+              Lang Center Grants and Awards (select all that apply)
+            </Form.Label>
+            <Select
+              isMulti
+              name="langGrants"
+              options={projectGrants}
+              className="basic-multi-select"
+              classNamePrefix="select"
+              onChange={this.onFormSelectChange}
+            />
+          </Form.Group>
+
+          {/* Community Partners  */}
+          <Form.Group id="formCommunityPartners">
+            <Form.Label>
+              Community Partners (create as many as needed)
+            </Form.Label>
+            <CreatableSelect
+              isMulti
+              name="communityPartners"
+              onChange={this.onFormSelectChange}
+            />
+          </Form.Group>
+
+          {/* Funders */}
+          <Form.Group id="formFunders">
+            <Form.Label>Funders (create as many as needed)</Form.Label>
+            <CreatableSelect
+              isMulti
+              name="funders"
+              onChange={this.onFormSelectChange}
+            />
+          </Form.Group>
+
+          {/* Number of Beneficiaries  */}
+          <Form.Group id="formBeneficiaries">
+            <Form.Label>
+              Beneficiaries (please enter approximate number)
+            </Form.Label>
+            <Form.Control
+              type="text"
+              placeholder="50"
+              name="beneficiaries"
+              onChange={this.onFormChange}
+            />
           </Form.Group>
 
           <Form.Group controlId="formProjectWebsite">
