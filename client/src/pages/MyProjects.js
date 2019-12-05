@@ -128,6 +128,7 @@ class MyProjects extends Component {
     this.closeEditProjectModal = this.closeEditProjectModal.bind(this);
     this.saveProjectEdits = this.saveProjectEdits.bind(this);
     this.onEditFormChange = this.onEditFormChange.bind(this);
+    this.onEditFormChangeSelect = this.onEditFormChangeSelect.bind(this);
     this.getProjectsByUser = this.getProjectsByUser.bind(this);
     this.closeAddPhotoModal = this.closeAddPhotoModal.bind(this);
     this.addPhotoOnClick = this.addPhotoOnClick.bind(this);
@@ -248,6 +249,32 @@ class MyProjects extends Component {
     // for now just output the state to make sure the correct request
     // is sent
     console.log(this.state.editForm);
+
+    // this.setState({ isLoading: true })
+    fetch(`/api/projects/${this.state.editForm._id}/edit`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: this.state.editForm.name,
+        description: this.state.editForm.description,
+        type: this.state.editForm.type,
+        issue: this.state.editForm.issue,
+        langGrants: this.state.editForm.langGrants,
+        communityPartners: this.state.editForm.communityPartners,
+        funders: this.state.editForm.funders,
+        beneficiaries: this.state.editForm.beneficiaries,
+        website: this.state.editForm.website,
+        isVerified: this.state.editForm.isVerified,
+        isFeatured: this.state.editForm.isFeatured
+      })
+    })
+      .catch(error => this.setState({ error }))
+      .finally(() => {
+        this.closeEditProjectModal();
+        this.getProjectsByUser();
+      });
   }
   onEditFormChange(e) {
     const { name, value } = e.target;
@@ -257,6 +284,22 @@ class MyProjects extends Component {
     this.setState({
       editForm: currentState
     });
+  }
+  onEditFormChangeSelect(array, actionMeta) {
+    const { editForm } = { ...this.state };
+    const currentState = editForm;
+    const valueArray = [];
+    array.forEach(item => {
+      valueArray.push(item.value);
+    });
+
+    currentState[actionMeta.name] = valueArray;
+
+    this.setState({
+      editForm: currentState
+    });
+
+    console.log(this.state.editForm);
   }
   closeAddPhotoModal() {
     this.setState({
@@ -336,9 +379,10 @@ class MyProjects extends Component {
                     value: type,
                     label: type
                   }))}
+                  options={projectTypes}
                   className="basic-multi-select"
                   classNamePrefix="select"
-                  // onChange={this.onFormSelectChange}
+                  onChange={this.onEditFormChangeSelect}
                 />
               </Form.Group>
 
@@ -354,7 +398,7 @@ class MyProjects extends Component {
                   options={projectIssues}
                   className="basic-multi-select"
                   classNamePrefix="select"
-                  // onChange={this.onFormSelectChange}
+                  onChange={this.onEditFormChangeSelect}
                 />
               </Form.Group>
 
@@ -370,7 +414,7 @@ class MyProjects extends Component {
                   options={projectGrants}
                   className="basic-multi-select"
                   classNamePrefix="select"
-                  // onChange={this.onFormSelectChange}
+                  onChange={this.onEditFormChangeSelect}
                 />
               </Form.Group>
 
@@ -382,7 +426,7 @@ class MyProjects extends Component {
                     part => ({ value: part, label: part })
                   )}
                   name="communityPartners"
-                  // onChange={this.onFormSelectChange}
+                  onChange={this.onEditFormChangeSelect}
                 />
               </Form.Group>
 
@@ -395,7 +439,7 @@ class MyProjects extends Component {
                     label: fund
                   }))}
                   name="funders"
-                  // onChange={this.onFormSelectChange}
+                  onChange={this.onEditFormChangeSelect}
                 />
               </Form.Group>
 
@@ -405,7 +449,7 @@ class MyProjects extends Component {
                   type="text"
                   name="beneficiaries"
                   value={this.state.editForm.beneficiaries}
-                  onChange={this.onFormChange}
+                  onChange={this.onEditFormChange}
                 />
               </Form.Group>
 

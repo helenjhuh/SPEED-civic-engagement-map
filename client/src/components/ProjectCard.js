@@ -40,7 +40,7 @@ class ProjectCard extends Component {
       <div className="card">
         <div className="card-body">
           <h2>{name}</h2>
-          {type && <p className="text-muted">{type}</p>}
+          {type && type.map(t => <span className="text-muted">{type} ; </span>)}
           <p>{description}</p>
           {website && (
             <p>
