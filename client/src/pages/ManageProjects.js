@@ -14,7 +14,12 @@ class ManageProjects extends Component {
       editModal: false,
       name: "",
       description: "",
-      type: "",
+      type: [],
+      issue: [],
+      langGrants: [],
+      communityPartners: [],
+      funders: [],
+      beneficiaries: "",
       website: ""
     };
 
@@ -54,6 +59,11 @@ class ManageProjects extends Component {
       name: project.name,
       description: project.description,
       type: project.type,
+      issue: project.issue,
+      langGrants: project.langGrants,
+      communityPartners: project.communityPartners,
+      funders: project.funders,
+      beneficiaries: project.beneficiaries,
       website: project.website,
       isVerified: project.isVerified,
       isFeatured: project.isFeatured
@@ -72,6 +82,11 @@ class ManageProjects extends Component {
         name: this.state.name,
         description: this.state.description,
         type: this.state.type,
+        issue: this.state.issue,
+        langGrants: this.state.langGrants,
+        communityPartners: this.state.communityPartners,
+        funders: this.state.funders,
+        beneficiaries: this.state.beneficiaries,
         website: this.state.website,
         isVerified: this.state.isVerified,
         isFeatured: this.state.isFeatured

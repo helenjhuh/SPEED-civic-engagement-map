@@ -320,11 +320,42 @@ class Map extends Component {
               }}
             >
               {this.state.projects.map((project, i) => (
+                // Project Type  (s)
                 <ListGroup.Item key={i} className="project-list">
-                  <h3>{project.name}</h3>
-                  <p className="font-weight-bold">
-                    Managed by {project.owner.first} - {project.owner.email}
-                  </p>
+                  {project.type.length == 1 && (
+                    <span
+                      className="font-weight-bold"
+                      style={{
+                        color: "rgb(162, 42, 42)"
+                      }}
+                    >
+                      {project.type[0]}
+                    </span>
+                  )}
+                  {project.type.length > 1 && (
+                    <div
+                      className="font-weight-bold"
+                      style={{
+                        color: "rgb(162, 42, 42)"
+                      }}
+                    >
+                      {project.type.map(type => (
+                        <span>{type} ; </span>
+                      ))}
+                    </div>
+                  )}
+                  {/* Project Title  */}
+                  <h3
+                    style={{
+                      marginTop: "1rem",
+                      marginRight: "1rem"
+                      // marginBottom: "1rem"
+                    }}
+                  >
+                    {project.name}
+                  </h3>
+
+                  {/* Project Description */}
                   <p
                     className="text-muted"
                     style={{
@@ -335,6 +366,19 @@ class Map extends Component {
                   >
                     {project.description}
                   </p>
+
+                  {/* Issue Area (s) */}
+                  {project.issue && project.issue.length === 1 && (
+                    <span className="text-primary">#{project.issue[0]}</span>
+                  )}
+                  {project.issue && project.issue.length > 1 && (
+                    <div className="text-primary">
+                      {project.issue.map(issue => (
+                        <span>#{issue} </span>
+                      ))}
+                    </div>
+                  )}
+
                   <Button onClick={() => this.projectBtnOnClick(project)}>
                     Click me
                   </Button>

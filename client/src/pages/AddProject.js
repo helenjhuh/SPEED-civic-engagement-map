@@ -220,6 +220,7 @@ class AddProject extends Component {
       owner: this.props.loggedInAs._id
     };
 
+    console.log(payload);
     // Make the request
 
     this.setState({ isLoading: true });
