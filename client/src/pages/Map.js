@@ -379,9 +379,12 @@ class Map extends Component {
                     </div>
                   )}
 
-                  <Button onClick={() => this.projectBtnOnClick(project)}>
-                    Click me
-                  </Button>
+                  {/* TODO: Weird spacing of elements in list group */}
+                  <div>
+                    <Button onClick={() => this.projectBtnOnClick(project)}>
+                      Click me
+                    </Button>
+                  </div>
                 </ListGroup.Item>
               ))}
             </ListGroup>
