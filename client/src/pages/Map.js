@@ -52,6 +52,9 @@ const MapView = ReactMapboxGl({
 const defaultCenter = [-75.3499, 39.9021];
 const onClickZoomLevel = [18];
 const defaultZoomLevel = [11];
+const sw = new mapboxgl.LngLat(-73.9876, 40.7661);
+const ne = new mapboxgl.LngLat(-73.9397, 40.8002);
+const defaultBounds = new mapboxgl.LngLatBounds(sw, ne);
 
 const popupStyles = {
   backgroundColor: "white",
@@ -114,7 +117,8 @@ class Map extends Component {
   }
 
   onFilterChange(e) {
-    const { name, value } = e.target;
+    var { name, value } = e.target;
+    value = value.toLowerCase();
     const { projects } = this.state;
     const listItems = document.getElementsByClassName("project-list");
 
@@ -122,22 +126,34 @@ class Map extends Component {
       [name]: value
     });
 
-    value.toLowerCase();
-    projects.forEach(
-      (project, i) =>
-        // compare value to project.name
-        project.name.toLowerCase().includes(value) ||
-        project.description.toLowerCase().includes(value) ||
-        project.type.toLowerCase().includes(value) ||
-        project.owner.first.toLowerCase().includes(value) ||
-        project.owner.last.toLowerCase().includes(value)
-          ? (listItems[i].style.display = "block")
-          : (listItems[i].style.display = "none")
+    var typeHas = [];
+    var issueHas = [];
 
+    projects.forEach((project, i) => {
+      project.type.forEach(t =>
+        t.toLowerCase().includes(value) ? (typeHas[i] = true) : null
+      );
+      project.issue.forEach(issue =>
+        issue.toLowerCase().includes(value) ? (issueHas[i] = true) : null
+      );
+    });
+
+    projects.forEach((project, i) => {
+      // compare value to project.name
+      project.name.toLowerCase().includes(value) ||
+      project.description.toLowerCase().includes(value) ||
+      // project.type.toLowerCase().includes(value) ||
+      typeHas[i] ||
+      issueHas[i] ||
+      project.owner.first.toLowerCase().includes(value) ||
+      project.owner.last.toLowerCase().includes(value)
+        ? (listItems[i].style.display = "block")
+        : (listItems[i].style.display = "none");
       // compare value to project.description
       // compare value to project.category
       // get element with key = i , set show or hide
-    );
+    });
+
     // When the filter text is changed, it should filter the list of projects containing
     // only text with whatever the text string is. We will need to figure out what fields
     // on the project itself should allow filtering against.
@@ -258,6 +274,15 @@ class Map extends Component {
    */
   resetOnClick() {
     this.getProjects();
+    this.setState({
+      map: {
+        viewport: {
+          center: defaultCenter,
+          zoom: defaultZoomLevel,
+          fitBounds: undefined
+        }
+      }
+    });
   }
   render() {
     return (
@@ -416,6 +441,7 @@ class Map extends Component {
             {/* Create symbol layer to store project pins */}
             <MapContext.Consumer>
               {map => {
+                console.log(map.getBounds());
                 const marker = require("../map-marker-2-32.png");
                 map.loadImage(marker, (error, image) => {
                   if (error) throw error;
