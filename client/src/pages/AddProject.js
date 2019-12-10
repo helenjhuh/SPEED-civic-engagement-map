@@ -277,14 +277,6 @@ class AddProject extends Component {
             />
           </Form.Group>
 
-          {/* <Form.Group controlId="formProjectType">
-            <Form.Label>Project Type</Form.Label>
-            <Form.Control as="select" name="type" onChange={this.onFormChange}>
-              {projectTypes.map((type, i) => (
-                <option key={i}>{type}</option>
-              ))}
-            </Form.Control>
-          </Form.Group> */}
           <Form.Group id="formProjectTypes">
             <Form.Label>Project Type (select all that apply)</Form.Label>
             <Select

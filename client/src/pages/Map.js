@@ -52,9 +52,6 @@ const MapView = ReactMapboxGl({
 const defaultCenter = [-75.3499, 39.9021];
 const onClickZoomLevel = [18];
 const defaultZoomLevel = [11];
-const sw = new mapboxgl.LngLat(-73.9876, 40.7661);
-const ne = new mapboxgl.LngLat(-73.9397, 40.8002);
-const defaultBounds = new mapboxgl.LngLatBounds(sw, ne);
 
 const popupStyles = {
   backgroundColor: "white",
@@ -97,6 +94,7 @@ class Map extends Component {
   }
 
   getProjects() {
+    console.log(this.state);
     this.setState({ isLoading: true });
     fetch("/api/projects")
       .then(res => res.json())
@@ -279,10 +277,14 @@ class Map extends Component {
         viewport: {
           center: defaultCenter,
           zoom: defaultZoomLevel,
-          fitBounds: undefined
+          fitBounds: [
+            [-75.23866342773506, 40.007369864883685],
+            [-75.46113657226667, 39.79666815595115]
+          ]
         }
       }
     });
+    console.log(this.state);
   }
   render() {
     return (
