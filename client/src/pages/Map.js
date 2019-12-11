@@ -174,7 +174,8 @@ class Map extends Component {
       map: {
         viewport: {
           center: [project.address.lat, project.address.lng],
-          zoom: onClickZoomLevel
+          zoom: onClickZoomLevel,
+          fitBounds: undefined
         }
       },
       viewing: project
@@ -272,6 +273,8 @@ class Map extends Component {
    */
   resetOnClick() {
     this.getProjects();
+
+    //reset viewport
     this.setState({
       map: {
         viewport: {
@@ -281,9 +284,20 @@ class Map extends Component {
             [-75.23866342773506, 40.007369864883685],
             [-75.46113657226667, 39.79666815595115]
           ]
-        }
+        },
+        viewing: ""
       }
     });
+
+    //close popups
+    const popups = document.getElementsByClassName("popup");
+    const l = popups.length;
+    for (let i = 0; i < l; i++) {
+      console.log(popups[i]);
+      popups[i].remove();
+      //^^ not removing for some reason
+    }
+
     console.log(this.state);
   }
   render() {
