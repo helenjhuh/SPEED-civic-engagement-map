@@ -6,6 +6,83 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { LinkContainer } from "react-router-bootstrap";
 import { PhotoUpload } from "../components";
+import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
+
+const projectTypes = [
+  { value: "Engaged Teaching", label: "Engaged Teaching", name: "type" },
+  { value: "Engaged Research", label: "Engaged Research", name: "type" },
+  { value: "Engaged Projects", label: "Engaged Projects", name: "type" },
+  { value: "Other", label: "Other" }
+];
+const projectIssues = [
+  {
+    value: "Arts, Media, and Culture",
+    label: "Arts, Media, and Culture",
+    name: "issue"
+  },
+  {
+    value: "Economic Development",
+    label: "Economic Development",
+    name: "issue"
+  },
+  {
+    value: "Education and Access",
+    label: "Education and Access",
+    name: "issue"
+  },
+  {
+    value: "Environment and Sustainability",
+    label: "Environment and Sustainability",
+    name: "issue"
+  },
+  {
+    value: "Ethics and Human Rights",
+    label: "Ethics and Human Rights",
+    name: "issue"
+  },
+  {
+    value: "Identities and Inequality",
+    label: "Identities and Inequality",
+    name: "issue"
+  },
+  { value: "Public Health", label: "Public Health", name: "issue" },
+  {
+    value: "Politics and Public Policy",
+    label: "Politics and Public Policy",
+    name: "issue"
+  },
+  {
+    value: "Refugees and Immigration",
+    label: "Refugees and Immigration",
+    name: "issue"
+  },
+  { value: "Science and Society", label: "Science and Society", name: "issue" }
+];
+
+const projectGrants = [
+  {
+    value: "Chester Community Fellowship",
+    label: "Chester Community Fellowship",
+    name: "langGrants"
+  },
+  {
+    value: "Lang Opportunity Scholarship",
+    label: "Lang Opportunity Scholarship",
+    name: "langGrants"
+  },
+  {
+    value: "Project Pericles Fund",
+    label: "Project Pericles Fund",
+    name: "langGrants"
+  },
+  {
+    value: "Summer Grants ( projects, internships, research )",
+    label: "Summer Grants ( projects, internships, research )",
+    name: "langGrants"
+  },
+  { value: "Faculty Award", label: "Faculty Award", name: "langGrants" }
+];
 
 const mapStateToProps = state => ({
   loggedInAs: state.auth.loggedInAs
@@ -25,7 +102,12 @@ class MyProjects extends Component {
         _id: "",
         name: "",
         description: "",
-        type: "",
+        type: [],
+        issue: [],
+        langGrants: [],
+        communityPartners: [],
+        funders: [],
+        beneficiaries: "",
         website: ""
       },
       projects: "",
@@ -46,6 +128,7 @@ class MyProjects extends Component {
     this.closeEditProjectModal = this.closeEditProjectModal.bind(this);
     this.saveProjectEdits = this.saveProjectEdits.bind(this);
     this.onEditFormChange = this.onEditFormChange.bind(this);
+    this.onEditFormChangeSelect = this.onEditFormChangeSelect.bind(this);
     this.getProjectsByUser = this.getProjectsByUser.bind(this);
     this.closeAddPhotoModal = this.closeAddPhotoModal.bind(this);
     this.addPhotoOnClick = this.addPhotoOnClick.bind(this);
@@ -118,6 +201,11 @@ class MyProjects extends Component {
         name: project.name,
         description: project.description,
         type: project.type,
+        issue: project.issue,
+        langGrants: project.langGrants,
+        communityPartners: project.communityPartners,
+        funders: project.funders,
+        beneficiaries: project.beneficiaries,
         website: project.website
       }
     });
@@ -161,14 +249,57 @@ class MyProjects extends Component {
     // for now just output the state to make sure the correct request
     // is sent
     console.log(this.state.editForm);
+
+    // this.setState({ isLoading: true })
+    fetch(`/api/projects/${this.state.editForm._id}/edit`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        name: this.state.editForm.name,
+        description: this.state.editForm.description,
+        type: this.state.editForm.type,
+        issue: this.state.editForm.issue,
+        langGrants: this.state.editForm.langGrants,
+        communityPartners: this.state.editForm.communityPartners,
+        funders: this.state.editForm.funders,
+        beneficiaries: this.state.editForm.beneficiaries,
+        website: this.state.editForm.website,
+        isVerified: this.state.editForm.isVerified,
+        isFeatured: this.state.editForm.isFeatured
+      })
+    })
+      .catch(error => this.setState({ error }))
+      .finally(() => {
+        this.closeEditProjectModal();
+        this.getProjectsByUser();
+      });
   }
   onEditFormChange(e) {
     const { name, value } = e.target;
+    const { editForm } = { ...this.state };
+    const currentState = editForm;
+    currentState[name] = value;
     this.setState({
-      editForm: {
-        [name]: value
-      }
+      editForm: currentState
     });
+  }
+  onEditFormChangeSelect(array, actionMeta) {
+    const { editForm } = { ...this.state };
+    const currentState = editForm;
+    const valueArray = [];
+    array.forEach(item => {
+      valueArray.push(item.value);
+    });
+
+    currentState[actionMeta.name] = valueArray;
+
+    this.setState({
+      editForm: currentState
+    });
+
+    console.log(this.state.editForm);
   }
   closeAddPhotoModal() {
     this.setState({
@@ -238,15 +369,90 @@ class MyProjects extends Component {
                   onChange={this.onEditFormChange}
                 />
               </Form.Group>
-              <Form.Group controlId="formType">
+
+              <Form.Group id="formProjectTypes">
                 <Form.Label>Type</Form.Label>
+                <Select
+                  isMulti
+                  name="type"
+                  defaultValue={this.state.editForm.type.map(type => ({
+                    value: type,
+                    label: type
+                  }))}
+                  options={projectTypes}
+                  className="basic-multi-select"
+                  classNamePrefix="select"
+                  onChange={this.onEditFormChangeSelect}
+                />
+              </Form.Group>
+
+              <Form.Group id="formProjectIssues">
+                <Form.Label>Issues</Form.Label>
+                <Select
+                  isMulti
+                  name="issue"
+                  defaultValue={this.state.editForm.issue.map(issue => ({
+                    value: issue,
+                    label: issue
+                  }))}
+                  options={projectIssues}
+                  className="basic-multi-select"
+                  classNamePrefix="select"
+                  onChange={this.onEditFormChangeSelect}
+                />
+              </Form.Group>
+
+              <Form.Group id="formProjectGrants">
+                <Form.Label>Lang Center Grants and Awards</Form.Label>
+                <Select
+                  isMulti
+                  name="langGrants"
+                  defaultValue={this.state.editForm.langGrants.map(grant => ({
+                    value: grant,
+                    label: grant
+                  }))}
+                  options={projectGrants}
+                  className="basic-multi-select"
+                  classNamePrefix="select"
+                  onChange={this.onEditFormChangeSelect}
+                />
+              </Form.Group>
+
+              <Form.Group id="formCommunityPartners">
+                <Form.Label>Community Partners</Form.Label>
+                <CreatableSelect
+                  isMulti
+                  defaultValue={this.state.editForm.communityPartners.map(
+                    part => ({ value: part, label: part })
+                  )}
+                  name="communityPartners"
+                  onChange={this.onEditFormChangeSelect}
+                />
+              </Form.Group>
+
+              <Form.Group id="formFunders">
+                <Form.Label>Funders</Form.Label>
+                <CreatableSelect
+                  isMulti
+                  defaultValue={this.state.editForm.funders.map(fund => ({
+                    value: fund,
+                    label: fund
+                  }))}
+                  name="funders"
+                  onChange={this.onEditFormChangeSelect}
+                />
+              </Form.Group>
+
+              <Form.Group id="formBeneficiaries">
+                <Form.Label> Beneficiaries </Form.Label>
                 <Form.Control
                   type="text"
-                  name="type"
-                  value={this.state.editForm.type}
+                  name="beneficiaries"
+                  value={this.state.editForm.beneficiaries}
                   onChange={this.onEditFormChange}
                 />
               </Form.Group>
+
               <Form.Group controlId="formWebsite">
                 <Form.Label>Website</Form.Label>
                 <Form.Control
@@ -256,6 +462,7 @@ class MyProjects extends Component {
                   onChange={this.onEditFormChange}
                 />
               </Form.Group>
+
               <Button className="mt-3" onClick={this.saveProjectEdits}>
                 Save
               </Button>

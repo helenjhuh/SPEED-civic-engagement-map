@@ -94,6 +94,7 @@ class Map extends Component {
   }
 
   getProjects() {
+    console.log(this.state);
     this.setState({ isLoading: true });
     fetch("/api/projects")
       .then(res => res.json())
@@ -114,7 +115,8 @@ class Map extends Component {
   }
 
   onFilterChange(e) {
-    const { name, value } = e.target;
+    var { name, value } = e.target;
+    value = value.toLowerCase();
     const { projects } = this.state;
     const listItems = document.getElementsByClassName("project-list");
 
@@ -122,22 +124,34 @@ class Map extends Component {
       [name]: value
     });
 
-    value.toLowerCase();
-    projects.forEach(
-      (project, i) =>
-        // compare value to project.name
-        project.name.toLowerCase().includes(value) ||
-        project.description.toLowerCase().includes(value) ||
-        project.type.toLowerCase().includes(value) ||
-        project.owner.first.toLowerCase().includes(value) ||
-        project.owner.last.toLowerCase().includes(value)
-          ? (listItems[i].style.display = "block")
-          : (listItems[i].style.display = "none")
+    var typeHas = [];
+    var issueHas = [];
 
+    projects.forEach((project, i) => {
+      project.type.forEach(t =>
+        t.toLowerCase().includes(value) ? (typeHas[i] = true) : null
+      );
+      project.issue.forEach(issue =>
+        issue.toLowerCase().includes(value) ? (issueHas[i] = true) : null
+      );
+    });
+
+    projects.forEach((project, i) => {
+      // compare value to project.name
+      project.name.toLowerCase().includes(value) ||
+      project.description.toLowerCase().includes(value) ||
+      // project.type.toLowerCase().includes(value) ||
+      typeHas[i] ||
+      issueHas[i] ||
+      project.owner.first.toLowerCase().includes(value) ||
+      project.owner.last.toLowerCase().includes(value)
+        ? (listItems[i].style.display = "block")
+        : (listItems[i].style.display = "none");
       // compare value to project.description
       // compare value to project.category
       // get element with key = i , set show or hide
-    );
+    });
+
     // When the filter text is changed, it should filter the list of projects containing
     // only text with whatever the text string is. We will need to figure out what fields
     // on the project itself should allow filtering against.
@@ -258,6 +272,19 @@ class Map extends Component {
    */
   resetOnClick() {
     this.getProjects();
+    this.setState({
+      map: {
+        viewport: {
+          center: defaultCenter,
+          zoom: defaultZoomLevel,
+          fitBounds: [
+            [-75.23866342773506, 40.007369864883685],
+            [-75.46113657226667, 39.79666815595115]
+          ]
+        }
+      }
+    });
+    console.log(this.state);
   }
   render() {
     return (
@@ -320,11 +347,42 @@ class Map extends Component {
               }}
             >
               {this.state.projects.map((project, i) => (
+                // Project Type  (s)
                 <ListGroup.Item key={i} className="project-list">
-                  <h3>{project.name}</h3>
-                  <p className="font-weight-bold">
-                    Managed by {project.owner.first} - {project.owner.email}
-                  </p>
+                  {project.type.length == 1 && (
+                    <span
+                      className="font-weight-bold"
+                      style={{
+                        color: "rgb(162, 42, 42)"
+                      }}
+                    >
+                      {project.type[0]}
+                    </span>
+                  )}
+                  {project.type.length > 1 && (
+                    <div
+                      className="font-weight-bold"
+                      style={{
+                        color: "rgb(162, 42, 42)"
+                      }}
+                    >
+                      {project.type.map(type => (
+                        <span>{type} ; </span>
+                      ))}
+                    </div>
+                  )}
+                  {/* Project Title  */}
+                  <h3
+                    style={{
+                      marginTop: "1rem",
+                      marginRight: "1rem"
+                      // marginBottom: "1rem"
+                    }}
+                  >
+                    {project.name}
+                  </h3>
+
+                  {/* Project Description */}
                   <p
                     className="text-muted"
                     style={{
@@ -335,9 +393,25 @@ class Map extends Component {
                   >
                     {project.description}
                   </p>
-                  <Button onClick={() => this.projectBtnOnClick(project)}>
-                    Click me
-                  </Button>
+
+                  {/* Issue Area (s) */}
+                  {project.issue && project.issue.length === 1 && (
+                    <span className="text-primary">#{project.issue[0]}</span>
+                  )}
+                  {project.issue && project.issue.length > 1 && (
+                    <div className="text-primary">
+                      {project.issue.map(issue => (
+                        <span>#{issue} </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* TODO: Weird spacing of elements in list group */}
+                  <div>
+                    <Button onClick={() => this.projectBtnOnClick(project)}>
+                      Click me
+                    </Button>
+                  </div>
                 </ListGroup.Item>
               ))}
             </ListGroup>
@@ -369,6 +443,7 @@ class Map extends Component {
             {/* Create symbol layer to store project pins */}
             <MapContext.Consumer>
               {map => {
+                console.log(map.getBounds());
                 const marker = require("../map-marker-2-32.png");
                 map.loadImage(marker, (error, image) => {
                   if (error) throw error;

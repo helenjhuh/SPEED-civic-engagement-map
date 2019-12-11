@@ -40,7 +40,7 @@ class ProjectCard extends Component {
       <div className="card">
         <div className="card-body">
           <h2>{name}</h2>
-          {type && <p className="text-muted">{type}</p>}
+          {type && type.map(t => <span className="text-muted">{t} ; </span>)}
           <p>{description}</p>
           {website && (
             <p>
@@ -130,7 +130,12 @@ class ProjectCard extends Component {
               </Container>
             )}
 
-            <LinkContainer to={`/projects/${_id}`}>
+            <LinkContainer
+              to={`/projects/${_id}`}
+              style={{
+                marginTop: "1rem"
+              }}
+            >
               <Button className="mr-2">Go to project</Button>
             </LinkContainer>
           </div>
