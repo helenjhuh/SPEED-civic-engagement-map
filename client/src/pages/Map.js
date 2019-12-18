@@ -87,6 +87,7 @@ class Map extends Component {
     this.filterOnClick = this.filterOnClick.bind(this);
     this.getProjects = this.getProjects.bind(this);
     this.resetOnClick = this.resetOnClick.bind(this);
+    this.closePopups = this.closePopups.bind(this);
   }
 
   componentDidMount() {
@@ -162,14 +163,7 @@ class Map extends Component {
   }
 
   projectBtnOnClick(project) {
-    //Close any existing popups
-    const popups = document.getElementsByClassName("popup");
-    const l = popups.length;
-    for (let i = 0; i < l; i++) {
-      console.log(popups[i]);
-      popups[i].remove();
-    }
-
+    this.closePopups();
     this.setState({
       map: {
         viewport: {
@@ -273,6 +267,7 @@ class Map extends Component {
    */
   resetOnClick() {
     this.getProjects();
+    this.closePopups();
 
     //reset viewport
     this.setState({
@@ -284,22 +279,22 @@ class Map extends Component {
             [-75.23866342773506, 40.007369864883685],
             [-75.46113657226667, 39.79666815595115]
           ]
-        },
-        viewing: ""
-      }
+        }
+      },
+      viewing: null
     });
+  }
 
-    //close popups
+  closePopups() {
+    //Close any existing popups
     const popups = document.getElementsByClassName("popup");
     const l = popups.length;
     for (let i = 0; i < l; i++) {
       console.log(popups[i]);
       popups[i].remove();
-      //^^ not removing for some reason
     }
-
-    console.log(this.state);
   }
+
   render() {
     return (
       <div className="row">
@@ -457,7 +452,6 @@ class Map extends Component {
             {/* Create symbol layer to store project pins */}
             <MapContext.Consumer>
               {map => {
-                console.log(map.getBounds());
                 const marker = require("../map-marker-2-32.png");
                 map.loadImage(marker, (error, image) => {
                   if (error) throw error;
@@ -514,6 +508,7 @@ class Map extends Component {
               <MapContext.Consumer>
                 {map => {
                   // map.fitBounds(boundSwarthmore);
+                  console.log(`render, viewing && ${this.state.viewing.name}`);
                   var popup = new mapboxgl.Popup({ className: "popup" }) //{ closeOnClick: false }
                     .setLngLat([
                       this.state.viewing.address.lat,
