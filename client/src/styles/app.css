@@ -248,3 +248,8 @@ div.right:nth-child(1) {
   background-color: #fff;
   animation: yAxis 10s infinite cubic-bezier(0.3, 0.27, 0.07, 1.64);
 }
+
+.mapboxgl-popup-close-button {
+    padding: .5em;
+    margin: .25em;
+}

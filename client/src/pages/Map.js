@@ -11,7 +11,8 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Badge from "react-bootstrap/Badge";
-import turf from "@turf/bbox";
+import "../styles/app.css";
+// import turf from "@turf/bbox";
 
 /**
  * @desc Transforms an array of strings into an array of objects
@@ -55,8 +56,8 @@ const defaultZoomLevel = [11];
 
 const popupStyles = {
   backgroundColor: "white",
-  borderRadius: "8px 8px 0px 0px",
-  maxWidth: "25em"
+  borderRadius: "8px 8px 8px 8px",
+  width: "25em"
 };
 
 // Import bbox to enable map zooming to common areas
@@ -87,6 +88,7 @@ class Map extends Component {
     this.filterOnClick = this.filterOnClick.bind(this);
     this.getProjects = this.getProjects.bind(this);
     this.resetOnClick = this.resetOnClick.bind(this);
+    this.closePopups = this.closePopups.bind(this);
   }
 
   componentDidMount() {
@@ -162,14 +164,7 @@ class Map extends Component {
   }
 
   projectBtnOnClick(project) {
-    //Close any existing popups
-    const popups = document.getElementsByClassName("popup");
-    const l = popups.length;
-    for (let i = 0; i < l; i++) {
-      console.log(popups[i]);
-      popups[i].remove();
-    }
-
+    this.closePopups();
     this.setState({
       map: {
         viewport: {
@@ -273,6 +268,7 @@ class Map extends Component {
    */
   resetOnClick() {
     this.getProjects();
+    this.closePopups();
 
     //reset viewport
     this.setState({
@@ -284,22 +280,22 @@ class Map extends Component {
             [-75.23866342773506, 40.007369864883685],
             [-75.46113657226667, 39.79666815595115]
           ]
-        },
-        viewing: ""
-      }
+        }
+      },
+      viewing: null
     });
+  }
 
-    //close popups
+  closePopups() {
+    //Close any existing popups
     const popups = document.getElementsByClassName("popup");
     const l = popups.length;
     for (let i = 0; i < l; i++) {
       console.log(popups[i]);
       popups[i].remove();
-      //^^ not removing for some reason
     }
-
-    console.log(this.state);
   }
+
   render() {
     return (
       <div className="row">
@@ -457,7 +453,6 @@ class Map extends Component {
             {/* Create symbol layer to store project pins */}
             <MapContext.Consumer>
               {map => {
-                console.log(map.getBounds());
                 const marker = require("../map-marker-2-32.png");
                 map.loadImage(marker, (error, image) => {
                   if (error) throw error;
@@ -491,19 +486,33 @@ class Map extends Component {
             <MapContext.Consumer>
               {map => {
                 commonAreaData.features.map(feature =>
-                  map.addLayer({
-                    id: feature.properties.name,
-                    type: "fill",
-                    source: {
-                      type: "geojson",
-                      data: feature
-                    },
-                    layout: {},
-                    paint: {
-                      "fill-color": "#088",
-                      "fill-opacity": 0.5
-                    }
-                  })
+                  map
+                    .addLayer({
+                      id: feature.properties.name,
+                      type: "fill",
+                      source: {
+                        type: "geojson",
+                        data: feature
+                      },
+                      layout: {},
+                      paint: {
+                        "fill-color": "#088",
+                        "fill-opacity": 0.15
+                      }
+                    })
+                    .addLayer({
+                      id: `${feature.properties.name}Fill`,
+                      type: "line",
+                      source: {
+                        type: "geojson",
+                        data: feature
+                      },
+                      layout: {},
+                      paint: {
+                        "line-color": "rgba(0, 0, 0, 1)",
+                        "line-width": 2
+                      }
+                    })
                 );
               }}
             </MapContext.Consumer>
@@ -514,13 +523,23 @@ class Map extends Component {
               <MapContext.Consumer>
                 {map => {
                   // map.fitBounds(boundSwarthmore);
-                  var popup = new mapboxgl.Popup({ className: "popup" }) //{ closeOnClick: false }
+                  console.log(`render, viewing && ${this.state.viewing.name}`);
+                  var popup = new mapboxgl.Popup({
+                    className: "popup",
+                    closeOnClick: true
+                  }) //{ closeOnClick: false }
                     .setLngLat([
                       this.state.viewing.address.lat,
                       this.state.viewing.address.lng
                     ])
                     .setHTML(
-                      `<div style="${popupStyles}">
+                      `<div 
+                        style="
+                          background: white;
+                          border-radius: 8px 8px 8px 8px;
+                          width: inherit
+                        "
+                        > 
                               <p class="lead">${this.state.viewing.name}</p>
                               <p
                                 class="text-muted"
@@ -533,7 +552,7 @@ class Map extends Component {
                                 ${this.state.viewing.description}
                               </p>
                               <p>
-                                <a href='#/projects/${this.state.viewing._id}' type="button" class="btn btn-info btn-sm btn-block">
+                                <a href='#/projects/${this.state.viewing._id}' type="button" class="btn btn-warning btn-sm btn-block">
                                   See more
                                 </a>
                               </p>
