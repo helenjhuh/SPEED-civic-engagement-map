@@ -11,7 +11,8 @@ import ListGroup from "react-bootstrap/ListGroup";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Badge from "react-bootstrap/Badge";
-import turf from "@turf/bbox";
+import "../styles/app.css";
+// import turf from "@turf/bbox";
 
 /**
  * @desc Transforms an array of strings into an array of objects
@@ -55,8 +56,8 @@ const defaultZoomLevel = [11];
 
 const popupStyles = {
   backgroundColor: "white",
-  borderRadius: "8px 8px 0px 0px",
-  maxWidth: "25em"
+  borderRadius: "8px 8px 8px 8px",
+  width: "25em"
 };
 
 // Import bbox to enable map zooming to common areas
@@ -523,13 +524,22 @@ class Map extends Component {
                 {map => {
                   // map.fitBounds(boundSwarthmore);
                   console.log(`render, viewing && ${this.state.viewing.name}`);
-                  var popup = new mapboxgl.Popup({ className: "popup" }) //{ closeOnClick: false }
+                  var popup = new mapboxgl.Popup({
+                    className: "popup",
+                    closeOnClick: true
+                  }) //{ closeOnClick: false }
                     .setLngLat([
                       this.state.viewing.address.lat,
                       this.state.viewing.address.lng
                     ])
                     .setHTML(
-                      `<div style="${popupStyles}">
+                      `<div 
+                        style="
+                          background: white;
+                          border-radius: 8px 8px 8px 8px;
+                          width: inherit
+                        "
+                        > 
                               <p class="lead">${this.state.viewing.name}</p>
                               <p
                                 class="text-muted"
@@ -542,7 +552,7 @@ class Map extends Component {
                                 ${this.state.viewing.description}
                               </p>
                               <p>
-                                <a href='#/projects/${this.state.viewing._id}' type="button" class="btn btn-info btn-sm btn-block">
+                                <a href='#/projects/${this.state.viewing._id}' type="button" class="btn btn-warning btn-sm btn-block">
                                   See more
                                 </a>
                               </p>
