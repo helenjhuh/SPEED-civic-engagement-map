@@ -485,19 +485,33 @@ class Map extends Component {
             <MapContext.Consumer>
               {map => {
                 commonAreaData.features.map(feature =>
-                  map.addLayer({
-                    id: feature.properties.name,
-                    type: "fill",
-                    source: {
-                      type: "geojson",
-                      data: feature
-                    },
-                    layout: {},
-                    paint: {
-                      "fill-color": "#088",
-                      "fill-opacity": 0.5
-                    }
-                  })
+                  map
+                    .addLayer({
+                      id: feature.properties.name,
+                      type: "fill",
+                      source: {
+                        type: "geojson",
+                        data: feature
+                      },
+                      layout: {},
+                      paint: {
+                        "fill-color": "#088",
+                        "fill-opacity": 0.15
+                      }
+                    })
+                    .addLayer({
+                      id: `${feature.properties.name}Fill`,
+                      type: "line",
+                      source: {
+                        type: "geojson",
+                        data: feature
+                      },
+                      layout: {},
+                      paint: {
+                        "line-color": "rgba(0, 0, 0, 1)",
+                        "line-width": 2
+                      }
+                    })
                 );
               }}
             </MapContext.Consumer>
