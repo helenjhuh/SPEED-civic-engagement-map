@@ -37,8 +37,8 @@ class SingleProject extends Component {
     //   Math.random() * 10)}`;
     return (
       <div className="container">
-        <h1
-          className="display-3 mb-3"
+        <div
+          className="display-2 mb-3"
           style={{
             backgroundImage: "url(https://loremflickr.com/640/480?random=75)",
             backgroundSize: "cover",
@@ -47,11 +47,21 @@ class SingleProject extends Component {
             alignItems: "center",
             padding: "3em",
             paddingTop: "5em",
-            color: "white"
+            color: "white",
+            marginBottom: "1.75rem"
           }}
         >
-          {project.name || "Project title"}
-        </h1>
+          <h1
+            className="display-2 mb-3"
+            style={{
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+              color: "white",
+              padding: "1em"
+            }}
+          >
+            {project.name || "Project title"}
+          </h1>
+        </div>
         {/* If there's an error, display it to the user */}
         {error && <p className="text-danger">{error}</p>}
         {/* If the project is loading, display it to the user */}
@@ -61,10 +71,85 @@ class SingleProject extends Component {
           <div>
             <Row>
               <Col>
-                <p className="font-weight-normal">
-                  <strong>[{project.type}]</strong> <br />
+                <h2
+                  className="display-4"
+                  style={{ color: "#A3292A", marginBottom: "1.75rem" }}
+                >
+                  [ {project.type} ]
+                </h2>
+                <p
+                  className="font-weight-normal"
+                  style={{
+                    fontSize: "18px",
+                    fontFamily: "'Open Sans', sans-serif",
+                    lineHeight: "1.75em",
+                    marginBottom: "1.75rem"
+                  }}
+                >
                   {project.description}
                 </p>
+                <p
+                  style={{
+                    fontSize: "18px",
+                    fontFamily: "'Open Sans', sans-serif",
+                    lineHeight: "1.75em",
+                    marginBottom: "1.75rem"
+                  }}
+                >
+                  <strong>Issue Areas: </strong>
+                  {project.issue &&
+                    project.issue.map((issue, i) => <span>{issue}, </span>)}
+                </p>
+                <h2
+                  className="display-4"
+                  style={{ color: "#A3292A", marginBottom: "1.75rem" }}
+                >
+                  Community
+                </h2>
+                <p
+                  style={{
+                    fontSize: "18px",
+                    fontFamily: "'Open Sans', sans-serif",
+                    lineHeight: "1.75em",
+                    marginBottom: "1.75rem"
+                  }}
+                >
+                  {project.communityPartners &&
+                    project.communityPartners.map((c, i) => (
+                      <li
+                        style={{
+                          listStylePosition: "inside",
+                          listStyleType: "none",
+                          textIndent: "1.75rem"
+                        }}
+                      >
+                        <h3> - {c}</h3>
+                      </li>
+                    ))}
+                </p>
+                {project.langGrants && (
+                  <h2
+                    className="display-4"
+                    style={{ color: "#A3292A", marginBottom: "1.75rem" }}
+                  >
+                    Lang Center Grants
+                  </h2>
+                )}
+                {project.langGrants &&
+                  project.langGrants.map(lg => (
+                    <li
+                      style={{
+                        fontSize: "18px",
+                        fontFamily: "'Open Sans', sans-serif",
+                        lineHeight: "1.75em",
+                        listStylePosition: "inside",
+                        listStyleType: "none",
+                        textIndent: "1.75rem"
+                      }}
+                    >
+                      <h3> - {lg}</h3>
+                    </li>
+                  ))}
               </Col>
               <Col sm={4}>
                 {/* Eventually check for user phrofile picutre upload */}
