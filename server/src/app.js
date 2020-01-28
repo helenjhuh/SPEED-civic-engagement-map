@@ -19,6 +19,7 @@ const { Types } = require("mongoose");
 const { Project } = require("./models");
 const methodOverride = require("method-override");
 const { User, Role } = require("./models");
+const mime = require("mime-types");
 
 // Initialize some of the variables we will need
 let app;
@@ -46,17 +47,25 @@ const storage = new gridFsStorage({
   file: (req, file) => {
     return new Promise((resolve, reject) => {
       // TODO: Check the file mime type here, we only want to accept images
-      crypto.randomBytes(16, (err, buf) => {
-        if (err) {
-          return reject(err);
-        }
-        const filename = buf.toString("hex") + path.extname(file.originalname);
-        const fileInfo = {
-          filename,
-          bucketName: "uploads"
-        };
-        resolve(fileInfo);
-      });
+
+      if (
+        mime.contentTypes(file) === ("image/jpeg" || "image/png" || "image/gif")
+      ) {
+        crypto.randomBytes(16, (err, buf) => {
+          if (err) {
+            return reject(err);
+          }
+          const filename =
+            buf.toString("hex") + path.extname(file.originalname);
+          const fileInfo = {
+            filename,
+            bucketName: "uploads"
+          };
+          resolve(fileInfo);
+        });
+      } else {
+        reject("Invalid file type");
+      }
     });
   }
 });

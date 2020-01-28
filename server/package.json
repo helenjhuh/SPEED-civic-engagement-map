@@ -33,6 +33,7 @@
     "geojson": "^0.5.0",
     "gridfs-stream": "^1.1.1",
     "method-override": "^3.0.0",
+    "mime-types": "^2.1.26",
     "mongodb": "^3.2.7",
     "mongoose": "^5.6.0",
     "morgan": "^1.9.1",
