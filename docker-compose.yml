@@ -1,0 +1,45 @@
+version: '3.5'
+services:
+
+  client:
+    build:
+      context: ./client
+    ports:
+      - 3000:3000
+    depends_on:
+      - api
+
+  api:
+    build:
+      context: ./server
+    ports:
+      - 8000:8000
+    restart: always
+    depends_on:
+      - db
+    environment:
+      NODE_ENV: ${API_NODE_ENV}
+      DB_USER: ${DB_USER}
+      DB_PASS: ${DB_PASS}
+      DB_NAME: ${DB_NAME}
+      DB_PORT: ${DB_PORT}
+      DB_HOST: db
+      APP_PORT:  ${API_PORT}
+      SESSION_SECRET: ${API_SESSION_SECRET}
+      SALT_WORK_FACTOR: ${API_SALT_WORK_FACTOR}
+      MAPBOX_TOKEN: ${MAPBOX_TOKEN}
+      ADMIN_EMAIL: ${API_ADMIN_EMAIL}
+      ADMIN_PASS: ${API_ADMIN_PASS}
+      ADMIN_ROLE: ${API_ADMIN_ROLE}
+
+  db:
+    image: mongo
+    restart: always
+    volumes:
+      - db_data:/db/data
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASS}
+
+volumes:
+  db_data:

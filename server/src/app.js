@@ -25,19 +25,9 @@ const mime = require("mime-types");
 let app;
 
 // Initialize mongoose and the db connection
-// Create the dbURI based on the db mode in .env
-// the mode should either be local or remote but will
-// default to a localhost connection if nothing is
-// provided
-let dbURI;
+let dbURI = `mongodb://${config.db.user}:${config.db.pass}@${config.db.host}:${config.db.port}/${config.db.name}?authSource=admin`;
 
-if (config.db.mode === "local") {
-  dbURI = `mongodb://${config.db.host}/${config.db.name}`;
-} else if (config.db.mode === "remote") {
-  dbURI = `mongodb+srv://${config.db.user}:${config.db.pass}@${config.db.host}/${config.db.name}`;
-} else {
-  dbURI = "mongodb://localhost/civic_map";
-}
+console.log("connecting to ", dbURI);
 
 mongoose.connect(dbURI, { useNewUrlParser: true });
 const conn = mongoose.connection;
@@ -216,7 +206,7 @@ conn.once("open", () => {
       Role.create(
         {
           name: config.admin.role,
-          description: "Can do anything!"
+          description: "Can do anything"
         },
         (err, role) => {
           if (err) {
@@ -236,7 +226,7 @@ conn.once("open", () => {
         Role.create(
           {
             name: config.admin.role,
-            description: "Can do anything!"
+            description: "Can do anything"
           },
           (err, role) => {
             if (err) console.error(err);
@@ -246,14 +236,13 @@ conn.once("open", () => {
                 User.create(
                   {
                     first: "Admin",
-                    last: "Admin",
+                    last: "User",
                     email: config.admin.email,
                     password: config.admin.pass,
                     roles: [role._id]
                   },
                   (err, user) => {
                     if (err) console.error(err);
-                    console.log("Admin user created", user);
                   }
                 );
               }
@@ -268,14 +257,13 @@ conn.once("open", () => {
             User.create(
               {
                 first: "Admin",
-                last: "Admin",
+                last: "User",
                 email: config.admin.email,
                 password: config.admin.pass,
                 roles: [role._id]
               },
               (err, user) => {
                 if (err) console.error(err);
-                console.log("Admin user created", user);
               }
             );
           }
@@ -288,7 +276,7 @@ conn.once("open", () => {
 
   app.listen(config.app.port, () =>
     console.log(
-      `App is listening on port http://localhost:${config.app.port} \nRunning in ${config.app.env} mode.`
+      `App is listening on ::${config.app.port} \nRunning in ${config.app.env} mode.`
     )
   );
 });

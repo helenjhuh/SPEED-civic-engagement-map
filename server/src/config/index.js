@@ -10,7 +10,7 @@ module.exports = {
     user: process.env.DB_USER,
     pass: process.env.DB_PASS,
     name: process.env.DB_NAME,
-    mode: process.env.DB_MODE || "local"
+    port: process.env.DB_PORT
   },
   mapbox: {
     apiToken: process.env.MAPBOX_TOKEN
