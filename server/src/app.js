@@ -27,8 +27,6 @@ let app;
 // Initialize mongoose and the db connection
 let dbURI = `mongodb://${config.db.user}:${config.db.pass}@${config.db.host}:${config.db.port}/${config.db.name}?authSource=admin`;
 
-console.log("connecting to ", dbURI);
-
 mongoose.connect(dbURI, { useNewUrlParser: true });
 const conn = mongoose.connection;
 
@@ -36,8 +34,6 @@ const storage = new gridFsStorage({
   db: conn,
   file: (req, file) => {
     return new Promise((resolve, reject) => {
-      // TODO: Check the file mime type here, we only want to accept images
-
       if (
         mime.contentTypes(file) === ("image/jpeg" || "image/png" || "image/gif")
       ) {
