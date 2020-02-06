@@ -53,14 +53,10 @@ const MainNavbar = ({ isLoggedIn, loggedInAs, logout }) => {
         {!isLoggedIn && (
           <>
             <LinkContainer to="/login">
-              <Button color="primary" size="sm" className="mx-1">
-                Login
-              </Button>
+              <Nav.Link>Login</Nav.Link>
             </LinkContainer>
             <LinkContainer to="/signup">
-              <Button color="primary" size="sm" className="mx-1">
-                Signup
-              </Button>
+              <Nav.Link>Signup</Nav.Link>
             </LinkContainer>
           </>
         )}

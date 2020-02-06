@@ -8,6 +8,8 @@ services:
       - 3000:3000
     depends_on:
       - api
+    environment:
+      REACT_APP_MAPBOX_TOKEN: ${MAPBOX_TOKEN}
 
   api:
     build:

@@ -44,8 +44,7 @@ function randomFromArray(arr) {
 }
 
 const MapView = ReactMapboxGl({
-  accessToken:
-    "pk.eyJ1IjoiYXdlZWQxIiwiYSI6ImNrMGZxa2ZldTAyNHMzb3M4YTZyM3QxNzMifQ.qZtFXEGeC-VE3IwTKHIk_g",
+  accessToken: process.env.REACT_APP_MAPBOX_TOKEN,
   minZoom: 8,
   maxZoom: 20
 });
@@ -96,7 +95,6 @@ class Map extends Component {
   }
 
   getProjects() {
-    console.log(this.state);
     this.setState({ isLoading: true });
     fetch("/api/projects")
       .then(res => res.json())
@@ -160,7 +158,7 @@ class Map extends Component {
   }
 
   onViewportChange() {
-    console.log("Changing map view....");
+    //placeholder
   }
 
   projectBtnOnClick(project) {
@@ -234,7 +232,7 @@ class Map extends Component {
         .then(res => {
           const { results } = res.data;
           if (!results) {
-            console.log("geocoding error");
+            console.error("geocoding error");
           }
           const { features } = results;
           this.setState({
@@ -291,7 +289,6 @@ class Map extends Component {
     const popups = document.getElementsByClassName("popup");
     const l = popups.length;
     for (let i = 0; i < l; i++) {
-      console.log(popups[i]);
       popups[i].remove();
     }
   }
@@ -523,7 +520,6 @@ class Map extends Component {
               <MapContext.Consumer>
                 {map => {
                   // map.fitBounds(boundSwarthmore);
-                  console.log(`render, viewing && ${this.state.viewing.name}`);
                   var popup = new mapboxgl.Popup({
                     className: "popup",
                     closeOnClick: true

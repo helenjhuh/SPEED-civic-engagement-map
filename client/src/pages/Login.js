@@ -4,6 +4,8 @@ import Button from "react-bootstrap/Button";
 import { connect } from "react-redux";
 import { actions } from "../store/actions";
 import { Redirect } from "react-router-dom";
+import { Formik } from "formik";
+import * as yup from "yup";
 
 const mapStateToProps = state => ({
   isLoggedIn: state.auth.isLoggedIn,
@@ -15,30 +17,25 @@ const mapDispatchToProps = dispatch => ({
   login: payload => dispatch(actions.auth.login(payload))
 });
 
+const schema = yup.object({
+  email: yup
+    .string()
+    .email()
+    .required(),
+  password: yup.string().required()
+});
+
 class Login extends Component {
   constructor() {
     super();
-    this.state = {
-      email: "",
-      password: ""
-    };
     this.login = this.login.bind(this);
-    this.onFormChange = this.onFormChange.bind(this);
   }
 
-  onFormChange(e) {
-    const { name, value } = e.target;
-    this.setState({
-      [name]: value
-    });
-  }
-
-  login(e) {
-    e.preventDefault();
+  login(values) {
     // construct the payload
     const payload = {
-      email: this.state.email,
-      password: this.state.password
+      email: values.email,
+      password: values.password
     };
     this.props.login(payload);
   }
@@ -57,31 +54,56 @@ class Login extends Component {
           />
         )}
 
-        <Form>
-          <Form.Group controlId="formEmail">
-            <Form.Label>Email address</Form.Label>
-            <Form.Control
-              type="email"
-              placeholder="Enter email"
-              name="email"
-              onChange={this.onFormChange}
-            />
-          </Form.Group>
+        <Formik
+          validationSchema={schema}
+          onSubmit={this.login}
+          initialValues={{ email: "", password: "" }}
+        >
+          {({
+            handleSubmit,
+            handleChange,
+            handleBlur,
+            values,
+            touched,
+            isValid,
+            errors
+          }) => (
+            <Form noValidate onSubmit={handleSubmit}>
+              <Form.Group controlId="formEmail">
+                <Form.Label>Email address</Form.Label>
+                <Form.Control
+                  type="email"
+                  placeholder="Enter email"
+                  name="email"
+                  value={values.email}
+                  onChange={handleChange}
+                  isInvalid={!!errors.email}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.email}
+                </Form.Control.Feedback>
+              </Form.Group>
 
-          <Form.Group controlId="formPassword">
-            <Form.Label>Password</Form.Label>
-            <Form.Control
-              type="password"
-              placeholder="Password"
-              name="password"
-              onChange={this.onFormChange}
-            />
-          </Form.Group>
-
-          <Button variant="primary" onClick={this.login}>
-            Submit
-          </Button>
-        </Form>
+              <Form.Group controlId="formPassword">
+                <Form.Label>Password</Form.Label>
+                <Form.Control
+                  type="password"
+                  placeholder="Password"
+                  name="password"
+                  value={values.password}
+                  onChange={handleChange}
+                  isInvalid={!!errors.password}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {errors.password}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <Button variant="primary" type="submit" disabled={!isValid}>
+                Submit
+              </Button>
+            </Form>
+          )}
+        </Formik>
       </div>
     );
   }

@@ -1,7 +1,7 @@
 module.exports = {
   app: {
-    env: process.env.NODE_ENV || "development",
-    port: process.env.APP_PORT || 9000,
+    env: process.env.NODE_ENV,
+    port: process.env.APP_PORT,
     sessionSecret: process.env.SESSION_SECRET,
     saltWorkFactor: process.env.SALT_WORK_FACTOR
   },
@@ -18,6 +18,6 @@ module.exports = {
   admin: {
     email: process.env.ADMIN_EMAIL,
     pass: process.env.ADMIN_PASS,
-    role: process.env.ADMIN_ROLE || "Administrator"
+    role: process.env.ADMIN_ROLE
   }
 };
