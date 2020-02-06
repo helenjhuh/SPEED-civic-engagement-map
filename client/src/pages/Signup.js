@@ -179,7 +179,7 @@ class Signup extends Component {
               <Button
                 variant="primary"
                 onClick={this.signup}
-                disabled={!isValid}
+                disabled={errors.length > 0}
               >
                 Submit
               </Button>

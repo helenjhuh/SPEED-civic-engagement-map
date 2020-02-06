@@ -1,7 +1,6 @@
 import React, { Component } from "react";
-
-// import React from "react";
 import { FPVideo, FeaturedProject } from "../components";
+import { Link } from "react-router-dom";
 
 class Home extends Component {
   constructor() {
@@ -12,7 +11,6 @@ class Home extends Component {
       projects: "",
       counter: 0
     };
-
     this.getProjects = this.getProjects.bind(this);
   }
 
@@ -27,9 +25,9 @@ class Home extends Component {
       .then(res => res.json())
       .then(res => {
         if (res.status === "error") {
-          console.log(res.message);
+          console.error(res.message);
         } else if (res.status === "fail") {
-          console.log(res.data.messsage);
+          console.warn("Failed to retrieve projects.", res.data.messsage);
         } else {
           this.setState({ projects: res.data.projects });
         }
@@ -41,7 +39,6 @@ class Home extends Component {
   render() {
     const { projects, error } = this.state;
     let { counter } = this.state;
-    // var FeaturedProjects = { p: []};
     return (
       <>
         <FPVideo url="https://www.youtube.com/embed/_4B6e8mFqUI?controls=0" />
@@ -63,16 +60,16 @@ class Home extends Component {
         {error && <p className="text-danger">{error}</p>}
 
         {/* If the projects are loaded, display them to the user in a list */}
-
-        {/* {projects &&
-          projects.map(
-            (project, i) =>
-              project.isFeatured && (
-                FeaturedProjects.p[i] = project 
-              )
-          )
-        } */}
-
+        {projects.length === 0 && (
+          <>
+            <p className="text-lead text-center">
+              It doesn't look like there are any projects created yet!
+            </p>
+            <p className="text-center">
+              <Link to="/signup">Sign up</Link> to be the first!
+            </p>
+          </>
+        )}
         {projects &&
           projects.map(
             (project, i) =>
@@ -86,7 +83,6 @@ class Home extends Component {
                     Math.random() * 10
                   )}`}
                   projectURL={`/projects/${project._id}`}
-                  // flip={i % 2 != 0}
                   flip={counter % 2 !== 0}
                 />
               ))

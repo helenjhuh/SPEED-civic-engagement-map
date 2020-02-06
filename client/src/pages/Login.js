@@ -98,7 +98,11 @@ class Login extends Component {
                   {errors.password}
                 </Form.Control.Feedback>
               </Form.Group>
-              <Button variant="primary" type="submit" disabled={!isValid}>
+              <Button
+                variant="primary"
+                type="submit"
+                disabled={errors.length > 0}
+              >
                 Submit
               </Button>
             </Form>
