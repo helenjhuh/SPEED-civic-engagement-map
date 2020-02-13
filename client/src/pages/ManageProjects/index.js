@@ -3,8 +3,6 @@ import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
-import Select from "react-select";
-import CreatableSelect from "react-select/creatable";
 
 //TODO: create edit modal component
 //TODO: atomize these commonly used arrays
@@ -348,7 +346,7 @@ class ManageProjects extends Component {
 
               <Form.Group controlId="type">
                 <Form.Label>Type</Form.Label>
-                <Select
+                {/*                 <Select
                   isMulti
                   name="type"
                   defaultValue={this.state.type.map(type => ({
@@ -359,12 +357,12 @@ class ManageProjects extends Component {
                   className="basic-multi-select"
                   classNamePrefix="select"
                   onChange={this.onEditFormChangeSelect}
-                />
+                /> */}
               </Form.Group>
 
               <Form.Group controlId="issues">
                 <Form.Label>Issues</Form.Label>
-                <Select
+                {/*                 <Select
                   isMulti
                   name="issue"
                   defaultValue={this.state.issue.map(issue => ({
@@ -375,12 +373,12 @@ class ManageProjects extends Component {
                   className="basic-multi-select"
                   classNamePrefix="select"
                   onChange={this.onEditFormChangeSelect}
-                />
+                /> */}
               </Form.Group>
 
               <Form.Group controlId="projectGrants">
                 <Form.Label>Lang Center Grants and Awards</Form.Label>
-                <Select
+                {/*                 <Select
                   isMulti
                   name="langGrants"
                   defaultValue={this.state.langGrants.map(grant => ({
@@ -391,12 +389,12 @@ class ManageProjects extends Component {
                   className="basic-multi-select"
                   classNamePrefix="select"
                   onChange={this.onEditFormChangeSelect}
-                />
+                /> */}
               </Form.Group>
 
               <Form.Group controlId="communityPartners">
                 <Form.Label>Community Partners</Form.Label>
-                <CreatableSelect
+                {/*                 <CreatableSelect
                   isMulti
                   defaultValue={this.state.communityPartners.map(part => ({
                     value: part,
@@ -404,12 +402,12 @@ class ManageProjects extends Component {
                   }))}
                   name="communityPartners"
                   onChange={this.onEditFormChangeSelect}
-                />
+                /> */}
               </Form.Group>
 
               <Form.Group controlId="formFunders">
                 <Form.Label>Funders</Form.Label>
-                <CreatableSelect
+                {/*                 <CreatableSelect
                   isMulti
                   defaultValue={this.state.funders.map(fund => ({
                     value: fund,
@@ -417,7 +415,7 @@ class ManageProjects extends Component {
                   }))}
                   name="funders"
                   onChange={this.onEditFormChangeSelect}
-                />
+                /> */}
               </Form.Group>
 
               <Form.Group controlId="beneficiaries">

@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import { Redirect } from "react-router-dom";
 import { Formik } from "formik";
 import * as yup from "yup";
+import Alert from "react-bootstrap/Alert";
 
 const mapStateToProps = state => ({
   isLoggedIn: state.auth.isLoggedIn,
@@ -14,7 +15,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  signup: payload => dispatch(actions.auth.signup(payload))
+  signup: payload => dispatch(actions.auth.signup(payload)),
+  clearErrors: () => dispatch(actions.auth.clearErrors())
 });
 
 const schema = yup.object({
@@ -55,7 +57,11 @@ class Signup extends Component {
       <div className="container">
         <h1 className="display-4 mb-4">Signup</h1>
         {/* if there's an error, display it to the user */}
-        {this.props.error && <p className="error">{this.props.error}</p>}
+        {this.props.error && (
+          <Alert variant="danger" dismissible onClose={this.props.clearErrors}>
+            {this.props.error}
+          </Alert>
+        )}
 
         {/* if the user is already logged in, redirect them to the home page */}
         {this.props.isLoggedIn && (
@@ -94,7 +100,7 @@ class Signup extends Component {
                   name="first"
                   value={values.first}
                   onChange={handleChange}
-                  isInvalid={!!errors.first}
+                  isInvalid={!touched.first || !!errors.first}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.first}
@@ -109,7 +115,7 @@ class Signup extends Component {
                   name="last"
                   values={values.last}
                   onChange={handleChange}
-                  isInvalid={!!errors.last}
+                  isInvalid={!touched.lsat || !!errors.last}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.last}
@@ -124,7 +130,7 @@ class Signup extends Component {
                   name="email"
                   values={values.email}
                   onChange={handleChange}
-                  isInvalid={!!errors.email}
+                  isInvalid={!touched.email || !!errors.email}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.email}
@@ -139,7 +145,7 @@ class Signup extends Component {
                   name="college"
                   values={values.college}
                   onChange={handleChange}
-                  isInvalid={!!errors.college}
+                  isInvalid={!touched.college || !!errors.college}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.college}
@@ -154,7 +160,7 @@ class Signup extends Component {
                   name="password"
                   values={values.password}
                   onChange={handleChange}
-                  isInvalid={!!errors.password}
+                  isInvalid={!touched.password || !!errors.password}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.password}
@@ -169,7 +175,7 @@ class Signup extends Component {
                   name="password2"
                   values={values.password2}
                   onChange={handleChange}
-                  isInvalid={!!errors.password2}
+                  isInvalid={!touched.password2 || !!errors.password2}
                 />
                 <Form.Control.Feedback type="invalid">
                   Passwords do not match!
@@ -177,9 +183,10 @@ class Signup extends Component {
               </Form.Group>
 
               <Button
+                size="lg"
                 variant="primary"
-                onClick={this.signup}
-                disabled={errors.length > 0}
+                disabled={!isValid}
+                type="submit"
               >
                 Submit
               </Button>

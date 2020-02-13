@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, {useEffect, useState} from "react";
 import { ProjectCard } from "../components";
 import { connect } from "react-redux";
 import Modal from "react-bootstrap/Modal";
@@ -6,87 +6,95 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { LinkContainer } from "react-router-bootstrap";
 import { PhotoUpload } from "../components";
-import Select from "react-select";
-import CreatableSelect from "react-select/creatable";
-
-const projectTypes = [
-  { value: "Engaged Teaching", label: "Engaged Teaching", name: "type" },
-  { value: "Engaged Research", label: "Engaged Research", name: "type" },
-  { value: "Engaged Projects", label: "Engaged Projects", name: "type" },
-  { value: "Other", label: "Other" }
-];
-const projectIssues = [
-  {
-    value: "Arts, Media, and Culture",
-    label: "Arts, Media, and Culture",
-    name: "issue"
-  },
-  {
-    value: "Economic Development",
-    label: "Economic Development",
-    name: "issue"
-  },
-  {
-    value: "Education and Access",
-    label: "Education and Access",
-    name: "issue"
-  },
-  {
-    value: "Environment and Sustainability",
-    label: "Environment and Sustainability",
-    name: "issue"
-  },
-  {
-    value: "Ethics and Human Rights",
-    label: "Ethics and Human Rights",
-    name: "issue"
-  },
-  {
-    value: "Identities and Inequality",
-    label: "Identities and Inequality",
-    name: "issue"
-  },
-  { value: "Public Health", label: "Public Health", name: "issue" },
-  {
-    value: "Politics and Public Policy",
-    label: "Politics and Public Policy",
-    name: "issue"
-  },
-  {
-    value: "Refugees and Immigration",
-    label: "Refugees and Immigration",
-    name: "issue"
-  },
-  { value: "Science and Society", label: "Science and Society", name: "issue" }
-];
-
-const projectGrants = [
-  {
-    value: "Chester Community Fellowship",
-    label: "Chester Community Fellowship",
-    name: "langGrants"
-  },
-  {
-    value: "Lang Opportunity Scholarship",
-    label: "Lang Opportunity Scholarship",
-    name: "langGrants"
-  },
-  {
-    value: "Project Pericles Fund",
-    label: "Project Pericles Fund",
-    name: "langGrants"
-  },
-  {
-    value: "Summer Grants ( projects, internships, research )",
-    label: "Summer Grants ( projects, internships, research )",
-    name: "langGrants"
-  },
-  { value: "Faculty Award", label: "Faculty Award", name: "langGrants" }
-];
+import { projectTypes, projectIssues, projectGrants } from '../selectOptions'
 
 const mapStateToProps = state => ({
   loggedInAs: state.auth.loggedInAs
 });
+
+const MyProjects = props => {
+  const {} = props;
+
+  const [showModal, setShowModal] = useState(false)
+  const [modalType, setModalType] = useState('')
+  const [projects, setProjects] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState(null)
+
+  const submitPin = async () => {
+    try {
+      setLoading(true)
+      const projectId = 'some_id'
+      const headers = { "Content-Type": "application/json" }
+      const res = await fetch(`/api/pins/add-with-address-to-project?id=${projectId}`)
+      const json = await res.json()
+    } catch (error) {
+      setError(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const removeProject = async () => {
+    const opts = { method: "DELETE" }
+    const res = await fetch(`/api/projects/${id}/delete`, opts)
+    const json = await res.json()
+    
+  }
+
+  const showCreateModal = () => {
+    setModalType('Create')
+    setShowModal(true)
+  }
+
+  const showPhotoModal = () => {
+    setModalType('Photo')
+    setShowModal(true)
+  }
+
+  const closeModals = () => {
+    setModalType('')
+    setShowModal(false)
+  }
+
+  const getUserProjects = async () => {
+    try {
+      setLoading(true)
+      const res = await fetch(`/api/projects/by-user/${this.props.loggedInAs._id}`)
+      const { data } = await json()
+      setProjects(data)
+    } catch (error) {
+      setError(error)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const geocode = async () => {
+    try {
+      setLoading(true)
+      const res = await fetch(`/api/mapbox/geocode/${payload}`)
+      const json = await res.json()
+    } catch (error) {
+      setError(error)
+    } finally {
+      setLoading(false)
+    }
+
+    const payload = this.state.location;
+      .then(res => res.json())
+      .then(res => {
+        this.setState({ geocodeResults: res.data.results.features });
+      })
+      .catch(error => this.setState({ error }));
+
+  }
+
+  return (
+
+  );
+
+}
 
 class MyProjects extends Component {
   constructor() {
@@ -115,44 +123,6 @@ class MyProjects extends Component {
       error: "",
       addPhotoModal: false
     };
-
-    // This can probably be seriously cleaned up
-    this.projectEditClick = this.projectEditClick.bind(this);
-    this.projectDeleteClick = this.projectDeleteClick.bind(this);
-    this.addPinOnClick = this.addPinOnClick.bind(this);
-    this.onAddPinFormChange = this.onAddPinFormChange.bind(this);
-    this.openAddPinModal = this.openAddPinModal.bind(this);
-    this.closeAddPinModal = this.closeAddPinModal.bind(this);
-    this.submitPin = this.submitPin.bind(this);
-    this.geocode = this.geocode.bind(this);
-    this.closeEditProjectModal = this.closeEditProjectModal.bind(this);
-    this.saveProjectEdits = this.saveProjectEdits.bind(this);
-    this.onEditFormChange = this.onEditFormChange.bind(this);
-    this.onEditFormChangeSelect = this.onEditFormChangeSelect.bind(this);
-    this.getProjectsByUser = this.getProjectsByUser.bind(this);
-    this.closeAddPhotoModal = this.closeAddPhotoModal.bind(this);
-    this.addPhotoOnClick = this.addPhotoOnClick.bind(this);
-  }
-
-  componentDidMount() {
-    this.getProjectsByUser();
-  }
-
-  getProjectsByUser() {
-    this.setState({ isLoading: true });
-    fetch(`/api/projects/by-user/${this.props.loggedInAs._id}`)
-      .then(res => res.json())
-      .then(results => this.setState({ projects: results.data.projects }))
-      .catch(error => this.setState({ error }))
-      .finally(() => this.setState({ isLoading: false }));
-  }
-
-  openAddPinModal() {
-    this.setState({ addPinModal: true });
-  }
-
-  closeAddPinModal() {
-    this.setState({ addPinModal: false });
   }
 
   submitPin() {
@@ -161,17 +131,6 @@ class MyProjects extends Component {
       lat: `${this.state.geocodeResults[0].center[0]}`,
       lng: `${this.state.geocodeResults[0].center[1]}`
     };
-    fetch(`/api/pins/add-with-address-to-project?id=${this.state.projectid}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    }).finally(() => {
-      // close the modal
-      this.closeAddPinModal();
-      // get the projects again, which will force a re-render. The newly created pin
-      // should be attached to the new data
-      this.getProjectsByUser();
-    });
   }
   onAddPinFormChange(e) {
     const { name, value } = e.target;
@@ -182,16 +141,6 @@ class MyProjects extends Component {
     if (this.state.location.length > 3) {
       this.geocode();
     }
-  }
-  geocode() {
-    // construct the payload
-    const payload = this.state.location;
-    fetch(`/api/mapbox/geocode/${payload}`)
-      .then(res => res.json())
-      .then(res => {
-        this.setState({ geocodeResults: res.data.results.features });
-      })
-      .catch(error => this.setState({ error }));
   }
   projectEditClick(project) {
     // First set the edit form state
@@ -213,37 +162,12 @@ class MyProjects extends Component {
     // Then open the edit modal
     this.openEditProjectModal();
   }
-  projectDeleteClick(id) {
-    // delete the project
-    // TODO: This should probably have some sort of delete confirmation before
-    // the action occurs
-    fetch(`/api/projects/${id}/delete`, { method: "DELETE" })
-      .then(res => res.json())
-      .then(res => {
-        // TODO: This isn't refreshing the page on a success response for some reason
-        if (res.status === "success") {
-          this.setState(this.state);
-        } else if (res.status === "failure") {
-          this.setState({ error: res.data.message });
-        } else if (res.status === "error") {
-          this.setState({ error: res.error });
-        }
-      })
-      .finally(() => {
-        // fetch the projects again
-        this.getProjectsByUser();
-      });
-  }
+  
   addPinOnClick(id) {
     this.setState({ projectid: id });
     this.openAddPinModal();
   }
-  openEditProjectModal() {
-    this.setState({ editProjectModal: true });
-  }
-  closeEditProjectModal() {
-    this.setState({ editProjectModal: false });
-  }
+  
   saveProjectEdits() {
     // make fetch (or redux) request to save edits
     // for now just output the state to make sure the correct request
@@ -388,8 +312,9 @@ class MyProjects extends Component {
 
               <Form.Group id="formProjectIssues">
                 <Form.Label>Issues</Form.Label>
-                <Select
-                  isMulti
+                <Form.Control 
+                  as="select"
+                  multiple
                   name="issue"
                   defaultValue={this.state.editForm.issue.map(issue => ({
                     value: issue,
@@ -404,8 +329,9 @@ class MyProjects extends Component {
 
               <Form.Group id="formProjectGrants">
                 <Form.Label>Lang Center Grants and Awards</Form.Label>
-                <Select
-                  isMulti
+                <Form.Control
+                  as="select"
+                  multiple 
                   name="langGrants"
                   defaultValue={this.state.editForm.langGrants.map(grant => ({
                     value: grant,
@@ -420,6 +346,12 @@ class MyProjects extends Component {
 
               <Form.Group id="formCommunityPartners">
                 <Form.Label>Community Partners</Form.Label>
+                <Form.Control
+                  as="select"
+                  multiple
+                  name="communityPartners"
+                  onChange={this.onEditFormChangeSelect}
+                />
                 <CreatableSelect
                   isMulti
                   defaultValue={this.state.editForm.communityPartners.map(
@@ -432,6 +364,13 @@ class MyProjects extends Component {
 
               <Form.Group id="formFunders">
                 <Form.Label>Funders</Form.Label>
+                <Form.Control
+                  as="select"
+                  multiple
+                  name="communityPartners"
+                  onChange={this.onEditFormChangeSelect}
+                />
+                
                 <CreatableSelect
                   isMulti
                   defaultValue={this.state.editForm.funders.map(fund => ({

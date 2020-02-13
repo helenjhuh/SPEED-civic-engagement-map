@@ -33,6 +33,8 @@ export default function(state = initialState, action) {
       return { ...state, isLoading: false, error: action.payload.message };
     case AUTH.LOGOUT:
       return initialState;
+    case AUTH.CLEAR_ERRORS:
+      return { ...state, error: null };
     default:
       return state;
   }

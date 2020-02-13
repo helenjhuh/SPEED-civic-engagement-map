@@ -6,6 +6,7 @@ import { actions } from "../store/actions";
 import { Redirect } from "react-router-dom";
 import { Formik } from "formik";
 import * as yup from "yup";
+import Alert from "react-bootstrap/Alert";
 
 const mapStateToProps = state => ({
   isLoggedIn: state.auth.isLoggedIn,
@@ -14,7 +15,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  login: payload => dispatch(actions.auth.login(payload))
+  login: payload => dispatch(actions.auth.login(payload)),
+  clearErrors: () => dispatch(actions.auth.clearErrors())
 });
 
 const schema = yup.object({
@@ -45,7 +47,11 @@ class Login extends Component {
       <div className="container">
         <h1 className="display-4 mb-4">Login</h1>
         {/* if there's an error, display it to the user */}
-        {this.props.error && <p className="error">{this.props.error}</p>}
+        {this.props.error && (
+          <Alert variant="danger" dismissible onClose={this.props.clearErrors}>
+            {this.props.error}
+          </Alert>
+        )}
 
         {/* if the user is already logged in, redirect them to the home page */}
         {this.props.isLoggedIn && (
@@ -77,7 +83,7 @@ class Login extends Component {
                   name="email"
                   value={values.email}
                   onChange={handleChange}
-                  isInvalid={!!errors.email}
+                  isInvalid={!touched.email || !!errors.email}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.email}
@@ -92,16 +98,18 @@ class Login extends Component {
                   name="password"
                   value={values.password}
                   onChange={handleChange}
-                  isInvalid={!!errors.password}
+                  isInvalid={!touched.password || !!errors.password}
                 />
                 <Form.Control.Feedback type="invalid">
                   {errors.password}
                 </Form.Control.Feedback>
               </Form.Group>
               <Button
+                type="submit"
+                size="lg"
                 variant="primary"
                 type="submit"
-                disabled={errors.length > 0}
+                disabled={!isValid}
               >
                 Submit
               </Button>
