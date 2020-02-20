@@ -9,9 +9,7 @@ const initialState = {
   auth: {
     loggedInAs: JSON.parse(user),
     isLoggedIn: user ? true : false
-  },
-  project: {},
-  pin: {}
+  }
 };
 
 const store = createStore(

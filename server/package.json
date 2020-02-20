@@ -9,7 +9,8 @@
     "start": "cross-env NODE_ENV=development node src/app.js",
     "start:dev": "cross-env NODE_ENV=development nodemon src/app.js",
     "test": "cross-env NODE_ENV=test mocha test/**/*.test.js --timeout 10000 --exit",
-    "test:dev": "cross-env NODE_ENV=test nodemon --watch . --ext js --exec \"yarn test\""
+    "test:dev": "cross-env NODE_ENV=test nodemon --watch . --ext js --exec \"yarn test\"",
+    "start:db": "docker run -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=root mongo:latest"
   },
   "author": "Swarthmore College",
   "license": "MIT",

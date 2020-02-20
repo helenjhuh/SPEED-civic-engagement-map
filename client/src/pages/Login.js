@@ -1,17 +1,101 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import { connect } from "react-redux";
 import { actions } from "../store/actions";
 import { Redirect } from "react-router-dom";
-import { Formik } from "formik";
-import * as yup from "yup";
 import Alert from "react-bootstrap/Alert";
+import { Formik, Field, ErrorMessage } from "formik";
+import loginSchema from "../validators/login";
+import Container from "react-bootstrap/Container";
+import FormControl from "react-bootstrap/FormControl";
+
+const LoginPage = props => {
+  const {
+    isLoggedIn,
+    login,
+    clearErrors,
+    location,
+    loggedInAs,
+    authError
+  } = props;
+
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async values => {
+    const { email, password } = values;
+    try {
+      setLoading(true);
+      const payload = { email, password };
+      login(payload);
+    } catch (error) {
+      setError(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const initialValues = {
+    email: "",
+    password: ""
+  };
+
+  return (
+    <Container>
+      <h1 className="display-4 mb-4">Login</h1>
+      {/* if there's an error, display it to the user */}
+
+      {authError && (
+        <Alert variant="danger" dismissible onClose={clearErrors}>
+          {authError}
+        </Alert>
+      )}
+
+      {error && (
+        <Alert variant="danger" dismissible onClose={clearErrors}>
+          {error}
+        </Alert>
+      )}
+
+      {/* if the user is already logged in, redirect them to the home page */}
+      {isLoggedIn && (
+        <Redirect to={{ pathname: "/", state: { from: location } }} />
+      )}
+
+      <Formik
+        initialValues={initialValues}
+        validationSchema={loginSchema}
+        onSubmit={handleSubmit}
+      >
+        {formik => (
+          <Form onSubmit={formik.handleSubmit}>
+            <Form.Group controlId="validationFormik01">
+              <Form.Label>Email address</Form.Label>
+              <Field name="email" type="email" as={FormControl} />
+              <ErrorMessage name="email" />
+            </Form.Group>
+
+            <Form.Group controlId="validationFormik02">
+              <Form.Label>Password</Form.Label>
+              <Field name="password" type="password" as={FormControl} />
+              <ErrorMessage name="password" />
+            </Form.Group>
+
+            <Button size="lg" type="submit" variant="primary">
+              Login
+            </Button>
+          </Form>
+        )}
+      </Formik>
+    </Container>
+  );
+};
 
 const mapStateToProps = state => ({
   isLoggedIn: state.auth.isLoggedIn,
   loggedInAs: state.auth.loggedInAs,
-  error: state.auth.error
+  authError: state.auth.error
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -19,109 +103,7 @@ const mapDispatchToProps = dispatch => ({
   clearErrors: () => dispatch(actions.auth.clearErrors())
 });
 
-const schema = yup.object({
-  email: yup
-    .string()
-    .email()
-    .required(),
-  password: yup.string().required()
-});
-
-class Login extends Component {
-  constructor() {
-    super();
-    this.login = this.login.bind(this);
-  }
-
-  login(values) {
-    // construct the payload
-    const payload = {
-      email: values.email,
-      password: values.password
-    };
-    this.props.login(payload);
-  }
-
-  render() {
-    return (
-      <div className="container">
-        <h1 className="display-4 mb-4">Login</h1>
-        {/* if there's an error, display it to the user */}
-        {this.props.error && (
-          <Alert variant="danger" dismissible onClose={this.props.clearErrors}>
-            {this.props.error}
-          </Alert>
-        )}
-
-        {/* if the user is already logged in, redirect them to the home page */}
-        {this.props.isLoggedIn && (
-          <Redirect
-            to={{ pathname: "/", state: { from: this.props.location } }}
-          />
-        )}
-
-        <Formik
-          validationSchema={schema}
-          onSubmit={this.login}
-          initialValues={{ email: "", password: "" }}
-        >
-          {({
-            handleSubmit,
-            handleChange,
-            handleBlur,
-            values,
-            touched,
-            isValid,
-            errors
-          }) => (
-            <Form noValidate onSubmit={handleSubmit}>
-              <Form.Group controlId="formEmail">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control
-                  type="email"
-                  placeholder="Enter email"
-                  name="email"
-                  value={values.email}
-                  onChange={handleChange}
-                  isInvalid={!touched.email || !!errors.email}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.email}
-                </Form.Control.Feedback>
-              </Form.Group>
-
-              <Form.Group controlId="formPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                  type="password"
-                  placeholder="Password"
-                  name="password"
-                  value={values.password}
-                  onChange={handleChange}
-                  isInvalid={!touched.password || !!errors.password}
-                />
-                <Form.Control.Feedback type="invalid">
-                  {errors.password}
-                </Form.Control.Feedback>
-              </Form.Group>
-              <Button
-                type="submit"
-                size="lg"
-                variant="primary"
-                type="submit"
-                disabled={!isValid}
-              >
-                Submit
-              </Button>
-            </Form>
-          )}
-        </Formik>
-      </div>
-    );
-  }
-}
-
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Login);
+)(LoginPage);

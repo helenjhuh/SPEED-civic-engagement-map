@@ -10,7 +10,13 @@ const initialState = {
 export default function(state = initialState, action) {
   switch (action.type) {
     case AUTH.LOGIN_REQUEST:
-      return { ...state, isLoading: true };
+      return {
+        ...state,
+        isLoading: true,
+        error: null,
+        loggedInAs: null,
+        isLoggedIn: false
+      };
     case AUTH.LOGIN_SUCCESS:
       return {
         ...state,
@@ -21,7 +27,13 @@ export default function(state = initialState, action) {
     case AUTH.LOGIN_FAILURE:
       return { ...state, isLoading: false, error: action.payload.message };
     case AUTH.SIGNUP_REQUEST:
-      return { ...state, isLoading: true };
+      return {
+        ...state,
+        isLoading: true,
+        error: null,
+        loggedInAs: null,
+        isLoggedIn: false
+      };
     case AUTH.SIGNUP_SUCCESS:
       return {
         ...state,

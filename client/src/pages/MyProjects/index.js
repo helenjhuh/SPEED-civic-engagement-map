@@ -9,13 +9,11 @@ const mapStateToProps = state => ({
 });
 
 const MyProjects = props => {
-  const {} = props;
-
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState("");
-  const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [projects, setProjects] = useState([]);
 
   const submitPin = async () => {
     try {
