@@ -17,32 +17,34 @@ const projectSchema = mongoose.Schema({
     type: String,
     required: true
   },
-  type: [
+  types: [
     {
       type: String,
-      required: true
+      default: undefined
     }
   ],
-  issue: [
+  issues: [
     {
       type: String,
-      required: true
+      default: undefined
     }
   ],
   langGrants: [
     {
-      type: String
+      type: String,
+      default: undefined
     }
   ],
   communityPartners: [
     {
       type: String,
-      required: true
+      default: undefined
     }
   ],
   funders: [
     {
-      type: String
+      type: String,
+      default: undefined
     }
   ],
   beneficiaries: {
@@ -62,10 +64,16 @@ const projectSchema = mongoose.Schema({
   pins: [
     {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Pin"
+      ref: "Pin",
+      default: undefined
     }
   ],
-  photos: [{ type: mongoose.Schema.Types.String }]
+  photos: [
+    {
+      type: mongoose.Schema.Types.String,
+      default: undefined
+    }
+  ]
 });
 
 module.exports = mongoose.model("Project", projectSchema);

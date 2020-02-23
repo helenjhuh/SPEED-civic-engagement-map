@@ -5,7 +5,11 @@ import useAPI from "../hooks/useAPI";
 
 const Home = props => {
   const url = "/api/projects";
-  const { loading, error, data = [] } = useAPI(url);
+  const { loading, error, data } = useAPI(url);
+
+  if (!data.projects) {
+    data.projects = [];
+  }
 
   return (
     <div>
@@ -29,7 +33,7 @@ const Home = props => {
 
       {loading && <p className="text-muted">Loading...</p>}
 
-      {data.length === 0 && (
+      {data && data.projects.length === 0 && (
         <div>
           <p className="text-lead text-center">
             It doesn't look like there are any projects created yet!
@@ -40,19 +44,20 @@ const Home = props => {
         </div>
       )}
 
-      {data.map(
-        ({ isFeatured, name, description, _id }) =>
-          isFeatured && (
-            <FeaturedProject
-              title={name}
-              description={description}
-              imageURL={`https://loremflickr.com/640/480?random=${Math.round(
-                Math.random() * 10
-              )}`}
-              projectURL={`/projects/${_id}`}
-            />
-          )
-      )}
+      {data &&
+        data.projects.map(
+          ({ isFeatured, name, description, _id }) =>
+            isFeatured && (
+              <FeaturedProject
+                title={name}
+                description={description}
+                imageURL={`https://loremflickr.com/640/480?random=${Math.round(
+                  Math.random() * 10
+                )}`}
+                projectURL={`/projects/${_id}`}
+              />
+            )
+        )}
     </div>
   );
 };

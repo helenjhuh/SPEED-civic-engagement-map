@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 
-export default async (url, token) => {
+const useAPI = (url, token) => {
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
   const [error, setError] = useState(null);
@@ -16,7 +16,7 @@ export default async (url, token) => {
         const opts = { headers };
         const res = await fetch(url, opts);
         const json = await res.json();
-        setData(json);
+        setData(json.data);
       } catch (error) {
         setError(error);
       } finally {
@@ -28,3 +28,5 @@ export default async (url, token) => {
 
   return { loading, data, error };
 };
+
+export default useAPI;
