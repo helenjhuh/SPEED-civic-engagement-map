@@ -6,7 +6,12 @@ import Overlay from "react-bootstrap/Overlay";
 import Alert from "react-bootstrap/Alert";
 import LoginCard from "./LoginCard";
 import SignupCard from "./SignupCard";
+import Dimmer from "./Dimmer";
 import feathers, { services } from "../feathers";
+import AboutPage from "../pages/about.page";
+import FAQPage from "../pages/faq.page";
+import ManagePage from "../pages/manage.page";
+import HomePage from "../pages/home.page";
 
 const TYPE_LOGIN_MODAL = "TYPE_LOGIN_MODAL";
 const TYPE_SIGNUP_MODAL = "TYPE_SIGNUP_MODAL";
@@ -15,9 +20,6 @@ const TYPE_SIGNUP_MODAL = "TYPE_SIGNUP_MODAL";
 const SUCCESS = "success";
 const DANGER = "danger";
 const INFO = "info";
-
-const TYPE_ERROR_ALERT = "TYPE_ERROR_ALERT";
-const TYPE_SUCCESS_ALERT = "TYPE_SUCCESS_ALERT";
 
 const Application = props => {
   const [loading, setLoading] = useState(false);
@@ -68,7 +70,6 @@ const Application = props => {
       setLoading(true);
       const payload = { strategy: "local", email, password };
       const res = await feathers.authenticate(payload);
-
       setAlertText("Logged in!");
       setAlertType(SUCCESS);
       setUser(res.user);
@@ -77,6 +78,7 @@ const Application = props => {
       setAlertText(error.message);
       setAlertType(DANGER);
     } finally {
+      closeModals();
       setLoading(false);
     }
   };
@@ -86,12 +88,13 @@ const Application = props => {
       setLoading(true);
       const payload = { first, last, email, college, password };
       await services.users.create(payload);
-      setAlertText("You can not login to your account");
+      setAlertText("You can now login to your account");
       setAlertType(SUCCESS);
     } catch (error) {
       setAlertText(error.message);
       setAlertType(DANGER);
     } finally {
+      closeModals();
       setLoading(false);
     }
   };
@@ -103,6 +106,8 @@ const Application = props => {
   return (
     <div id="Application">
       <Router>
+        <Dimmer open={showModal} />
+
         <MainNavbar
           onLogoutClick={handleLogoutClick}
           onLoginClick={handleLoginClick}
@@ -110,20 +115,19 @@ const Application = props => {
           loggedIn={token && user}
         />
 
-        <Container className="mt-3">
-          {alertText && (
+        {alertText && (
+          <Container className="container-xl">
             <Alert variant={alertType} dismissible onClose={clearAlerts}>
               {alertText}
             </Alert>
-          )}
-        </Container>
+          </Container>
+        )}
 
         <Switch>
-          <Route exact path="/">
-            <Container>
-              <p>Home</p>
-            </Container>
-          </Route>
+          <Route exact path="/" component={HomePage} />
+          <Route path="/faq" component={FAQPage} />
+          <Route path="/about" component={AboutPage} />
+          <Route path="/manage" component={ManagePage} />
         </Switch>
 
         <Overlay

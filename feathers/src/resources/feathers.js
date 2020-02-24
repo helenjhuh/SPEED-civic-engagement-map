@@ -17,7 +17,9 @@ feathers.configure(
 );
 
 const services = {
-  users: feathers.service("users")
+  users: feathers.service("users"),
+  roles: feathers.service("roles"),
+  projects: feathers.service("projects")
 };
 
 export { feathers as default, socket, services };

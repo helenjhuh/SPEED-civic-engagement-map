@@ -14,7 +14,7 @@ const MainNavbar = props => {
   } = props;
 
   return (
-    <Navbar bg="light" expand="lg">
+    <Navbar bg="light" expand="lg" className="mb-4">
       <LinkContainer to="/">
         <Navbar.Brand href="/">
           <svg width="208px" height="22px" viewBox="0 0 208 22">
@@ -44,6 +44,9 @@ const MainNavbar = props => {
           <LinkContainer to="/map">
             <Nav.Link>View map</Nav.Link>
           </LinkContainer>
+          <LinkContainer to="/manage">
+            <Nav.Link>Manage Site</Nav.Link>
+          </LinkContainer>
         </Nav>
 
         {!loggedIn && (
@@ -63,24 +66,6 @@ const MainNavbar = props => {
                 <NavDropdown.Item>My projects</NavDropdown.Item>
               </LinkContainer>
             </NavDropdown>
-
-            <LinkContainer to="/my/account">
-              <Nav.Link>Manage account</Nav.Link>
-            </LinkContainer>
-
-            {/* Only show this if the user has an admin role */}
-            <NavDropdown title="Admin" id="admin-dropdown">
-              <LinkContainer to="/manage/users">
-                <NavDropdown.Item>Manage Users</NavDropdown.Item>
-              </LinkContainer>
-              <LinkContainer to="/manage/projects">
-                <NavDropdown.Item>Manage Projects</NavDropdown.Item>
-              </LinkContainer>
-              <LinkContainer to="/manage/roles">
-                <NavDropdown.Item>Manage Roles</NavDropdown.Item>
-              </LinkContainer>
-            </NavDropdown>
-
             <Nav.Link onClick={onLogoutClick}>Logout</Nav.Link>
           </Nav>
         )}
