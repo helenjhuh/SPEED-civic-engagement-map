@@ -11,14 +11,15 @@ const ConfirmModal = props => {
     show,
     onHide
   } = props;
+
   return (
     <Modal show={show} onHide={onHide}>
       <Modal.Header closeButton>
-        <Modal.Text>{title}</Modal.Text>
+        <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <p>{message}</p>
-        <Button variant="warning" onClick={() => action}>
+        <p className="text-leader">{message}</p>
+        <Button variant="warning" onClick={action}>
           {buttonText}
         </Button>
       </Modal.Body>

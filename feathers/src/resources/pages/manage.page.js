@@ -2,13 +2,12 @@ import React, { useState, useEffect } from "react";
 import Container from "react-bootstrap/Container";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
-import feathers, { services } from "../feathers";
+import { services } from "../feathers";
 import UsersTable from "../components/UsersTable";
 import RolesTable from "../components/RolesTable";
 import ProjectsTable from "../components/ProjectsTable";
-import ConfirmModal from "../components/ConfirmModal";
-import Button from "react-bootstrap/Button";
 import UserEditModal from "../components/UserEditModal";
+import ConfirmModal from "../components/ConfirmModal";
 
 const ManagePage = props => {
   const [tabKey, setTabKey] = useState("users");
@@ -83,10 +82,25 @@ const ManagePage = props => {
     try {
       setLoading(true);
       const updatedUser = await services.users.patch(id, payload);
-      console.log(updatedUser);
     } catch (error) {
       setError(error.message);
     } finally {
+      setModalData({});
+      closeModals();
+      setLoading(false);
+    }
+  };
+
+  const deleteUser = async () => {
+    try {
+      setLoading(true);
+      const { _id } = modalData;
+      const deletedUser = await services.users.remove(_id);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setModalData({});
+      closeModals();
       setLoading(false);
     }
   };
@@ -128,7 +142,12 @@ const ManagePage = props => {
     const { _id } = role;
   };
 
-  const handleUserDeleteClick = user => {};
+  const handleUserDeleteClick = user => {
+    setModalType(DELETE_USER_MODAL);
+    setModalData(user);
+    setShowModal(true);
+  };
+
   const handleProjectDeleteClick = projects => {};
   const handleRoleDeleteClick = role => {};
 
@@ -167,22 +186,19 @@ const ManagePage = props => {
       <UserEditModal
         title="Edit User"
         description="Use this form to update a user"
-        show={EDIT_USER_MODAL && showModal}
+        show={modalType === EDIT_USER_MODAL && showModal}
+        onHide={closeModals}
         user={modalData}
         onSubmit={handleUserEditSubmit}
-        onHide={closeModals}
       />
 
-      {/*
-        <ConfirmModal 
-          show={modalType === DELETE_MODAL && showModal} 
-          onHide={closeModals} 
-          action={console.log}
-          title="Please confirm that you actually want to do this"
-          messag="This is a PERMANENT ACTION"
-          buttonText="I WANT TO DO THIS"
-        />
-      */}
+      <ConfirmModal
+        show={modalType === DELETE_USER_MODAL && showModal}
+        onHide={closeModals}
+        message="This action is permanent. Are you sure you want to proceed?"
+        buttonText="Delete User"
+        action={deleteUser}
+      />
     </Container>
   );
 };
