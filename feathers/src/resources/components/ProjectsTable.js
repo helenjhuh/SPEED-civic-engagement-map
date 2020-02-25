@@ -70,13 +70,13 @@ const ProjectsTable = props => {
                 icon={faPencilAlt}
                 fixedWidth
                 className="mr-3 text-warning"
-                onClick={project => handleEditClick(project)}
+                onClick={() => handleEditClick(project)}
               />
               <FontAwesomeIcon
                 icon={faTrashAlt}
                 fixedWidth
                 className="text-danger"
-                onCLick={project => handleDeleteClick(project)}
+                onCLick={() => handleDeleteClick(project)}
               />
             </td>
           </tr>

@@ -14,6 +14,7 @@ const RolesTable = props => {
           <th>Name</th>
           <th>Description</th>
           <th>Created On</th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -27,13 +28,13 @@ const RolesTable = props => {
                 icon={faPencilAlt}
                 fixedWidth
                 className="mr-3 text-warning"
-                onClick={role => handleEditClick(role)}
+                onClick={() => handleEditClick(role)}
               />
               <FontAwesomeIcon
                 icon={faTrashAlt}
                 fixedWidth
                 className="text-danger"
-                onCLick={role => handleDeleteClick(role)}
+                onClick={() => handleDeleteClick(role)}
               />
             </td>
           </tr>

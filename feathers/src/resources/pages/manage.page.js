@@ -7,9 +7,19 @@ import UsersTable from "../components/UsersTable";
 import RolesTable from "../components/RolesTable";
 import ProjectsTable from "../components/ProjectsTable";
 import UserEditModal from "../components/UserEditModal";
+import RoleEditModal from "../components/RoleEditModal";
 import ConfirmModal from "../components/ConfirmModal";
+import RoleCreateModal from "../components/RoleCreateModal";
+import ProjectCreateModal from "../components/ProjectCreateModal";
+import ProjectEditModal from "../components/ProjectEditModal";
+import Button from "react-bootstrap/Button";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 
 const ManagePage = props => {
+  //
+  // Page state
+  //
   const [tabKey, setTabKey] = useState("users");
   const [users, setUsers] = useState([]);
   const [projects, setProjects] = useState([]);
@@ -20,6 +30,12 @@ const ManagePage = props => {
   const [showModal, setShowModal] = useState("");
   const [modalData, setModalData] = useState({});
 
+  //
+  // Modal Types
+  //
+  const CREATE_USER_MODAL = "CREATE_USER_MODAL";
+  const CREATE_ROLE_MODAL = "CREATE_ROLE_MODAL";
+  const CREATE_PROJECT_MODAL = "CREATE_PROJECT_MODAL";
   const EDIT_USER_MODAL = "EDIT_USER_MODAL";
   const EDIT_PROJECT_MODAL = "EDIT_PROJECT_MODAL";
   const EDIT_ROLE_MODAL = "EDIT_ROLE_MODAL";
@@ -27,20 +43,32 @@ const ManagePage = props => {
   const DELETE_PROJECT_MODAL = "DELETE_PROJECT_MODAL";
   const DELETE_ROLE_MODAL = "DELETE_ROLE_MODAL";
 
-  const openModal = type => {
-    if (
-      ![EDIT_USER_MODAL, EDIT_PROJECT_MODAL, EDIT_ROLE_MODAL].includes(type)
-    ) {
-      throw new TypeError();
-    }
-    setModalType(type);
-    setShowModal(true);
-  };
-
   const closeModals = () => {
     setModalType("");
     setShowModal(false);
   };
+
+  const handleTabSelect = key => {
+    setTabKey(key);
+
+    switch (key) {
+      case "users":
+        getUsers();
+        break;
+      case "roles":
+        getRoles();
+        break;
+      case "projects":
+        getProjects();
+        break;
+      default:
+        break;
+    }
+  };
+
+  //
+  // API Functions
+  //
 
   const getUsers = async () => {
     try {
@@ -91,6 +119,58 @@ const ManagePage = props => {
     }
   };
 
+  const createRole = async payload => {
+    try {
+      setLoading(true);
+      const createdRole = await services.roles.create(payload);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setModalData({});
+      closeModals();
+      setLoading(false);
+    }
+  };
+
+  const updateRole = async (id, payload) => {
+    try {
+      setLoading(true);
+      const updatedRole = await services.roles.patch(id, payload);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setModalData({});
+      closeModals();
+      setLoading(false);
+    }
+  };
+
+  const createProject = async payload => {
+    try {
+      setLoading(true);
+      const createdProject = await services.projects.create(payload);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setModalData({});
+      closeModals();
+      setLoading(false);
+    }
+  };
+
+  const updateProject = async (id, payload) => {
+    try {
+      setLoading(true);
+      const updateProject = await services.projects.patch(id, payload);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setModalData({});
+      closeModals();
+      setLoading(false);
+    }
+  };
+
   const deleteUser = async () => {
     try {
       setLoading(true);
@@ -105,52 +185,125 @@ const ManagePage = props => {
     }
   };
 
-  const handleTabSelect = key => {
-    setTabKey(key);
-
-    switch (key) {
-      case "users":
-        getUsers();
-        break;
-      case "roles":
-        getRoles();
-        break;
-      case "projects":
-        getProjects();
-        break;
-      default:
-        break;
+  const deleteRole = async () => {
+    try {
+      setLoading(true);
+      const { _id } = modalData;
+      const deletedRole = await services.roles.remove(_id);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setModalData({});
+      closeModals();
+      setLoading(false);
     }
   };
 
+  const deleteProject = async () => {
+    try {
+      setLoading(true);
+      const { _id } = modalData;
+      const deletedProject = await services.projects.remove(_id);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setModalData({});
+      closeModals();
+      setLoading(false);
+    }
+  };
+
+  //
+  // User handler functions
+  //
   const handleUserEditClick = user => {
     setModalType(EDIT_USER_MODAL);
     setModalData(user);
     setShowModal(true);
   };
-
   const handleUserEditSubmit = user => {
     const { _id, ...rest } = user;
     updateUser(_id, rest);
   };
-
-  const handleProjectEditClick = project => {
-    const { _id } = project;
-  };
-
-  const handleRoleEditClick = role => {
-    const { _id } = role;
-  };
-
   const handleUserDeleteClick = user => {
     setModalType(DELETE_USER_MODAL);
     setModalData(user);
     setShowModal(true);
   };
 
-  const handleProjectDeleteClick = projects => {};
-  const handleRoleDeleteClick = role => {};
+  //
+  // Role handler functions
+  //
+  const handleRoleCreateClick = () => {
+    setModalType(CREATE_ROLE_MODAL);
+    // @note: The role parameter maps to formik's intial values
+    setModalData({ name: "", description: "" });
+    setShowModal(true);
+  };
+  const handleRoleCreateSubmit = role => {
+    createRole(role);
+  };
+  const handleRoleEditClick = role => {
+    setModalType(EDIT_ROLE_MODAL);
+    setModalData(role);
+    setShowModal(true);
+  };
+  const handleRoleEditSubmit = role => {
+    const { _id, ...rest } = role;
+    updateRole(_id, rest);
+  };
+  const handleRoleDeleteClick = role => {
+    setModalType(DELETE_ROLE_MODAL);
+    setModalData(role);
+    setShowModal(true);
+  };
 
+  //
+  // Project handler functions
+  //
+  const handleProjectCreateClick = () => {
+    setModalType(CREATE_PROJECT_MODAL);
+    // @note: The role parameter maps to formik's intial values
+    const initialState = {
+      name: "",
+      description: "",
+      website: "",
+      street1: "",
+      street2: "",
+      city: "",
+      region: "",
+      zip: "",
+      country: ""
+    };
+    setModalData(initialState);
+    setShowModal(true);
+  };
+
+  const handleProjectCreateSubmit = project => {
+    // Send request to API
+    // API should have a hook to geolocate address and add lat/lng
+    // Before posting it to the database
+  };
+
+  const handleProjectEditClick = project => {
+    setModalType(EDIT_PROJECT_MODAL);
+    setModalData(project);
+    setShowModal(true);
+  };
+
+  const handleProjectEditSubmit = projects => {
+    console.log({ project });
+  };
+
+  const handleProjectDeleteClick = project => {
+    setModalType(DELETE_PROJECT_MODAL);
+    setModalData(project);
+    setShowModal(true);
+  };
+
+  //
+  // Render
+  //
   return (
     <Container className="container-lg">
       <h1 className="mb-4">Manage Site</h1>
@@ -160,6 +313,10 @@ const ManagePage = props => {
 
       <Tabs activeKey={tabKey} onSelect={handleTabSelect}>
         <Tab eventKey="users" title="Users">
+          <Button className="my-3 float-right" disabled variant="success">
+            <FontAwesomeIcon icon={faPlusCircle} fixedWidth className="mr-2" />
+            New User
+          </Button>
           <UsersTable
             users={users}
             handleEditClick={handleUserEditClick}
@@ -167,6 +324,14 @@ const ManagePage = props => {
           />
         </Tab>
         <Tab eventKey="projects" title="Projects">
+          <Button
+            className="my-3 float-right"
+            onClick={handleProjectCreateClick}
+            variant="success"
+          >
+            <FontAwesomeIcon icon={faPlusCircle} fixedWidth className="mr-2" />
+            New Project
+          </Button>
           <ProjectsTable
             projects={projects}
             handleEditClick={handleProjectEditClick}
@@ -174,6 +339,14 @@ const ManagePage = props => {
           />
         </Tab>
         <Tab eventKey="roles" title="Roles">
+          <Button
+            className="my-3 float-right"
+            onClick={handleRoleCreateClick}
+            variant="success"
+          >
+            <FontAwesomeIcon icon={faPlusCircle} fixedWidth className="mr-2" />
+            New Role
+          </Button>
           <RolesTable
             roles={roles}
             handleEditClick={handleRoleEditClick}
@@ -182,7 +355,7 @@ const ManagePage = props => {
         </Tab>
       </Tabs>
 
-      {/* when the user clicks hte edit icon for a resource, a modal should display with a form to edit that resource*/}
+      {/* keep all modals here, or in a seperate file */}
       <UserEditModal
         title="Edit User"
         description="Use this form to update a user"
@@ -192,12 +365,60 @@ const ManagePage = props => {
         onSubmit={handleUserEditSubmit}
       />
 
+      <RoleCreateModal
+        show={modalType === CREATE_ROLE_MODAL && showModal}
+        onHide={closeModals}
+        role={modalData}
+        onSubmit={handleRoleCreateSubmit}
+      />
+
+      <RoleEditModal
+        title="Edit Role"
+        description="Use this form to update a role"
+        show={modalType === EDIT_ROLE_MODAL && showModal}
+        onHide={closeModals}
+        role={modalData}
+        onSubmit={handleRoleEditSubmit}
+      />
+
+      <ProjectCreateModal
+        show={modalType === CREATE_PROJECT_MODAL && showModal}
+        onHide={closeModals}
+        project={modalData}
+        onSubmit={handleProjectCreateSubmit}
+      />
+
+      <ProjectEditModal
+        show={modalType === EDIT_PROJECT_MODAL && showModal}
+        title="Edit Project"
+        description="Use this form to update a project"
+        onHide={closeModals}
+        project={modalData}
+        onSubmit={handleProjectEditSubmit}
+      />
+
       <ConfirmModal
         show={modalType === DELETE_USER_MODAL && showModal}
         onHide={closeModals}
         message="This action is permanent. Are you sure you want to proceed?"
         buttonText="Delete User"
         action={deleteUser}
+      />
+
+      <ConfirmModal
+        show={modalType === DELETE_ROLE_MODAL && showModal}
+        onHide={closeModals}
+        message="This action is permanent. Are you sure you want to proceed?"
+        buttonText="Delete Role"
+        action={deleteRole}
+      />
+
+      <ConfirmModal
+        show={modalType === DELETE_PROJECT_MODAL && showModal}
+        onHide={closeModals}
+        message="This action is permanent. Are you sure you want to proceed?"
+        buttonText="Delete Project"
+        action={deleteProject}
       />
     </Container>
   );

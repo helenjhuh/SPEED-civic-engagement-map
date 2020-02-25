@@ -53,7 +53,7 @@ const UserForm = props => {
             />
           </Form.Group>
 
-          <Button type="submit">Update</Button>
+          <Button type="submit">Submit</Button>
         </Form>
       )}
     </Formik>
