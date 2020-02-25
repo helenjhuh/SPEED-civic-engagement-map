@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import MainNavbar from "./MainNavbar";
 import Container from "react-bootstrap/Container";
@@ -103,6 +103,15 @@ const Application = props => {
     await feathers.logout();
     document.location.href = "/";
   };
+
+  useEffect(() => {
+    // hate to use this syntax here when everything else async/await
+    // but it looks cleaner like this
+    feathers.reAuthenticate().then(({ user, accessToken }) => {
+      setUser(user);
+      setToken(accessToken);
+    });
+  });
 
   return (
     <div id="Application">
