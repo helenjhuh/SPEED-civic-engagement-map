@@ -101,6 +101,7 @@ const Application = props => {
 
   const logout = async () => {
     await feathers.logout();
+    document.location.href = "/";
   };
 
   return (

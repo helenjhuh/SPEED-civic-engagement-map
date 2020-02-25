@@ -7,6 +7,8 @@ import UsersTable from "../components/UsersTable";
 import RolesTable from "../components/RolesTable";
 import ProjectsTable from "../components/ProjectsTable";
 import ConfirmModal from "../components/ConfirmModal";
+import Button from "react-bootstrap/Button";
+import UserEditModal from "../components/UserEditModal";
 
 const ManagePage = props => {
   const [tabKey, setTabKey] = useState("users");
@@ -17,15 +19,21 @@ const ManagePage = props => {
   const [error, setError] = useState(null);
   const [modalType, setModalType] = useState("");
   const [showModal, setShowModal] = useState("");
+  const [modalData, setModalData] = useState({});
 
-  const EDIT_MODAL = "EDIT_MDOAL";
-  const DELETE_MODAL = "DELETE_MODAL"; // this is a confirmation modal, ie. are you sure you want to delete this resource
+  const EDIT_USER_MODAL = "EDIT_USER_MODAL";
+  const EDIT_PROJECT_MODAL = "EDIT_PROJECT_MODAL";
+  const EDIT_ROLE_MODAL = "EDIT_ROLE_MODAL";
+  const DELETE_USER_MODAL = "DELETE_USER_MODAL";
+  const DELETE_PROJECT_MODAL = "DELETE_PROJECT_MODAL";
+  const DELETE_ROLE_MODAL = "DELETE_ROLE_MODAL";
 
   const openModal = type => {
-    if (![EDIT_MODAL, DELETE_MODAL].includes(type)) {
+    if (
+      ![EDIT_USER_MODAL, EDIT_PROJECT_MODAL, EDIT_ROLE_MODAL].includes(type)
+    ) {
       throw new TypeError();
     }
-
     setModalType(type);
     setShowModal(true);
   };
@@ -39,7 +47,6 @@ const ManagePage = props => {
     try {
       setLoading(true);
       const { data, total, limit, skip } = await services.users.find();
-      console.log({ data, total, limit, skip });
       setUsers(data);
     } catch (error) {
       setError(error.message);
@@ -72,6 +79,18 @@ const ManagePage = props => {
     }
   };
 
+  const updateUser = async (id, payload) => {
+    try {
+      setLoading(true);
+      const updatedUser = await services.users.patch(id, payload);
+      console.log(updatedUser);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleTabSelect = key => {
     setTabKey(key);
 
@@ -91,8 +110,14 @@ const ManagePage = props => {
   };
 
   const handleUserEditClick = user => {
-    const { _id } = user;
-    console.log(user);
+    setModalType(EDIT_USER_MODAL);
+    setModalData(user);
+    setShowModal(true);
+  };
+
+  const handleUserEditSubmit = user => {
+    const { _id, ...rest } = user;
+    updateUser(_id, rest);
   };
 
   const handleProjectEditClick = project => {
@@ -101,8 +126,11 @@ const ManagePage = props => {
 
   const handleRoleEditClick = role => {
     const { _id } = role;
-    console.log(role);
   };
+
+  const handleUserDeleteClick = user => {};
+  const handleProjectDeleteClick = projects => {};
+  const handleRoleDeleteClick = role => {};
 
   return (
     <Container className="container-lg">
@@ -113,18 +141,37 @@ const ManagePage = props => {
 
       <Tabs activeKey={tabKey} onSelect={handleTabSelect}>
         <Tab eventKey="users" title="Users">
-          <UsersTable users={users} handleEditClick={handleUserEditClick} />
+          <UsersTable
+            users={users}
+            handleEditClick={handleUserEditClick}
+            handleDeleteClick={handleUserDeleteClick}
+          />
         </Tab>
         <Tab eventKey="projects" title="Projects">
           <ProjectsTable
             projects={projects}
             handleEditClick={handleProjectEditClick}
+            handleDeleteClick={handleProjectDeleteClick}
           />
         </Tab>
         <Tab eventKey="roles" title="Roles">
-          <RolesTable roles={roles} handleEditClick={handleRoleEditClick} />
+          <RolesTable
+            roles={roles}
+            handleEditClick={handleRoleEditClick}
+            handleDeleteClick={handleRoleDeleteClick}
+          />
         </Tab>
       </Tabs>
+
+      {/* when the user clicks hte edit icon for a resource, a modal should display with a form to edit that resource*/}
+      <UserEditModal
+        title="Edit User"
+        description="Use this form to update a user"
+        show={EDIT_USER_MODAL && showModal}
+        user={modalData}
+        onSubmit={handleUserEditSubmit}
+        onHide={closeModals}
+      />
 
       {/*
         <ConfirmModal 

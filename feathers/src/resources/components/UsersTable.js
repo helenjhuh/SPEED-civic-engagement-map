@@ -32,13 +32,13 @@ const UsersTable = props => {
                 icon={faPencilAlt}
                 fixedWidth
                 className="mr-3 text-warning"
-                onClick={user => handleEditClick(user)}
+                onClick={() => handleEditClick(user)}
               />
               <FontAwesomeIcon
                 icon={faTrashAlt}
                 fixedWidth
                 className="text-danger"
-                onClick={user => handleDeleteClick(user)}
+                onClick={() => handleDeleteClick(user)}
               />
             </td>
           </tr>
