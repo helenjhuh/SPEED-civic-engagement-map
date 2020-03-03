@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Container from "react-bootstrap/Container";
 import Tabs from "react-bootstrap/Tabs";
 import Tab from "react-bootstrap/Tab";
@@ -6,6 +6,7 @@ import { services } from "../feathers";
 import UsersTable from "../components/UsersTable";
 import RolesTable from "../components/RolesTable";
 import ProjectsTable from "../components/ProjectsTable";
+import UserCreateModal from "../components/UserCreateModal";
 import UserEditModal from "../components/UserEditModal";
 import RoleEditModal from "../components/RoleEditModal";
 import ConfirmModal from "../components/ConfirmModal";
@@ -16,7 +17,7 @@ import Button from "react-bootstrap/Button";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
 
-const ManagePage = props => {
+const ManagePage = () => {
   //
   // Page state
   //
@@ -50,7 +51,6 @@ const ManagePage = props => {
 
   const handleTabSelect = key => {
     setTabKey(key);
-
     switch (key) {
       case "users":
         getUsers();
@@ -70,6 +70,22 @@ const ManagePage = props => {
   // API Functions
   //
 
+  //
+  // User actions
+  //
+  const createUser = async payload => {
+    try {
+      setLoading(true);
+      const createdUser = await services.users.create(payload);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setModalData({});
+      closeModals();
+      setLoading(false);
+    }
+  };
+
   const getUsers = async () => {
     try {
       setLoading(true);
@@ -82,86 +98,10 @@ const ManagePage = props => {
     }
   };
 
-  const getProjects = async () => {
-    try {
-      setLoading(true);
-      const { data, total, limit, skip } = await services.projects.find();
-      setProjects(data);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const getRoles = async () => {
-    try {
-      setLoading(true);
-      const { data, total, limit, skip } = await services.roles.find();
-      setRoles(data);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const updateUser = async (id, payload) => {
     try {
       setLoading(true);
       const updatedUser = await services.users.patch(id, payload);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setModalData({});
-      closeModals();
-      setLoading(false);
-    }
-  };
-
-  const createRole = async payload => {
-    try {
-      setLoading(true);
-      const createdRole = await services.roles.create(payload);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setModalData({});
-      closeModals();
-      setLoading(false);
-    }
-  };
-
-  const updateRole = async (id, payload) => {
-    try {
-      setLoading(true);
-      const updatedRole = await services.roles.patch(id, payload);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setModalData({});
-      closeModals();
-      setLoading(false);
-    }
-  };
-
-  const createProject = async payload => {
-    try {
-      setLoading(true);
-      const createdProject = await services.projects.create(payload);
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setModalData({});
-      closeModals();
-      setLoading(false);
-    }
-  };
-
-  const updateProject = async (id, payload) => {
-    try {
-      setLoading(true);
-      const updateProject = await services.projects.patch(id, payload);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -185,11 +125,93 @@ const ManagePage = props => {
     }
   };
 
+  //
+  // Role actions
+  //
+  const createRole = async payload => {
+    try {
+      setLoading(true);
+      const createdRole = await services.roles.create(payload);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setModalData({});
+      closeModals();
+      setLoading(false);
+    }
+  };
+
+  const getRoles = async () => {
+    try {
+      setLoading(true);
+      const { data, total, limit, skip } = await services.roles.find();
+      setRoles(data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateRole = async (id, payload) => {
+    try {
+      setLoading(true);
+      const updatedRole = await services.roles.patch(id, payload);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setModalData({});
+      closeModals();
+      setLoading(false);
+    }
+  };
+
   const deleteRole = async () => {
     try {
       setLoading(true);
       const { _id } = modalData;
       const deletedRole = await services.roles.remove(_id);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setModalData({});
+      closeModals();
+      setLoading(false);
+    }
+  };
+
+  //
+  // Project actions
+  //
+  const createProject = async payload => {
+    try {
+      setLoading(true);
+      const createdProject = await services.projects.create(payload);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setModalData({});
+      closeModals();
+      setLoading(false);
+    }
+  };
+
+  const getProjects = async () => {
+    try {
+      setLoading(true);
+      const { data, total, limit, skip } = await services.projects.find();
+      setProjects(data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateProject = async (id, payload) => {
+    try {
+      setLoading(true);
+      const updateProject = await services.projects.patch(id, payload);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -216,15 +238,36 @@ const ManagePage = props => {
   //
   // User handler functions
   //
+
+  const handleUserCreateSubmit = user => {
+    createUser(user);
+  };
+
+  const handleUserCreateClick = () => {
+    setModalType(CREATE_USER_MODAL);
+    const initialState = {
+      first: "",
+      last: "",
+      email: "",
+      password: "",
+      password2: "",
+      college: ""
+    };
+    setModalData(initialState);
+    setShowModal(true);
+  };
+
   const handleUserEditClick = user => {
     setModalType(EDIT_USER_MODAL);
     setModalData(user);
     setShowModal(true);
   };
+
   const handleUserEditSubmit = user => {
     const { _id, ...rest } = user;
     updateUser(_id, rest);
   };
+
   const handleUserDeleteClick = user => {
     setModalType(DELETE_USER_MODAL);
     setModalData(user);
@@ -237,7 +280,11 @@ const ManagePage = props => {
   const handleRoleCreateClick = () => {
     setModalType(CREATE_ROLE_MODAL);
     // @note: The role parameter maps to formik's intial values
-    setModalData({ name: "", description: "" });
+    const initialState = {
+      name: "",
+      description: ""
+    };
+    setModalData(initialState);
     setShowModal(true);
   };
   const handleRoleCreateSubmit = role => {
@@ -283,6 +330,7 @@ const ManagePage = props => {
     // Send request to API
     // API should have a hook to geolocate address and add lat/lng
     // Before posting it to the database
+    console.log({ project });
   };
 
   const handleProjectEditClick = project => {
@@ -291,7 +339,7 @@ const ManagePage = props => {
     setShowModal(true);
   };
 
-  const handleProjectEditSubmit = projects => {
+  const handleProjectEditSubmit = project => {
     console.log({ project });
   };
 
@@ -305,7 +353,7 @@ const ManagePage = props => {
   // Render
   //
   return (
-    <Container className="container-lg">
+    <Container fluid className="px-5">
       <h1 className="mb-4">Manage Site</h1>
 
       {loading && <p className="text-muted">Getting your data...</p>}
@@ -313,7 +361,11 @@ const ManagePage = props => {
 
       <Tabs activeKey={tabKey} onSelect={handleTabSelect}>
         <Tab eventKey="users" title="Users">
-          <Button className="my-3 float-right" disabled variant="success">
+          <Button
+            className="my-3 float-right"
+            onClick={handleUserCreateClick}
+            variant="success"
+          >
             <FontAwesomeIcon icon={faPlusCircle} fixedWidth className="mr-2" />
             New User
           </Button>
@@ -356,6 +408,13 @@ const ManagePage = props => {
       </Tabs>
 
       {/* keep all modals here, or in a seperate file */}
+      <UserCreateModal
+        show={modalType === CREATE_USER_MODAL && showModal}
+        onHide={closeModals}
+        user={modalData}
+        onSubmit={handleUserCreateSubmit}
+      />
+
       <UserEditModal
         title="Edit User"
         description="Use this form to update a user"

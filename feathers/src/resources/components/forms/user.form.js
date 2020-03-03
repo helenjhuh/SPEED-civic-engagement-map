@@ -11,7 +11,12 @@ const validationSchema = yup.object({
     .string()
     .email()
     .required(),
-  college: yup.string()
+  college: yup.string(),
+  password: yup.string().required(),
+  password2: yup
+    .string()
+    .oneOf([yup.ref("password"), null])
+    .required()
 });
 
 const UserForm = props => {
@@ -48,6 +53,26 @@ const UserForm = props => {
             <Field name="college" type="text" as={Form.Control} />
             <ErrorMessage
               name="college"
+              className="text-danger"
+              component="p"
+            />
+          </Form.Group>
+
+          <Form.Group controlId="formik_password">
+            <Form.Label>Password</Form.Label>
+            <Field name="password" type="password" as={Form.Control} />
+            <ErrorMessage
+              name="password"
+              className="text-danger"
+              component="p"
+            />
+          </Form.Group>
+
+          <Form.Group controlId="formik_password2">
+            <Form.Label>Confirm Password</Form.Label>
+            <Field name="password2" type="password" as={Form.Control} />
+            <ErrorMessage
+              name="password2"
               className="text-danger"
               component="p"
             />
