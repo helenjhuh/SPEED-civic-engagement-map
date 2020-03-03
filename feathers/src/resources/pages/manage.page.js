@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Container from 'react-bootstrap/Container';
 import Tabs from 'react-bootstrap/Tabs';
 import Tab from 'react-bootstrap/Tab';
-import { services } from '../feathers';
+import feathers, { services } from '../feathers';
 import UsersTable from '../components/UsersTable';
 import RolesTable from '../components/RolesTable';
 import ProjectsTable from '../components/ProjectsTable';
@@ -183,21 +183,64 @@ const ManagePage = () => {
   //
   // Project actions
   //
-  const createProject = async payload => {
+  const createProject = async project => {
     try {
       setLoading(true);
+      const { user } = await feathers.get('authentication');     
+
+      // destructure this, it looks messy, but makes contructing the 
+      // needed requests easier, since the project var is used in the
+      // creation of different resources
+      const { 
+        name, 
+        description, 
+        types, 
+        issues, 
+        langGrants, 
+        communityPartners, 
+        funders, 
+        beneficiaries, 
+        website, 
+        street1, 
+        street2, 
+        city, 
+        region, 
+        zip, 
+        country } = project
+
       // first we need to geocode the address
       const opts = {
         query: {
-          query: 'Swarthmore College, Swarthmore, PA, 19081',
-          limit: 10
+          query: `${street1} ${street2} ${city} ${region} ${zip}`,
+          limit: 5
         }
       };
-      const results = await services.mapbox.find(opts);
 
-      console.log({ results });
+      const [result] = await services.mapbox.find(opts);
+      const [lat,lng] = result.center
 
-      //const createdProject = await services.projects.create(payload);
+      // we need to create an address record for the project
+      const addressPayload = {
+        street1, street2, city, region, zip, country, lat, lng 
+      }
+      const {_id: addressId} = await services.addresses.create(addressPayload)
+
+      const projectPayload = {
+        verified: false,
+        featured: false,
+        name,
+        description,
+        types,
+        issues,
+        langGrants,
+        communityPartners,
+        funders,
+        beneficiaries,
+        website,
+        owner: user._id, 
+        address: addressId
+      }
+      const createdProject = await services.projects.create(projectPayload);
     } catch (error) {
       setError(error.message);
     } finally {

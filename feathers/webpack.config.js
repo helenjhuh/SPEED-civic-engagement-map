@@ -4,9 +4,6 @@ module.exports = {
   mode: process.env.NODE_ENV || 'development',
 
   entry: {
-    api: {
-      
-    },
     frontend: path.resolve(__dirname, 'src', 'resources', 'frontend.js')
   },
 

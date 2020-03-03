@@ -20,7 +20,8 @@ const services = {
   users: feathers.service('users'),
   roles: feathers.service('roles'),
   projects: feathers.service('projects'),
-  mapbox: feathers.service('mapbox')
+  mapbox: feathers.service('mapbox'),
+  addresses: feathers.service('addresses')
 };
 
 export { feathers as default, socket, services };
