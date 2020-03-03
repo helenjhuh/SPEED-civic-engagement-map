@@ -1,6 +1,6 @@
-import React from "react";
-import UserForm from "../components/forms/user.form";
-import Modal from "react-bootstrap/Modal";
+import React from 'react';
+import UserForm from '../components/forms/user.form';
+import Modal from 'react-bootstrap/Modal';
 
 const UserCreateModal = props => {
   const { show, onHide, onSubmit, user } = props;

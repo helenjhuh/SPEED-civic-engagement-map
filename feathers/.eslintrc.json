@@ -2,12 +2,17 @@
   "env": {
     "es6": true,
     "node": true,
-    "mocha": true
+    "mocha": true,
+    "browser": true
   },
   "parserOptions": {
+    "sourceType": "module",
     "ecmaVersion": 2018
   },
-  "extends": "eslint:recommended",
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended" 
+  ],
   "rules": {
     "indent": [
       "error",
@@ -24,6 +29,13 @@
     "semi": [
       "error",
       "always"
+    ],
+    "no-unused-vars": [
+      "warn"
+    ],
+    "react/prop-types": [
+      "warn"
     ]
   }
 }
+

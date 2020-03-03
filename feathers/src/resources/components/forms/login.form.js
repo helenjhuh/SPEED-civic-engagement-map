@@ -1,8 +1,8 @@
-import React from "react";
-import Form from "react-bootstrap/Form";
-import Button from "react-bootstrap/Button";
-import { Formik, Field, ErrorMessage } from "formik";
-import * as yup from "yup";
+import React from 'react';
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+import { Formik, Field, ErrorMessage } from 'formik';
+import * as yup from 'yup';
 
 const validationSchema = yup.object({
   email: yup
@@ -13,8 +13,8 @@ const validationSchema = yup.object({
 });
 
 const initialValues = {
-  email: "",
-  password: ""
+  email: '',
+  password: ''
 };
 
 const LoginForm = props => {

@@ -3,8 +3,8 @@
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
 module.exports = function(app) {
-  const modelName = "users";
-  const mongooseClient = app.get("mongooseClient");
+  const modelName = 'users';
+  const mongooseClient = app.get('mongooseClient');
   const schema = new mongooseClient.Schema(
     {
       first: { type: String, required: true },

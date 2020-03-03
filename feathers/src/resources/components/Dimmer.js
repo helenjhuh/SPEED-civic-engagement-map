@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 
 const Dimmer = props => {
   const { open } = props;
@@ -6,15 +6,15 @@ const Dimmer = props => {
     return (
       <div
         style={{
-          width: "100vw",
-          height: "100vh",
-          backgroundColor: "rgb(0,0,0)",
+          width: '100vw',
+          height: '100vh',
+          backgroundColor: 'rgb(0,0,0)',
           opacity: 0.6,
           zIndex: 5000,
-          position: "absolute",
+          position: 'absolute',
           top: 0,
           left: 0,
-          transition: "opacity 0.15s"
+          transition: 'opacity 0.15s'
         }}
       />
     );

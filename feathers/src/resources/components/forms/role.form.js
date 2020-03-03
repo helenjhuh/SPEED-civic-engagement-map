@@ -1,8 +1,8 @@
-import React from "react";
-import { Formik, Field, ErrorMessage } from "formik";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import * as yup from "yup";
+import React from 'react';
+import { Formik, Field, ErrorMessage } from 'formik';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import * as yup from 'yup';
 
 const validationSchema = yup.object({
   name: yup.string().required(),

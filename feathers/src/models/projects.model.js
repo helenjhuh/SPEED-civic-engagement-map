@@ -3,8 +3,8 @@
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
 module.exports = function(app) {
-  const modelName = "projects";
-  const mongooseClient = app.get("mongooseClient");
+  const modelName = 'projects';
+  const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
   const { Types } = Schema;
   const schema = new Schema(
@@ -20,10 +20,10 @@ module.exports = function(app) {
       funders: [{ type: String, default: undefined }],
       beneficiaries: { type: Number },
       website: { type: String },
-      owner: { type: Types.ObjectId, ref: "users" },
-      address: { type: Types.ObjectId, ref: "addresses" },
-      pins: [{ type: Types.ObjectId, ref: "pins", default: undefined }],
-      photos: [{ type: Types.ObjectId, ref: "photos", default: undefined }]
+      owner: { type: Types.ObjectId, ref: 'users' },
+      address: { type: Types.ObjectId, ref: 'addresses' },
+      pins: [{ type: Types.ObjectId, ref: 'pins', default: undefined }],
+      photos: [{ type: Types.ObjectId, ref: 'photos', default: undefined }]
     },
     {
       timestamps: true

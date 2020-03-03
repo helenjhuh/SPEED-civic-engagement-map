@@ -1,12 +1,12 @@
-import React from "react";
-import Modal from "react-bootstrap/Modal";
-import Button from "react-bootstrap/Button";
+import React from 'react';
+import Modal from 'react-bootstrap/Modal';
+import Button from 'react-bootstrap/Button';
 
 const ConfirmModal = props => {
   const {
-    title = "Confirm your action",
+    title = 'Confirm your action',
     message,
-    buttonText = "Confirm",
+    buttonText = 'Confirm',
     action,
     show,
     onHide

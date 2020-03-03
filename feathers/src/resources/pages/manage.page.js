@@ -1,68 +1,68 @@
-import React, { useState } from "react";
-import Container from "react-bootstrap/Container";
-import Tabs from "react-bootstrap/Tabs";
-import Tab from "react-bootstrap/Tab";
-import { services } from "../feathers";
-import UsersTable from "../components/UsersTable";
-import RolesTable from "../components/RolesTable";
-import ProjectsTable from "../components/ProjectsTable";
-import UserCreateModal from "../components/UserCreateModal";
-import UserEditModal from "../components/UserEditModal";
-import RoleEditModal from "../components/RoleEditModal";
-import ConfirmModal from "../components/ConfirmModal";
-import RoleCreateModal from "../components/RoleCreateModal";
-import ProjectCreateModal from "../components/ProjectCreateModal";
-import ProjectEditModal from "../components/ProjectEditModal";
-import Button from "react-bootstrap/Button";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+import React, { useState } from 'react';
+import Container from 'react-bootstrap/Container';
+import Tabs from 'react-bootstrap/Tabs';
+import Tab from 'react-bootstrap/Tab';
+import { services } from '../feathers';
+import UsersTable from '../components/UsersTable';
+import RolesTable from '../components/RolesTable';
+import ProjectsTable from '../components/ProjectsTable';
+import UserCreateModal from '../components/UserCreateModal';
+import UserEditModal from '../components/UserEditModal';
+import RoleEditModal from '../components/RoleEditModal';
+import ConfirmModal from '../components/ConfirmModal';
+import RoleCreateModal from '../components/RoleCreateModal';
+import ProjectCreateModal from '../components/ProjectCreateModal';
+import ProjectEditModal from '../components/ProjectEditModal';
+import Button from 'react-bootstrap/Button';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
 
 const ManagePage = () => {
   //
   // Page state
   //
-  const [tabKey, setTabKey] = useState("users");
+  const [tabKey, setTabKey] = useState('users');
   const [users, setUsers] = useState([]);
   const [projects, setProjects] = useState([]);
   const [roles, setRoles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [modalType, setModalType] = useState("");
-  const [showModal, setShowModal] = useState("");
+  const [modalType, setModalType] = useState('');
+  const [showModal, setShowModal] = useState('');
   const [modalData, setModalData] = useState({});
 
   //
   // Modal Types
   //
-  const CREATE_USER_MODAL = "CREATE_USER_MODAL";
-  const CREATE_ROLE_MODAL = "CREATE_ROLE_MODAL";
-  const CREATE_PROJECT_MODAL = "CREATE_PROJECT_MODAL";
-  const EDIT_USER_MODAL = "EDIT_USER_MODAL";
-  const EDIT_PROJECT_MODAL = "EDIT_PROJECT_MODAL";
-  const EDIT_ROLE_MODAL = "EDIT_ROLE_MODAL";
-  const DELETE_USER_MODAL = "DELETE_USER_MODAL";
-  const DELETE_PROJECT_MODAL = "DELETE_PROJECT_MODAL";
-  const DELETE_ROLE_MODAL = "DELETE_ROLE_MODAL";
+  const CREATE_USER_MODAL = 'CREATE_USER_MODAL';
+  const CREATE_ROLE_MODAL = 'CREATE_ROLE_MODAL';
+  const CREATE_PROJECT_MODAL = 'CREATE_PROJECT_MODAL';
+  const EDIT_USER_MODAL = 'EDIT_USER_MODAL';
+  const EDIT_PROJECT_MODAL = 'EDIT_PROJECT_MODAL';
+  const EDIT_ROLE_MODAL = 'EDIT_ROLE_MODAL';
+  const DELETE_USER_MODAL = 'DELETE_USER_MODAL';
+  const DELETE_PROJECT_MODAL = 'DELETE_PROJECT_MODAL';
+  const DELETE_ROLE_MODAL = 'DELETE_ROLE_MODAL';
 
   const closeModals = () => {
-    setModalType("");
+    setModalType('');
     setShowModal(false);
   };
 
   const handleTabSelect = key => {
     setTabKey(key);
     switch (key) {
-      case "users":
-        getUsers();
-        break;
-      case "roles":
-        getRoles();
-        break;
-      case "projects":
-        getProjects();
-        break;
-      default:
-        break;
+    case 'users':
+      getUsers();
+      break;
+    case 'roles':
+      getRoles();
+      break;
+    case 'projects':
+      getProjects();
+      break;
+    default:
+      break;
     }
   };
 
@@ -186,7 +186,18 @@ const ManagePage = () => {
   const createProject = async payload => {
     try {
       setLoading(true);
-      const createdProject = await services.projects.create(payload);
+      // first we need to geocode the address
+      const opts = {
+        query: {
+          query: 'Swarthmore College, Swarthmore, PA, 19081',
+          limit: 10
+        }
+      };
+      const results = await services.mapbox.find(opts);
+
+      console.log({ results });
+
+      //const createdProject = await services.projects.create(payload);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -246,12 +257,12 @@ const ManagePage = () => {
   const handleUserCreateClick = () => {
     setModalType(CREATE_USER_MODAL);
     const initialState = {
-      first: "",
-      last: "",
-      email: "",
-      password: "",
-      password2: "",
-      college: ""
+      first: '',
+      last: '',
+      email: '',
+      password: '',
+      password2: '',
+      college: ''
     };
     setModalData(initialState);
     setShowModal(true);
@@ -281,8 +292,8 @@ const ManagePage = () => {
     setModalType(CREATE_ROLE_MODAL);
     // @note: The role parameter maps to formik's intial values
     const initialState = {
-      name: "",
-      description: ""
+      name: '',
+      description: ''
     };
     setModalData(initialState);
     setShowModal(true);
@@ -312,15 +323,15 @@ const ManagePage = () => {
     setModalType(CREATE_PROJECT_MODAL);
     // @note: The role parameter maps to formik's intial values
     const initialState = {
-      name: "",
-      description: "",
-      website: "",
-      street1: "",
-      street2: "",
-      city: "",
-      region: "",
-      zip: "",
-      country: ""
+      name: '',
+      description: '',
+      website: '',
+      street1: '',
+      street2: '',
+      city: '',
+      region: '',
+      zip: '',
+      country: ''
     };
     setModalData(initialState);
     setShowModal(true);
@@ -331,6 +342,7 @@ const ManagePage = () => {
     // API should have a hook to geolocate address and add lat/lng
     // Before posting it to the database
     console.log({ project });
+    createProject(project);
   };
 
   const handleProjectEditClick = project => {

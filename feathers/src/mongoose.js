@@ -1,9 +1,9 @@
-const mongoose = require("mongoose");
-const logger = require("./logger");
+const mongoose = require('mongoose');
+const logger = require('./logger');
 
 module.exports = function(app) {
   mongoose
-    .connect(app.get("mongodb"), {
+    .connect(app.get('mongodb'), {
       useCreateIndex: true,
       useNewUrlParser: true,
       useUnifiedTopology: true
@@ -15,5 +15,5 @@ module.exports = function(app) {
 
   mongoose.Promise = global.Promise;
 
-  app.set("mongooseClient", mongoose);
+  app.set('mongooseClient', mongoose);
 };

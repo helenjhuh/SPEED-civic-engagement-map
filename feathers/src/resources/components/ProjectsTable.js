@@ -1,8 +1,8 @@
-import React from "react";
-import PropTypes from "prop-types";
-import Table from "react-bootstrap/Table";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPencilAlt, faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import React from 'react';
+import PropTypes from 'prop-types';
+import Table from 'react-bootstrap/Table';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 
 const ProjectsTable = props => {
   const { projects, handleEditClick, handleDeleteClick } = props;
@@ -31,8 +31,8 @@ const ProjectsTable = props => {
       <tbody>
         {projects.map(project => (
           <tr key={project._id}>
-            <td>{project.verified && "x"}</td>
-            <td>{project.featured && "x"}</td>
+            <td>{project.verified && 'x'}</td>
+            <td>{project.featured && 'x'}</td>
             <td>{project.name}</td>
             <td>{project.description}</td>
             <td>

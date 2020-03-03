@@ -4,13 +4,13 @@
 // for more of what you can do here.
 
 module.exports = function(app) {
-  const modelName = "pins";
-  const mongooseClient = app.get("mongooseClient");
+  const modelName = 'pins';
+  const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
   const { Types } = Schema;
   const schema = new Schema(
     {
-      address: { type: Types.ObjectId, ref: "addresses" },
+      address: { type: Types.ObjectId, ref: 'addresses' },
       description: { types: Types.String }
     },
     {

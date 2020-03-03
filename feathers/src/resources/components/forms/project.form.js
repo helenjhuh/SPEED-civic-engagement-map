@@ -1,14 +1,14 @@
-import React from "react";
-import { Formik, Field, ErrorMessage } from "formik";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import * as yup from "yup";
-import CustomSelectMultiple from "../CustomSelectMultiple";
+import React from 'react';
+import { Formik, Field, ErrorMessage } from 'formik';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import * as yup from 'yup';
+import CustomSelectMultiple from '../CustomSelectMultiple';
 import {
   projectGrants,
   projectIssues,
   projectTypes
-} from "../../selectOptions";
+} from '../../selectOptions';
 
 const validationSchema = yup.object({
   name: yup.string().required(),

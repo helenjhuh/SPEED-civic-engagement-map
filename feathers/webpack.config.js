@@ -1,10 +1,13 @@
-const path = require("path");
+const path = require('path');
 
 module.exports = {
-  mode: process.env.NODE_ENV || "development",
+  mode: process.env.NODE_ENV || 'development',
 
   entry: {
-    frontend: path.resolve(__dirname, "src", "resources", "frontend.js")
+    api: {
+      
+    },
+    frontend: path.resolve(__dirname, 'src', 'resources', 'frontend.js')
   },
 
   module: {
@@ -12,22 +15,22 @@ module.exports = {
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
-        use: ["babel-loader"]
+        use: ['babel-loader']
       },
       {
         test: /\.(css)$/,
-        use: ["style-loader", "css-loader"]
+        use: ['style-loader', 'css-loader']
       }
     ]
   },
 
   resolve: {
-    extensions: ["*", ".js", ".jsx"]
+    extensions: ['*', '.js', '.jsx']
   },
 
   output: {
-    path: path.join(__dirname, "public/js"),
-    publicPath: "public/",
-    filename: "[name].min.js"
+    path: path.join(__dirname, 'public/js'),
+    publicPath: 'public/',
+    filename: '[name].min.js'
   }
 };

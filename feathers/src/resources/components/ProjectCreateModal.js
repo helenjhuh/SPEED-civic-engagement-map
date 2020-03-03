@@ -1,6 +1,6 @@
-import React from "react";
-import ProjectForm from "../components/forms/project.form";
-import Modal from "react-bootstrap/Modal";
+import React from 'react';
+import ProjectForm from '../components/forms/project.form';
+import Modal from 'react-bootstrap/Modal';
 
 const ProjectCreateModal = props => {
   const { show, onHide, onSubmit, project } = props;

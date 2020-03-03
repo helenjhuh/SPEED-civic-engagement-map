@@ -1,11 +1,11 @@
-import React from "react";
-import Modal from "react-bootstrap/Modal";
-import RoleForm from "./forms/role.form";
+import React from 'react';
+import Modal from 'react-bootstrap/Modal';
+import RoleForm from './forms/role.form';
 
 const RoleEditModal = props => {
   const {
-    title = "Edit Resource",
-    description = "Be careful, changes are permanent",
+    title = 'Edit Resource',
+    description = 'Be careful, changes are permanent',
     role,
     onSubmit,
     show,

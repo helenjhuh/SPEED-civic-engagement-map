@@ -1,25 +1,30 @@
 /* eslint-disable no-unused-vars */
-const MapboxSDK = require("@mapbox/mapbox-sdk");
-const GeocodingService = require("@mapbox/mapbox-sdk/services/geocoding");
+const GeocodeService = require('@mapbox/mapbox-sdk/services/geocoding');
+const MapBoxSDK = require('@mapbox/mapbox-sdk');
 
 exports.Mapbox = class Mapbox {
-  constructor(options) {
-    this.options = options || [];
-  }
-
-  async setup(app) {
+  setup(app) {
     this.app = app;
-    const APIKey = this.app.get("mapboxAPIKey");
-    const MapboxBaseClient = MapboxSDK({ accessToken: APIKey });
-    this.geocodeClient = GeocodingService(MapboxBaseClient);
   }
 
   async find(params) {
-    const { query } = params;
+    const { query, limit = 1 } = params.query;
+    const APIKey = this.app.get('mapboxAPIKey');
+    const MapboxBaseClient = MapBoxSDK({ accessToken: APIKey });
+    const GeocodeClient = GeocodeService(MapboxBaseClient);
 
-    const response = await this.geocodeClient({ query, limit: 5 });
-    const results = response.json();
+    if (!query) return [];
 
-    return results;
+    const opts = { query, limit: +limit };
+
+    const request = await GeocodeClient.forwardGeocode(opts);
+    const response = await request.send();
+    const results = await response;
+    const { statusCode, body } = results;
+    const { features } = body;
+    if (statusCode !== 200) {
+      return [];
+    }
+    return features || [];
   }
 };

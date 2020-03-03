@@ -1,8 +1,8 @@
-import React from "react";
-import { Formik, Field, ErrorMessage } from "formik";
-import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
-import * as yup from "yup";
+import React from 'react';
+import { Formik, Field, ErrorMessage } from 'formik';
+import Button from 'react-bootstrap/Button';
+import Form from 'react-bootstrap/Form';
+import * as yup from 'yup';
 
 const validationSchema = yup.object({
   first: yup.string().required(),
@@ -15,17 +15,17 @@ const validationSchema = yup.object({
   password: yup.string().required(),
   password2: yup
     .string()
-    .oneOf([yup.ref("password"), null])
+    .oneOf([yup.ref('password'), null])
     .required()
 });
 
 const initialValues = {
-  first: "",
-  last: "",
-  email: "",
-  college: "",
-  password: "",
-  password2: ""
+  first: '',
+  last: '',
+  email: '',
+  college: '',
+  password: '',
+  password2: ''
 };
 
 const SignupForm = props => {

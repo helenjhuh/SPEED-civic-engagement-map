@@ -1,34 +1,33 @@
-import React, { useState, useRef, useEffect } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import MainNavbar from "./MainNavbar";
-import Container from "react-bootstrap/Container";
-import Overlay from "react-bootstrap/Overlay";
-import Alert from "react-bootstrap/Alert";
-import LoginCard from "./LoginCard";
-import SignupCard from "./SignupCard";
-import Dimmer from "./Dimmer";
-import feathers, { services } from "../feathers";
-import AboutPage from "../pages/about.page";
-import FAQPage from "../pages/faq.page";
-import ManagePage from "../pages/manage.page";
-import HomePage from "../pages/home.page";
+import React, { useState, useRef, useEffect } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import MainNavbar from './MainNavbar';
+import Container from 'react-bootstrap/Container';
+import Overlay from 'react-bootstrap/Overlay';
+import Alert from 'react-bootstrap/Alert';
+import LoginCard from './LoginCard';
+import SignupCard from './SignupCard';
+import Dimmer from './Dimmer';
+import feathers, { services } from '../feathers';
+import AboutPage from '../pages/about.page';
+import FAQPage from '../pages/faq.page';
+import ManagePage from '../pages/manage.page';
+import HomePage from '../pages/home.page';
 
-const TYPE_LOGIN_MODAL = "TYPE_LOGIN_MODAL";
-const TYPE_SIGNUP_MODAL = "TYPE_SIGNUP_MODAL";
+const TYPE_LOGIN_MODAL = 'TYPE_LOGIN_MODAL';
+const TYPE_SIGNUP_MODAL = 'TYPE_SIGNUP_MODAL';
 
 // bootstrap contexts
-const SUCCESS = "success";
-const DANGER = "danger";
-const INFO = "info";
+const SUCCESS = 'success';
+const DANGER = 'danger';
 
-const Application = props => {
+const Application = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(null);
-  const [alertText, setAlertText] = useState("");
-  const [alertType, setAlertType] = useState("");
+  const [alertText, setAlertText] = useState('');
+  const [alertType, setAlertType] = useState('');
 
   const ref = useRef(null);
 
@@ -48,8 +47,8 @@ const Application = props => {
   };
 
   const clearAlerts = () => {
-    setAlertText("");
-    setAlertType("");
+    setAlertText('');
+    setAlertType('');
   };
 
   const handleLoginClick = () => {
@@ -68,9 +67,9 @@ const Application = props => {
   const login = async ({ email, password }) => {
     try {
       setLoading(true);
-      const payload = { strategy: "local", email, password };
+      const payload = { strategy: 'local', email, password };
       const res = await feathers.authenticate(payload);
-      setAlertText("Logged in!");
+      setAlertText('Logged in!');
       setAlertType(SUCCESS);
       setUser(res.user);
       setToken(res.accessToken);
@@ -88,7 +87,7 @@ const Application = props => {
       setLoading(true);
       const payload = { first, last, email, college, password };
       await services.users.create(payload);
-      setAlertText("You can now login to your account");
+      setAlertText('You can now login to your account');
       setAlertType(SUCCESS);
     } catch (error) {
       setAlertText(error.message);
@@ -101,7 +100,7 @@ const Application = props => {
 
   const logout = async () => {
     await feathers.logout();
-    document.location.href = "/";
+    document.location.href = '/';
   };
 
   useEffect(() => {
@@ -117,7 +116,6 @@ const Application = props => {
     <div id="Application">
       <Router>
         <Dimmer open={showModal} />
-
         <MainNavbar
           onLogoutClick={handleLogoutClick}
           onLoginClick={handleLoginClick}
@@ -158,7 +156,7 @@ const Application = props => {
             <div
               {...props}
               style={{
-                padding: "10px",
+                padding: '10px',
                 borderRadius: 2,
                 zIndex: 9999,
                 ...props.style
@@ -187,7 +185,7 @@ const Application = props => {
             <div
               {...props}
               style={{
-                padding: "10px",
+                padding: '10px',
                 borderRadius: 2,
                 zIndex: 9999,
                 ...props.style

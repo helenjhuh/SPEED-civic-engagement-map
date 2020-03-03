@@ -1,11 +1,11 @@
-import React from "react";
-import Modal from "react-bootstrap/Modal";
-import ProjectForm from "../components/forms/project.form";
+import React from 'react';
+import Modal from 'react-bootstrap/Modal';
+import ProjectForm from '../components/forms/project.form';
 
 const ProjectEditModal = props => {
   const {
-    title = "Edit Resource",
-    description = "Be careful, changes are permanent",
+    title = 'Edit Resource',
+    description = 'Be careful, changes are permanent',
     project,
     onSubmit,
     show,

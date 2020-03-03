@@ -1,5 +1,5 @@
-import React from "react";
-import ReactSelect from "react-select";
+import React from 'react';
+import ReactSelect from 'react-select';
 
 const CustomSelectMultiple = ({
   field,
@@ -21,7 +21,7 @@ const CustomSelectMultiple = ({
         ? options.filter(option => field.value.indexOf(option.value) >= 0)
         : options.find(option => option.value === field.value);
     } else {
-      return isMulti ? [] : "";
+      return isMulti ? [] : '';
     }
   };
 
