@@ -32,6 +32,7 @@ const ProjectForm = props => {
     >
       {formik => (
         <Form onSubmit={formik.handleSubmit}>
+
           <Form.Group controlId="formik_name">
             <Form.Label>Project name</Form.Label>
             <Field name="name" type="name" as={Form.Control} />
@@ -54,7 +55,7 @@ const ProjectForm = props => {
               component={CustomSelectMultiple}
               options={projectTypes}
               isMulti
-              name="type"
+              name="types"
             />
             <ErrorMessage name="type" className="text-danger" component="p" />
           </Form.Group>
@@ -65,7 +66,7 @@ const ProjectForm = props => {
               component={CustomSelectMultiple}
               options={projectIssues}
               isMulti
-              name="issue"
+              name="issues"
             />
             <ErrorMessage name="type" className="text-danger" component="p" />
           </Form.Group>

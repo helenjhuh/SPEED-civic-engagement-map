@@ -1,16 +1,16 @@
 import React from 'react';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
-import NavDropdown from 'react-bootstrap/NavDropdown';
 import { LinkContainer } from 'react-router-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faCogs } from '@fortawesome/free-solid-svg-icons'
 
 const MainNavbar = props => {
   const {
     loggedIn,
-    loggedInAs = null,
-    onLogoutClick,
     onLoginClick,
-    onSignupClick
+    onSignupClick,
+    onLogoutClick
   } = props;
 
   return (
@@ -41,13 +41,22 @@ const MainNavbar = props => {
           <LinkContainer to="/faq">
             <Nav.Link>FAQ</Nav.Link>
           </LinkContainer>
-          <LinkContainer to="/map">
-            <Nav.Link>View map</Nav.Link>
-          </LinkContainer>
-          <LinkContainer to="/manage">
-            <Nav.Link>Manage Site</Nav.Link>
+          <LinkContainer to="/projects">
+            <Nav.Link>Projects</Nav.Link>
           </LinkContainer>
         </Nav>
+
+
+        {loggedIn && (
+          <Nav>
+            <LinkContainer to="/manage">
+              <Nav.Link>
+                <FontAwesomeIcon icon={faCogs} color="inherit" />
+              </Nav.Link>
+            </LinkContainer>
+            <Nav.Link onClick={onLogoutClick}>Logout</Nav.Link>
+          </Nav>
+        )}
 
         {!loggedIn && (
           <Nav>
@@ -56,19 +65,6 @@ const MainNavbar = props => {
           </Nav>
         )}
 
-        {loggedIn && (
-          <Nav>
-            <NavDropdown title="Projects" id="basic-nav-dropdown">
-              <LinkContainer to="/projects/add">
-                <NavDropdown.Item>Add project</NavDropdown.Item>
-              </LinkContainer>
-              <LinkContainer to="/my/projects">
-                <NavDropdown.Item>My projects</NavDropdown.Item>
-              </LinkContainer>
-            </NavDropdown>
-            <Nav.Link onClick={onLogoutClick}>Logout</Nav.Link>
-          </Nav>
-        )}
       </Navbar.Collapse>
     </Navbar>
   );

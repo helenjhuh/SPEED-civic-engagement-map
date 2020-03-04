@@ -1,7 +1,7 @@
 export const projectTypes = [
-  { value: 'Engaged Teaching', label: 'Engaged Teaching', name: 'type' },
-  { value: 'Engaged Research', label: 'Engaged Research', name: 'type' },
-  { value: 'Engaged Projects', label: 'Engaged Projects', name: 'type' },
+  { value: 'Engaged Teaching', label: 'Engaged Teaching', name: 'types' },
+  { value: 'Engaged Research', label: 'Engaged Research', name: 'types' },
+  { value: 'Engaged Projects', label: 'Engaged Projects', name: 'types' },
   { value: 'Other', label: 'Other' }
 ];
 
@@ -9,45 +9,45 @@ export const projectIssues = [
   {
     value: 'Arts, Media, and Culture',
     label: 'Arts, Media, and Culture',
-    name: 'issue'
+    name: 'issues'
   },
   {
     value: 'Economic Development',
     label: 'Economic Development',
-    name: 'issue'
+    name: 'issues'
   },
   {
     value: 'Education and Access',
     label: 'Education and Access',
-    name: 'issue'
+    name: 'issues'
   },
   {
     value: 'Environment and Sustainability',
     label: 'Environment and Sustainability',
-    name: 'issue'
+    name: 'issues'
   },
   {
     value: 'Ethics and Human Rights',
     label: 'Ethics and Human Rights',
-    name: 'issue'
+    name: 'issues'
   },
   {
     value: 'Identities and Inequality',
     label: 'Identities and Inequality',
-    name: 'issue'
+    name: 'issues'
   },
   { value: 'Public Health', label: 'Public Health', name: 'issue' },
   {
     value: 'Politics and Public Policy',
     label: 'Politics and Public Policy',
-    name: 'issue'
+    name: 'issues'
   },
   {
     value: 'Refugees and Immigration',
     label: 'Refugees and Immigration',
-    name: 'issue'
+    name: 'issues'
   },
-  { value: 'Science and Society', label: 'Science and Society', name: 'issue' }
+  { value: 'Science and Society', label: 'Science and Society', name: 'issues' }
 ];
 
 export const projectGrants = [

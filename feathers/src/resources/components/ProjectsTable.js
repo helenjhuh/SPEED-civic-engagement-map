@@ -1,11 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import Table from 'react-bootstrap/Table';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import ConfirmModal from './ConfirmModal'
+import Form from 'react-bootstrap/Form'
 
 const ProjectsTable = props => {
-  const { projects, handleEditClick, handleDeleteClick } = props;
+
+  const { projects, handleEditClick, handleDeleteClick, handleVerifyToggle, handleFeaturedToggle } = props;
 
   return (
     <Table>
@@ -29,10 +32,31 @@ const ProjectsTable = props => {
         </tr>
       </thead>
       <tbody>
+        {console.log(projects)}
         {projects.map(project => (
           <tr key={project._id}>
-            <td>{project.verified && 'x'}</td>
-            <td>{project.featured && 'x'}</td>
+            <td>
+              <Form>
+                <Form.Check
+                  type="switch"
+                  id="form_verified"
+                  label="Verified"
+                  checked={project.verified}
+                  onChange={() => handleVerifyToggle(project)}
+                />
+              </Form>
+            </td>
+            <td>
+              <Form>
+                <Form.Check
+                  type="switch"
+                  id="form_featured"
+                  label="Featured"
+                  checked={project.featured}
+                  onChange={() => handleFeaturedToggle(project)}
+                />
+              </Form>
+            </td>
             <td>{project.name}</td>
             <td>{project.description}</td>
             <td>
@@ -76,7 +100,7 @@ const ProjectsTable = props => {
                 icon={faTrashAlt}
                 fixedWidth
                 className="text-danger"
-                onCLick={() => handleDeleteClick(project)}
+                onClick={() => handleDeleteClick(project)}
               />
             </td>
           </tr>

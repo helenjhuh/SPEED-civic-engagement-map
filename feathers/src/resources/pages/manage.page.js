@@ -52,17 +52,17 @@ const ManagePage = () => {
   const handleTabSelect = key => {
     setTabKey(key);
     switch (key) {
-    case 'users':
-      getUsers();
-      break;
-    case 'roles':
-      getRoles();
-      break;
-    case 'projects':
-      getProjects();
-      break;
-    default:
-      break;
+      case 'users':
+        getUsers();
+        break;
+      case 'roles':
+        getRoles();
+        break;
+      case 'projects':
+        getProjects();
+        break;
+      default:
+        break;
     }
   };
 
@@ -76,7 +76,7 @@ const ManagePage = () => {
   const createUser = async payload => {
     try {
       setLoading(true);
-      const createdUser = await services.users.create(payload);
+      await services.users.create(payload);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -89,7 +89,7 @@ const ManagePage = () => {
   const getUsers = async () => {
     try {
       setLoading(true);
-      const { data, total, limit, skip } = await services.users.find();
+      const { data } = await services.users.find();
       setUsers(data);
     } catch (error) {
       setError(error.message);
@@ -186,27 +186,30 @@ const ManagePage = () => {
   const createProject = async project => {
     try {
       setLoading(true);
-      const { user } = await feathers.get('authentication');     
+      const { user } = await feathers.get('authentication');
 
       // destructure this, it looks messy, but makes contructing the 
       // needed requests easier, since the project var is used in the
       // creation of different resources
-      const { 
-        name, 
-        description, 
-        types, 
-        issues, 
-        langGrants, 
-        communityPartners, 
-        funders, 
-        beneficiaries, 
-        website, 
-        street1, 
-        street2, 
-        city, 
-        region, 
-        zip, 
+      const {
+        name,
+        description,
+        types,
+        issues,
+        langGrants,
+        communityPartners,
+        funders,
+        beneficiaries,
+        website,
+        street1,
+        street2,
+        city,
+        region,
+        zip,
         country } = project
+
+      console.log('~~ destructured ~~')
+      console.log(project)
 
       // first we need to geocode the address
       const opts = {
@@ -217,14 +220,13 @@ const ManagePage = () => {
       };
 
       const [result] = await services.mapbox.find(opts);
-      const [lat,lng] = result.center
+      const [lat, lng] = result.center
 
       // we need to create an address record for the project
       const addressPayload = {
-        street1, street2, city, region, zip, country, lat, lng 
+        street1, street2, city, region, zip, country, lat, lng
       }
-      const {_id: addressId} = await services.addresses.create(addressPayload)
-
+      const { _id: addressId } = await services.addresses.create(addressPayload)
       const projectPayload = {
         verified: false,
         featured: false,
@@ -237,7 +239,7 @@ const ManagePage = () => {
         funders,
         beneficiaries,
         website,
-        owner: user._id, 
+        owner: user._id,
         address: addressId
       }
       const createdProject = await services.projects.create(projectPayload);
@@ -288,6 +290,36 @@ const ManagePage = () => {
       setLoading(false);
     }
   };
+
+  const handleProjectVerifyToggle = async project => {
+    try {
+      setLoading(true)
+      const { _id, verified } = project
+      const payload = { verified: !verified }
+      const res = await services.projects.patch(_id, payload)
+      getProjects()
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleProjectFeaturedToggle = async project => {
+    const { _id, featured } = project
+    try {
+      setLoading(true)
+      const { _id, verified } = project
+      const payload = { featured: !featured }
+      const res = await services.projects.patch(_id, payload)
+      getProjects()
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false)
+    }
+
+  }
 
   //
   // User handler functions
@@ -384,7 +416,6 @@ const ManagePage = () => {
     // Send request to API
     // API should have a hook to geolocate address and add lat/lng
     // Before posting it to the database
-    console.log({ project });
     createProject(project);
   };
 
@@ -443,6 +474,8 @@ const ManagePage = () => {
             projects={projects}
             handleEditClick={handleProjectEditClick}
             handleDeleteClick={handleProjectDeleteClick}
+            handleVerifyToggle={handleProjectVerifyToggle}
+            handleFeaturedToggle={handleProjectFeaturedToggle}
           />
         </Tab>
         <Tab eventKey="roles" title="Roles">
