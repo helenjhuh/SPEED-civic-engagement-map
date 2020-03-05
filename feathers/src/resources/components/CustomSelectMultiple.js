@@ -1,10 +1,12 @@
 import React from 'react';
 import ReactSelect from 'react-select';
+import CreatableSelect from 'react-select/creatable';
 
 const CustomSelectMultiple = ({
   field,
   form,
   isMulti = false,
+  isCreatable = false,
   options,
   ...props
 }) => {
@@ -26,12 +28,19 @@ const CustomSelectMultiple = ({
   };
 
   return (
-    <ReactSelect
-      {...props}
-      onChange={onChange}
-      options={options}
-      isMulti={isMulti}
-    />
+    isCreatable
+      ? <CreatableSelect
+        {...props}
+        onChange={onChange}
+        options={options}
+        isMulti={isMulti}
+      />
+      : <ReactSelect
+        {...props}
+        onChange={onChange}
+        options={options}
+        isMulti={isMulti}
+      />
   );
 };
 

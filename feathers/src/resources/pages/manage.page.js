@@ -89,7 +89,7 @@ const ManagePage = () => {
   const getUsers = async () => {
     try {
       setLoading(true);
-      const { data } = await services.users.find();
+      const { data } = await services.users.find({ query: { $populate: "roles" } });
       setUsers(data);
     } catch (error) {
       setError(error.message);
@@ -208,9 +208,6 @@ const ManagePage = () => {
         zip,
         country } = project
 
-      console.log('~~ destructured ~~')
-      console.log(project)
-
       // first we need to geocode the address
       const opts = {
         query: {
@@ -249,13 +246,18 @@ const ManagePage = () => {
       setModalData({});
       closeModals();
       setLoading(false);
+      getProjects();
     }
   };
 
   const getProjects = async () => {
     try {
       setLoading(true);
-      const { data, total, limit, skip } = await services.projects.find();
+      const { data, total, limit, skip } = await services.projects.find({
+        query: {
+          $populate: ["address", "owner"]
+        }
+      });
       setProjects(data);
     } catch (error) {
       setError(error.message);
@@ -288,6 +290,7 @@ const ManagePage = () => {
       setModalData({});
       closeModals();
       setLoading(false);
+      getProjects();
     }
   };
 
@@ -337,7 +340,8 @@ const ManagePage = () => {
       email: '',
       password: '',
       password2: '',
-      college: ''
+      college: '',
+      permissions: []
     };
     setModalData(initialState);
     setShowModal(true);

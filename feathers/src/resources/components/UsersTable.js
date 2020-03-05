@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import Table from 'react-bootstrap/Table';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
+import Badge from 'react-bootstrap/Badge'
 
 const UsersTable = props => {
   const { users, handleEditClick, handleDeleteClick } = props;
@@ -15,6 +16,7 @@ const UsersTable = props => {
           <th>Last</th>
           <th>College</th>
           <th>Email</th>
+          <th>Permissions</th>
           <th>Joined On</th>
           <th>Actions</th>
         </tr>
@@ -26,6 +28,7 @@ const UsersTable = props => {
             <td>{user.last}</td>
             <td>{user.college}</td>
             <td>{user.email}</td>
+            <td>{user.permissions.map(permission => <Badge key={permission} variant="primary">{permission}</Badge>)}</td>
             <td>{new Date(user.createdAt).toDateString()}</td>
             <td>
               <FontAwesomeIcon

@@ -5,10 +5,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPencilAlt, faTrashAlt } from '@fortawesome/free-solid-svg-icons';
 import ConfirmModal from './ConfirmModal'
 import Form from 'react-bootstrap/Form'
+import Badge from 'react-bootstrap/Badge'
 
 const ProjectsTable = props => {
 
-  const { projects, handleEditClick, handleDeleteClick, handleVerifyToggle, handleFeaturedToggle } = props;
+  const {
+    projects,
+    handleEditClick,
+    handleDeleteClick,
+    handleVerifyToggle,
+    handleFeaturedToggle
+  } = props;
 
   return (
     <Table>
@@ -32,62 +39,57 @@ const ProjectsTable = props => {
         </tr>
       </thead>
       <tbody>
-        {console.log(projects)}
         {projects.map(project => (
           <tr key={project._id}>
             <td>
-              <Form>
-                <Form.Check
-                  type="switch"
-                  id="form_verified"
-                  label="Verified"
-                  checked={project.verified}
-                  onChange={() => handleVerifyToggle(project)}
-                />
-              </Form>
+              <Form.Check
+                type="switch"
+                id={"form_verified_" + project._id}
+                label="Verified"
+                checked={project.verified}
+                onChange={() => handleVerifyToggle(project)}
+              />
             </td>
             <td>
-              <Form>
-                <Form.Check
-                  type="switch"
-                  id="form_featured"
-                  label="Featured"
-                  checked={project.featured}
-                  onChange={() => handleFeaturedToggle(project)}
-                />
-              </Form>
+              <Form.Check
+                type="switch"
+                id={"form_featured_" + project._id}
+                label="Featured"
+                checked={project.featured}
+                onChange={() => handleFeaturedToggle(project)}
+              />
             </td>
             <td>{project.name}</td>
             <td>{project.description}</td>
             <td>
               {project.types.map(t => (
-                <p key={t}>{t}</p>
+                <Badge variant="light" key={t} pill>{t}</Badge>
               ))}
             </td>
             <td>
               {project.issues.map(i => (
-                <p key={i}>{i}</p>
+                <Badge variant="light" key={i} pill>{i}</Badge>
               ))}
             </td>
             <td>
               {project.langGrants.map(lg => (
-                <p key={lg}>{lg}</p>
+                <Badge variant="light" key={lg} pill>{lg}</Badge>
               ))}
             </td>
             <td>
               {project.communityPartners.map(cp => (
-                <p key={cp}>{cp}</p>
+                <Badge variant="light" key={cp} pill>{cp}</Badge>
               ))}
             </td>
             <td>
               {project.funders.map(f => (
-                <p key={f}>{f}</p>
+                <Badge variant="light" key={f} pill>{f}</Badge>
               ))}
             </td>
             <td>{project.beneficiaries}</td>
             <td>{project.website}</td>
-            <td>{project.owner}</td>
-            <td>{project.address}</td>
+            <td>{project.owner.first} {project.owner.last}<br />{project.owner.email}</td>
+            <td>{project.address.city} {project.address.region}, {project.address.zip}</td>
             <td>{new Date(project.createdAt).toDateString()}</td>
             <td>
               <FontAwesomeIcon

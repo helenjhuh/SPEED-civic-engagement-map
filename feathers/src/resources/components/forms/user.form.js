@@ -3,6 +3,7 @@ import { Formik, Field, ErrorMessage } from 'formik';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import * as yup from 'yup';
+import CustomSelectMultiple from '../CustomSelectMultiple';
 
 const validationSchema = yup.object({
   first: yup.string().required(),
@@ -18,6 +19,12 @@ const validationSchema = yup.object({
     .oneOf([yup.ref('password'), null])
     .required()
 });
+
+const permissionOpts = [
+  { name: "Admin", value: "Admin", label: "Admin" },
+  { name: "Editor", value: "Editor", label: "Editor" },
+  { name: "User", value: "User", label: "User" }
+]
 
 const UserForm = props => {
   const { user, handleSubmit } = props;
@@ -55,6 +62,17 @@ const UserForm = props => {
               name="college"
               className="text-danger"
               component="p"
+            />
+          </Form.Group>
+
+          <Form.Group controlId="formik_permissions">
+            <Form.Label>Permissions</Form.Label>
+            <Field
+              component={CustomSelectMultiple}
+              options={permissionOpts}
+              isMulti
+              isCreatable
+              name="permissions"
             />
           </Form.Group>
 

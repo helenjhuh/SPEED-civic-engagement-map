@@ -2,7 +2,7 @@
 //
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
-module.exports = function(app) {
+module.exports = function (app) {
   const modelName = 'users';
   const mongooseClient = app.get('mongooseClient');
   const schema = new mongooseClient.Schema(
@@ -11,6 +11,7 @@ module.exports = function(app) {
       last: { type: String, required: true },
       college: { type: String },
       email: { type: String, unique: true, lowercase: true, required: true },
+      permissions: [{ type: String }],
       password: { type: String, required: true },
       googleId: { type: String }
     },
