@@ -28,6 +28,7 @@ const Application = () => {
   const [modalType, setModalType] = useState(null);
   const [alertText, setAlertText] = useState('');
   const [alertType, setAlertType] = useState('');
+  const [featuredProjects, setFeaturedProjects] = useState([]);
 
   const ref = useRef(null);
 
@@ -103,6 +104,24 @@ const Application = () => {
     document.location.href = '/';
   };
 
+  const getFeaturedProjects = async() => {
+    try {
+      setLoading(true);
+      const {data} = await services.projects.find({
+        query: {
+          verified: true,
+          featured: true
+        }
+      });
+      setFeaturedProjects(data); 
+    } catch (error) {
+      setAlertText(error.message);
+      setAlertType(DANGER);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     // hate to use this syntax here when everything else async/await
     // but it looks cleaner like this
@@ -110,7 +129,8 @@ const Application = () => {
       setUser(user);
       setToken(accessToken);
     });
-  });
+    getFeaturedProjects();
+  }, []);
 
   return (
     <div id="Application">
@@ -132,7 +152,7 @@ const Application = () => {
         )}
 
         <Switch>
-          <Route exact path="/" component={HomePage} />
+          <Route exact path="/" render={props => <HomePage {...props} featuredProjects={featuredProjects} />} />
           <Route path="/faq" component={FAQPage} />
           <Route path="/about" component={AboutPage} />
           <Route path="/manage" component={ManagePage} />
