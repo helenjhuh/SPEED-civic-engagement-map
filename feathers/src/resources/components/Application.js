@@ -12,6 +12,7 @@ import AboutPage from '../pages/about.page';
 import FAQPage from '../pages/faq.page';
 import ManagePage from '../pages/manage.page';
 import HomePage from '../pages/home.page';
+import FeathersConfig from "../../../config/default.json";
 
 const TYPE_LOGIN_MODAL = 'TYPE_LOGIN_MODAL';
 const TYPE_SIGNUP_MODAL = 'TYPE_SIGNUP_MODAL';
@@ -143,21 +144,6 @@ const Application = () => {
           loggedIn={token && user}
         />
 
-        {alertText && (
-          <Container className="container-xl">
-            <Alert variant={alertType} dismissible onClose={clearAlerts}>
-              {alertText}
-            </Alert>
-          </Container>
-        )}
-
-        <Switch>
-          <Route exact path="/" render={props => <HomePage {...props} featuredProjects={featuredProjects} />} />
-          <Route path="/faq" component={FAQPage} />
-          <Route path="/about" component={AboutPage} />
-          <Route path="/manage" component={ManagePage} />
-        </Switch>
-
         <Overlay
           container={ref.current}
           show={modalType === TYPE_LOGIN_MODAL && showModal}
@@ -215,6 +201,28 @@ const Application = () => {
             </div>
           )}
         </Overlay>
+
+        {FeathersConfig.development && <Container className="container-xl">
+          <Alert variant="info">
+            This app if currently running in development mode.  
+          </Alert>          
+        </Container>}
+
+        {alertText && (
+          <Container className="container-xl">
+            <Alert variant={alertType} dismissible onClose={clearAlerts}>
+              {alertText}
+            </Alert>
+          </Container>
+        )}
+
+        <Switch>
+          <Route exact path="/" render={props => <HomePage {...props} featuredProjects={featuredProjects} />} />
+          <Route path="/faq" component={FAQPage} />
+          <Route path="/about" component={AboutPage} />
+          <Route path="/manage" component={ManagePage} />
+        </Switch>
+
       </Router>
     </div>
   );

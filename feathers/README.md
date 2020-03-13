@@ -6,6 +6,17 @@
 
 This project uses [Feathers](http://feathersjs.com). An open source web framework for building modern real-time applications.
 
+## Setup
+
+1. Clone the repository onto your server.
+2. Run the initialisation script in `bin/init/init.js`. You will need to supply `adminemail` and `adminpassword` arguments.
+
+  ```
+  node ./bin/init --adminemail somebody@example.org --adminpassword secretpassword
+  ```
+
+3. Head to your browser `http://localhost:3000` and login :)
+
 ## Getting Started
 
 Getting up and running is as easy as 1, 2, 3.

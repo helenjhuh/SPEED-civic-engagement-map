@@ -30,11 +30,11 @@ const HomePage = props => {
         </h2>
         <Row>
           {featuredProjects.map(project => 
-            <Col key={project._id}>
-              <FeaturedProjectCard 
-                key={project._id} 
-                project={project} />
-            </Col>
+              <Col key={project._id} xs={12} md={6} lg={4} xl={4} className="mb-3">
+                  <FeaturedProjectCard 
+                    key={project._id} 
+                    project={project} />
+              </Col>
           )} 
         </Row>
       </Container>}

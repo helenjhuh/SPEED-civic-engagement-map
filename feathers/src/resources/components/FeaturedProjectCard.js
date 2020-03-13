@@ -1,26 +1,30 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Card from 'react-bootstrap/Card';
+import Button from 'react-bootstrap/Button';
 
 const FeaturedProjectCard = props => {
 
   const { project } = props;
   
   const cardStyles = {
-    maxWidth: 400
+    maxWidth: 400,
+    minHeight: '100%'
   };
 
   return (
     <Card style={cardStyles}>
       <Card.Img variant="top" src={`https://via.placeholder.com/400x300.png?text=${project.name}`} />
       <Card.Body>
-        <Card.Title>{project.name}</Card.Title>
-        <Card.Subtitle>Created {new Date(project.createdAt).toDateString()}</Card.Subtitle>
+        <Card.Title className="mb-2"><h5>{project.name}</h5></Card.Title>
+        <Card.Subtitle className="mb-2"><p className="subtitle">Created {new Date(project.createdAt).toDateString()}</p></Card.Subtitle>
         <Card.Text>
-          {project.description}
+          <p className="lead">
+            {project.description}
+          </p> 
         </Card.Text>
-        {project.website && <Card.Link href={project.website}>{project.website}</Card.Link>}
-        <Card.Link href="#">Show on map</Card.Link>
+        <Card.Link href="#" as={Button} variant="primary">Show on map</Card.Link>
+        {project.website && (<><br/><Card.Link href={project.website} as={Button} variant="secondary" className="mt-2">{project.website}</Card.Link></>)}
       </Card.Body>
     </Card>
   );

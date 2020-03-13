@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
 const logger = require('./logger');
+const grid = require('gridfs-stream');
 
 module.exports = function(app) {
+
   mongoose
     .connect(app.get('mongodb'), {
       useCreateIndex: true,
@@ -15,6 +17,13 @@ module.exports = function(app) {
 
   mongoose.Promise = global.Promise;
 
+  const dbconnection = mongoose.connection;
+
+  dbconnection.once('open', () => {
+    const gfs = grid(dbconnection.db, mongoose.mongo);
+    app.set('gfs', gfs);
+  });
+  
   app.set('mongooseClient', mongoose);
 
 };

@@ -14,7 +14,8 @@ const ProjectsTable = props => {
     handleEditClick,
     handleDeleteClick,
     handleVerifyToggle,
-    handleFeaturedToggle
+    handleFeaturedToggle,
+    handleGenerateProjectsClick
   } = props;
 
   return (

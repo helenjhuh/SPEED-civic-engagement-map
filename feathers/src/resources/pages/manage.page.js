@@ -15,7 +15,9 @@ import ProjectCreateModal from '../components/ProjectCreateModal';
 import ProjectEditModal from '../components/ProjectEditModal';
 import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faPlusCircle, faGem } from '@fortawesome/free-solid-svg-icons';
+import FeathersConfig from '../../../config/default.json';
+import { fakeProject, fakeAddress } from '../migrations';
 
 const ManagePage = () => {
   //
@@ -294,6 +296,23 @@ const ManagePage = () => {
     }
   };
 
+  const handleGenerateProjectsClick = async count => {
+    try {
+      setLoading(true);
+      const { user } = await feathers.get('authentication');
+      for (let i=0; i<count; i++) {
+        const addressPayload = fakeAddress();
+        const {_id:addressId} = await services.addresses.create(addressPayload); 
+        const payload = fakeProject(user._id, addressId);
+        await services.projects.create(payload);
+      }
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
+
   const handleProjectVerifyToggle = async project => {
     try {
       setLoading(true)
@@ -451,14 +470,17 @@ const ManagePage = () => {
 
       <Tabs activeKey={tabKey} onSelect={handleTabSelect}>
         <Tab eventKey="users" title="Users">
-          <Button
-            className="my-3 float-right"
-            onClick={handleUserCreateClick}
-            variant="success"
-          >
-            <FontAwesomeIcon icon={faPlusCircle} fixedWidth className="mr-2" />
-            New User
-          </Button>
+          <div className="float-right">
+            {FeathersConfig.development && <Button className="my-3 mr-2" onClick={() => console.log('Not implemented')} variant="secondary"><FontAwesomeIcon icon={faGem} className="mr-2"/>Generate Users</Button>} 
+            <Button
+              className="my-3 float-right"
+              onClick={handleUserCreateClick}
+              variant="success"
+            >
+              <FontAwesomeIcon icon={faPlusCircle} fixedWidth className="mr-2" />
+              New User
+            </Button>
+          </div>
           <UsersTable
             users={users}
             handleEditClick={handleUserEditClick}
@@ -466,20 +488,24 @@ const ManagePage = () => {
           />
         </Tab>
         <Tab eventKey="projects" title="Projects">
-          <Button
-            className="my-3 float-right"
-            onClick={handleProjectCreateClick}
-            variant="success"
-          >
-            <FontAwesomeIcon icon={faPlusCircle} fixedWidth className="mr-2" />
-            New Project
-          </Button>
+          <div className="float-right">
+            {FeathersConfig.development && <Button className="my-3 mr-2" onClick={() => handleGenerateProjectsClick(10)} variant="secondary"><FontAwesomeIcon icon={faGem} className="mr-2"/>Generate Projects</Button>} 
+            <Button
+              className="my-3 float-right"
+              onClick={handleProjectCreateClick}
+              variant="success"
+            >
+              <FontAwesomeIcon icon={faPlusCircle} fixedWidth className="mr-2" />
+              New Project
+            </Button>
+          </div>
           <ProjectsTable
             projects={projects}
             handleEditClick={handleProjectEditClick}
             handleDeleteClick={handleProjectDeleteClick}
             handleVerifyToggle={handleProjectVerifyToggle}
             handleFeaturedToggle={handleProjectFeaturedToggle}
+            handleGenerateClick={handleGenerateProjectsClick}
           />
         </Tab>
         <Tab eventKey="roles" title="Roles">
