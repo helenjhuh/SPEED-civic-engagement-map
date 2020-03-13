@@ -12,7 +12,7 @@ import AboutPage from '../pages/about.page';
 import FAQPage from '../pages/faq.page';
 import ManagePage from '../pages/manage.page';
 import HomePage from '../pages/home.page';
-import FeathersConfig from "../../../config/default.json";
+import FeathersConfig from "../../../config/default.json"; 
 
 const TYPE_LOGIN_MODAL = 'TYPE_LOGIN_MODAL';
 const TYPE_SIGNUP_MODAL = 'TYPE_SIGNUP_MODAL';
@@ -22,6 +22,7 @@ const SUCCESS = 'success';
 const DANGER = 'danger';
 
 const Application = () => {
+
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
@@ -147,7 +148,7 @@ const Application = () => {
         <Overlay
           container={ref.current}
           show={modalType === TYPE_LOGIN_MODAL && showModal}
-          placement="right"
+          placement="top-end"
           onHide={() => closeModals()}
           rootClose={true}
         >
@@ -176,7 +177,7 @@ const Application = () => {
         <Overlay
           container={ref.current}
           show={modalType === TYPE_SIGNUP_MODAL && showModal}
-          placement="right"
+          placement="top-end"
           onHide={() => closeModals()}
           rootClose={true}
         >
