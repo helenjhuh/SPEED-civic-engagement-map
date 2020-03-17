@@ -99,5 +99,5 @@ const fakeProject = (ownerid, addressid, pinids = null, photoids = null) => {
   return project;
 }
 
-export { fakeProject, fakeAddress } 
+export { fakeProject, fakeAddress, fakeUser } 
 

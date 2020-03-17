@@ -17,7 +17,7 @@ import Button from 'react-bootstrap/Button';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faPlusCircle, faGem } from '@fortawesome/free-solid-svg-icons';
 import FeathersConfig from '../../../config/default.json';
-import { fakeProject, fakeAddress } from '../migrations';
+import { fakeProject, fakeAddress, fakeUser } from '../migrations';
 
 const ManagePage = () => {
   //
@@ -126,6 +126,21 @@ const ManagePage = () => {
       setLoading(false);
     }
   };
+  
+  const handleGenerateUsersClick = async count => {
+    try {
+      setLoading(true);
+      await feathers.get('authentication');
+      for (let i=0; i<count; i++) {
+        const userPayload = fakeUser();
+        await services.users.create(userPayload);
+      }
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   //
   // Role actions
@@ -471,7 +486,7 @@ const ManagePage = () => {
       <Tabs activeKey={tabKey} onSelect={handleTabSelect}>
         <Tab eventKey="users" title="Users">
           <div className="float-right">
-            {FeathersConfig.development && <Button className="my-3 mr-2" onClick={() => console.log('Not implemented')} variant="secondary"><FontAwesomeIcon icon={faGem} className="mr-2"/>Generate Users</Button>} 
+            {FeathersConfig.development && <Button className="my-3 mr-2" onClick={() => handleGenerateUsersClick(10)} variant="secondary"><FontAwesomeIcon icon={faGem} className="mr-2"/>Generate Users</Button>} 
             <Button
               className="my-3 float-right"
               onClick={handleUserCreateClick}
@@ -485,6 +500,7 @@ const ManagePage = () => {
             users={users}
             handleEditClick={handleUserEditClick}
             handleDeleteClick={handleUserDeleteClick}
+            handleGenerateClick={handleGenerateUsersClick}
           />
         </Tab>
         <Tab eventKey="projects" title="Projects">

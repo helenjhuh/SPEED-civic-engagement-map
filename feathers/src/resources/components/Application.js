@@ -11,8 +11,10 @@ import feathers, { services } from '../feathers';
 import AboutPage from '../pages/about.page';
 import FAQPage from '../pages/faq.page';
 import ManagePage from '../pages/manage.page';
+import MyProjectsPage from '../pages/myProjects.page';
 import HomePage from '../pages/home.page';
 import FeathersConfig from "../../../config/default.json"; 
+import Footer from "../components/Footer";
 
 const TYPE_LOGIN_MODAL = 'TYPE_LOGIN_MODAL';
 const TYPE_SIGNUP_MODAL = 'TYPE_SIGNUP_MODAL';
@@ -25,6 +27,7 @@ const Application = () => {
 
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
+  const [permissions, setPermissions] = useState([]);
   const [token, setToken] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState(null);
@@ -75,6 +78,7 @@ const Application = () => {
       setAlertText('Logged in!');
       setAlertType(SUCCESS);
       setUser(res.user);
+      setPermissions(res.user.permissions);
       setToken(res.accessToken);
     } catch (error) {
       setAlertText(error.message);
@@ -142,6 +146,7 @@ const Application = () => {
           onLogoutClick={handleLogoutClick}
           onLoginClick={handleLoginClick}
           onSignupClick={handleSignupClick}
+          permissions={permissions}
           loggedIn={token && user}
         />
 
@@ -222,8 +227,10 @@ const Application = () => {
           <Route path="/faq" component={FAQPage} />
           <Route path="/about" component={AboutPage} />
           <Route path="/manage" component={ManagePage} />
+          <Route path="/myprojects" component={MyProjectsPage} />
         </Switch>
 
+        <Footer />
       </Router>
     </div>
   );

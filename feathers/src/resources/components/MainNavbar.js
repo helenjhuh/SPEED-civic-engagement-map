@@ -8,11 +8,14 @@ import { faCogs } from '@fortawesome/free-solid-svg-icons'
 const MainNavbar = props => {
   const {
     loggedIn,
+    permissions,
     onLoginClick,
     onSignupClick,
     onLogoutClick
   } = props;
 
+  const isAdmin = permissions.includes('Admin');
+  
   return (
     <Navbar bg="light" expand="lg" className="mb-4">
       <LinkContainer to="/">
@@ -41,20 +44,25 @@ const MainNavbar = props => {
           <LinkContainer to="/faq">
             <Nav.Link>FAQ</Nav.Link>
           </LinkContainer>
-          <LinkContainer to="/projects">
-            <Nav.Link>Projects</Nav.Link>
-          </LinkContainer>
+
         </Nav>
 
-
         {loggedIn && (
+          <Nav>
+            <LinkContainer to="/myprojects">
+              <Nav.Link>My Projects</Nav.Link>
+            </LinkContainer>
+            <Nav.Link onClick={onLogoutClick}>Logout</Nav.Link>
+          </Nav>
+        )}
+
+        {isAdmin && (
           <Nav>
             <LinkContainer to="/manage">
               <Nav.Link>
                 <FontAwesomeIcon icon={faCogs} color="inherit" />
               </Nav.Link>
             </LinkContainer>
-            <Nav.Link onClick={onLogoutClick}>Logout</Nav.Link>
           </Nav>
         )}
 

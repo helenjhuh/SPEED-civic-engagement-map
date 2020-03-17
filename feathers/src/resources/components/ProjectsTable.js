@@ -19,7 +19,7 @@ const ProjectsTable = props => {
   } = props;
 
   return (
-    <Table>
+    <Table responsive>
       <thead>
         <tr>
           <th>Verified</th>
@@ -61,7 +61,7 @@ const ProjectsTable = props => {
               />
             </td>
             <td>{project.name}</td>
-            <td>{project.description}</td>
+            <td><div className="overflow-auto">{project.description}</div></td>
             <td>
               {project.types.map(t => (
                 <Badge variant="light" key={t} pill>{t}</Badge>
@@ -90,7 +90,7 @@ const ProjectsTable = props => {
             <td>{project.beneficiaries}</td>
             <td>{project.website}</td>
             <td>{project.owner.first} {project.owner.last}<br />{project.owner.email}</td>
-            <td>{project.address.city} {project.address.region}, {project.address.zip}</td>
+            <td className="overflow-auto">{project.address.city} {project.address.region}, {project.address.zip}</td>
             <td>{new Date(project.createdAt).toDateString()}</td>
             <td>
               <FontAwesomeIcon

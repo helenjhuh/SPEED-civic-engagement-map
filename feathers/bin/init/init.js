@@ -53,7 +53,7 @@ const handleCLI = async (command, flags) => {
       first: 'Admin',
       last: 'User',
       college: 'none',
-      permissions: ['admin'],
+      permissions: ['Admin'],
       email: adminemail,
       password: adminpassword
     });

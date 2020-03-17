@@ -19,8 +19,7 @@ const HomePage = props => {
   };
 
   return (
-    <Container fluid>
-      <YoutubeVideo url={'https://www.youtube.com/embed/_4B6e8mFqUI?controls=0'} />
+    <div>      <YoutubeVideo url={'https://www.youtube.com/embed/_4B6e8mFqUI?controls=0'} />
       {featuredProjects.length > 0 && <Container>
         <h2
           className="display-3 text-center"
@@ -38,8 +37,8 @@ const HomePage = props => {
           )} 
         </Row>
       </Container>}
-    </Container>
-  );
+ </div>
+ );
 };
 
 HomePage.propTypes = {
