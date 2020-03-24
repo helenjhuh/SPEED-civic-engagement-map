@@ -1,6 +1,6 @@
 {
   "name": "feathers",
-  "description": "The API server for the Civic Engagement project at Swarthmore College.",
+  "description": "Civic Engagement project at Swarthmore College.",
   "version": "0.0.0",
   "homepage": "",
   "private": true,

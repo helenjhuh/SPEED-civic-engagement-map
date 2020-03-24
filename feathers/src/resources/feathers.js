@@ -3,7 +3,7 @@ import Feathers from '@feathersjs/feathers';
 import authClient from '@feathersjs/authentication-client';
 import socketio from '@feathersjs/socketio-client';
 
-const backend = 'http://localhost:3030';
+const backend = 'http://tony-dockerhost.aws-dev.swarthmore.edu:8080';
 const socket = io(backend);
 const feathers = Feathers();
 

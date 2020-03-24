@@ -1,7 +1,7 @@
 {
   "development": true,
-  "host": "localhost",
-  "port": 3030,
+  "host": "tony-dockerhost.aws-dev.swarthmore.edu",
+  "port": 8080,
   "public": "../public/",
   "paginate": {
     "default": 10,
@@ -17,7 +17,7 @@
     ],
     "jwtOptions": {
       "header": {
-        "typ": "access"
+        "type": "access"
       },
       "audience": "https://swarthmore.edu",
       "issuer": "feathers",
