@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import ReactMapboxGL, { Layer, Feature, MapContext } from 'react-mapbox-gl;
 import mapboxgl from 'mapbox-gl';
+import CommonData from '../data/CommonAreas.json';
 
 const MapView = ReactMapboxGL({
   accessToken: '',
@@ -18,9 +20,16 @@ const mapStyles = {
 }
 
 const ProjectsMap = props => {
+
+  const {projects} = props;
+
   const [center, setCenter] = useState(defaultCenter);
   const [zoom, setZoom] = useState(defaultZoomLevel);
   const [fitBounds, setFitBounds] = useState(undefined);
+
+  const handleFeatureClick = (data) => {
+    console.log(data);
+  }
 
   return (
     <div style={mapStyles}>
@@ -36,7 +45,61 @@ const ProjectsMap = props => {
         flyToOptions={{
           speed: 0.8
         }}
-      />
+      >
+        <MapContext.Consumer>
+          {map => {
+            const marker = require("../images/map-marker-2-32.png");
+            map.loadImage(marker, (error, image) => {
+              if (error) throw error;
+              map.addImage("custom-marker", image);
+            });
+          }}
+        </MapContext.Consumer>
+
+        <Layer
+          type="symbol"
+          id="marker"
+          layout={{ "icon-image": "custom-markert" }} 
+        >
+          {projects.map(project => <Feature 
+            key={project._id} 
+            coordinates={[project.address.lat, project.address.lng]} 
+            onClick={handleFeatureClick} 
+            />)}
+        </Layer>
+          
+        <MapContext.Consumer>
+            {map => {
+              CommonData.features.map(feature => map.addLayer({
+                id: feature.properties.name,
+                type: 'fill',
+                source: {
+                  type: 'geojson',
+                  data: feature
+                },
+                layout: {},
+                paint: {
+                  'fill-color': '#888',
+                  'fill-opacity': 0.15
+                }
+              }))
+              .addLayer({
+                id: `${feature.properties.name}Fill`,
+                type: 'line',
+                source: {
+                  type: 'geojson',
+                  data: feature
+                },
+                layout: {},
+                paint: {
+                  'line-color': 'rgba(0,0,0,1)',
+                  'line-width': 2
+                }
+              })
+            }}
+        </MapContext.Consumer>
+
+      </MapView>
     </div>
   );
 
