@@ -1,4 +1,4 @@
 {
-  "host": "feathers-server-app.feathersjs.com",
-  "port": "PORT"
+  "host": "civicengagement.aws-dev.swarthmore.edu",
+  "port": "8080"
 }

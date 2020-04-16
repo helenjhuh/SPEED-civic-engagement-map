@@ -11,16 +11,16 @@ const randomBetween = (min, max) => Math.floor(Math.random() * max) + min;
  * @returns [{ city: String, count: Number }]
  **/
 const transformArray = arr => {
-  const output = [];
-  arr.forEach(city => {
-    const count = arr.filter(c => c === city).length;
-    // check that the city doesn't exist already
-    const exists = output.filter(c => c.city === city).length > 0;
-    if (!exists) {
-      output.push({ city, count });
-    }
-  });
-  return output;
-}
+    const output = [];
+    arr.forEach(city => {
+        const count = arr.filter(c => c === city).length;
+        // check that the city doesn't exist already
+        const exists = output.filter(c => c.city === city).length > 0;
+        if (!exists) {
+            output.push({ city, count });
+        }
+    });
+    return output;
+};
 
 module.exports = { randomFromArray, shuffleArray, randomBetween, transformArray };

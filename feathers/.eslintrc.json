@@ -16,7 +16,7 @@
   "rules": {
     "indent": [
       "error",
-      2
+      4
     ],
     "linebreak-style": [
       "error",
@@ -36,6 +36,13 @@
     "react/prop-types": [
       "warn"
     ]
+  },
+  "settings": {
+      "react": {
+          "createClass": "createReactClass",
+          "pragma": "React",
+          "version": "detect"
+      }
   }
 }
 

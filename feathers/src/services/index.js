@@ -8,11 +8,11 @@ const mapbox = require('./mapbox/mapbox.service.js');
 
 // eslint-disable-next-line no-unused-vars
 module.exports = function(app) {
-  app.configure(users);
-  app.configure(addresses);
-  app.configure(projects);
-  app.configure(pins);
-  app.configure(photos);
-  app.configure(roles);
-  app.configure(mapbox);
+    app.configure(users);
+    app.configure(addresses);
+    app.configure(projects);
+    app.configure(pins);
+    app.configure(photos);
+    app.configure(roles);
+    app.configure(mapbox);
 };

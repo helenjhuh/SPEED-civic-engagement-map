@@ -27,14 +27,15 @@
     "test": "yarn run lint && yarn run mocha",
     "lint": "eslint src/. test/. --config .eslintrc.json",
     "lint:fix": "eslint src/. --config .eslintrc.json --fix",
-    "dev": "nodemon src/",
-    "start": "node src/",
+    "dev": "NODE_ENV=development nodemon src/",
+    "start": "NODE_ENV=production node src/",
     "mocha": "mocha test/ --recursive --exit",
     "client:build": "webpack",
     "client:watch": "webpack --watch",
     "mongo": "docker run --name civic_map_mongodb -d -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=root -e MONGO_INITDB_ROOT_PASSWORD=root mongo",
     "mongoexpress": "docker run -d --rm -p 8080:8081 --env ME_CONFIG_MONGODB_ADMINUSERNAME='root' --env ME_CONFIG_MONGODB_ADMINPASSWORD='root' --link civic_map_mongodb:mongo mongo-express",
-    "pre-push": "yarn lint:fix"
+    "pre-push": "yarn lint:fix",
+    "init": "node ./bin/init/init.js"
   },
   "standard": {
     "env": [
@@ -80,6 +81,8 @@
     "react-router-bootstrap": "^0.25.0",
     "react-router-dom": "^5.1.2",
     "react-select": "^3.0.8",
+    "sass": "^1.26.3",
+    "sass-loader": "^8.0.2",
     "serve-favicon": "^2.5.0",
     "socket.io-client": "^2.3.0",
     "winston": "^3.0.0",

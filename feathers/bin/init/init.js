@@ -29,7 +29,7 @@ const cli = meow(`
 const handleCLI = async (command, flags) => {
   try {
 
-    const {adminemail, adminpassword} = flags;
+    const {adminemail = 'aweed1@swarthmore.edu', adminpassword = 'secret'} = flags;
     
     // Configure the feathers client
     feathers.configure(socketio(socket));
@@ -58,7 +58,7 @@ const handleCLI = async (command, flags) => {
       password: adminpassword
     });
 
-    console.log(`Created admin user. You can now log in with the credentials\ \nUSERNAME: ${adminUser.email}\nPASSWORD: ${adminUser.password}`)
+    console.log(`Created admin user. You can now log in with the credentials\ \n ${JSON.stringify(adminUser, null, 2)}`)
 
     process.exit();
   } catch(error) {

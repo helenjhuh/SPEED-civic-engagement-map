@@ -6,6 +6,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Application from './components/Application';
 
-import 'bootstrap/dist/css/bootstrap.min.css';
+import './app.scss';
 
 ReactDOM.render(<Application />, document.getElementById('root'));

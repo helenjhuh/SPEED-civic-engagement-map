@@ -21,7 +21,7 @@ import "../styles/app.css";
  * @param [String] arr
  * @returns [{ city: String, count: Number }]
  **/
-function count(arr) {
+const count = arr => {
   const output = [];
   arr.forEach(city => {
     const count = arr.filter(c => c === city).length;
@@ -39,9 +39,7 @@ function count(arr) {
  * @param [any] arr
  * @returns any
  **/
-function randomFromArray(arr) {
-  return arr[Math.floor(Math.random() * arr.length)];
-}
+const randomFromArray = arr => arr[Math.floor(Math.random() * arr.length)]
 
 const MapView = ReactMapboxGl({
   accessToken: process.env.REACT_APP_MAPBOX_TOKEN,
